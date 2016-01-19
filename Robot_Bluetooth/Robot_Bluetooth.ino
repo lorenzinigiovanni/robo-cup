@@ -35,7 +35,7 @@ MeDCMotor cingoloA(M1);
 MeDCMotor cingoloB(M2);
 MeRGBLed led(PORT_6);
 
-MeUltrasonicSensor ultraSensor(PORT_7);
+MeUltrasonicSensor ultraSensor(PORT_3);
 
 unsigned char table[128] = {0};
 
@@ -99,7 +99,10 @@ void parseData() {
 
   switch (action) {
     case GET:
+      writeHead();
+      writeSerial(idx);
       readSensor(device);
+      writeEnd();
       break;
     case RUN:
       runModule(device);
@@ -108,7 +111,7 @@ void parseData() {
       //reset();
       break;
     case START:
-      //callOk();
+      callOk();
       break;
   }
 }
@@ -336,6 +339,23 @@ void writeSerial(unsigned char c) {
   Serial.write(c);
 #if defined(__AVR_ATmega32U4__)
   Serial1.write(c);
+#endif
+}
+
+void callOk() {
+  writeHead();
+  writeEnd();
+}
+
+void writeHead() {
+  writeSerial(0xff);
+  writeSerial(0x55);
+}
+
+void writeEnd() {
+  Serial.println();
+#if defined(__AVR_ATmega_32U4__)
+  Serial1.println();
 #endif
 }
 
