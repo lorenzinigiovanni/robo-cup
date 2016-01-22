@@ -1,4 +1,3 @@
-
 #include <math.h>  // include for atan2
 #include "Wire.h"
 #include "I2Cdev.h"
@@ -39,7 +38,7 @@ void setup()
   Serial.begin(115200);          //setup serial
   accelgyro.initialize();
   
-  calibrateSensors();           // obtain zero values
+  //calibrateSensors();           // obtain zero values
 
   delay (100); 
 
