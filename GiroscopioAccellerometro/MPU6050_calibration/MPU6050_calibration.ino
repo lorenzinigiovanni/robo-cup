@@ -33,8 +33,11 @@
 
 // I2Cdev and MPU6050 must be installed as libraries
 #include "I2Cdev.h"
-#include "MPU6050.h"
+#include "MPU6050_6Axis_MotionApps20.h"
+
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #include "Wire.h"
+#endif
 
 ///////////////////////////////////   CONFIGURATION   /////////////////////////////
 //Change this 3 variables if you want to fine tune the skecth to your needs.
@@ -46,8 +49,8 @@ int giro_deadzone = 1;   //Giro error allowed, make it lower to get more precisi
 // specific I2C addresses may be passed as a parameter here
 // AD0 low = 0x68 (default for InvenSense evaluation board)
 // AD0 high = 0x69
-//MPU6050 accelgyro;
-MPU6050 accelgyro(0x68);
+MPU6050 accelgyro;
+//MPU6050 accelgyro(0x68);
 
 int16_t ax, ay, az, gx, gy, gz;
 
@@ -57,9 +60,12 @@ int ax_offset, ay_offset, az_offset, gx_offset, gy_offset, gz_offset;
 ///////////////////////////////////   SETUP   ////////////////////////////////////
 void setup() {
   // join I2C bus (I2Cdev library doesn't do this automatically)
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
-  // COMMENT NEXT LINE IF YOU ARE USING ARDUINO DUE
-  TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Leonardo measured 250kHz.
+//  TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
+#elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+  Fastwire::setup(400, true);
+#endif
 
   // initialize serial communication
   Serial.begin(115200);

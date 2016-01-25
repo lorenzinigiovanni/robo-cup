@@ -1,11 +1,11 @@
 //-------------------------------------------------------------------------------
 //PIN
 
-#define M1P 2
-#define M1D 3
-#define M2P 4
-#define M2D 5
-#define M1E 6
+#define M1E 12
+#define M1F 11
+#define M1R 10
+#define M2F 9
+#define M2R 8
 #define M2E 7
 
 //-------------------------------------------------------------------------------
@@ -13,9 +13,11 @@
 #include <PID_v1.h>
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
+
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #include "Wire.h"
 #endif
+
 MPU6050 mpu;
 
 bool dmpReady = false;
@@ -33,19 +35,21 @@ int numeroMorto = 0;
 
 //-------------------------------------------------------------------------------
 
+
 void setup() {
-  pinMode(M1P, OUTPUT);
-  pinMode(M1D, OUTPUT);
-  pinMode(M2P, OUTPUT);
-  pinMode(M2D, OUTPUT);
   pinMode(M1E, OUTPUT);
+  pinMode(M1F, OUTPUT);
+  pinMode(M1R, OUTPUT);
+  pinMode(M2F, OUTPUT);
+  pinMode(M2R, OUTPUT);
   pinMode(M2E, OUTPUT);
+  pinMode(13, OUTPUT);
 
   //-------------------------------------------------------------------------------
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
-  TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
+  //  TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
 #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
   Fastwire::setup(400, true);
 #endif
@@ -53,20 +57,28 @@ void setup() {
   Serial.begin(115200);
 
   mpu.initialize();
+  digitalWrite(13, LOW);
+  digitalWrite(13, mpu.testConnection() ? HIGH : LOW);
+  delay(500);
+  if (!mpu.testConnection())
+    setup();
   devStatus = mpu.dmpInitialize();
-  //-2866  -1038 1061  91  -48 12
-  mpu.setXAccelOffset(-2866);
-  mpu.setYAccelOffset(-1038);
-  mpu.setZAccelOffset(1061);
-  mpu.setXGyroOffset(91);
-  mpu.setYGyroOffset(-48);
-  mpu.setZGyroOffset(12);
+  mpu.setXAccelOffset(-2766);
+  mpu.setYAccelOffset(-1056);
+  mpu.setZAccelOffset(1002);
+  mpu.setXGyroOffset(1);
+  mpu.setYGyroOffset(-15);
+  mpu.setZGyroOffset(73);
 
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);
     dmpReady = true;
     packetSize = mpu.dmpGetFIFOPacketSize();
   }
+
+  //-------------------------------------------------------------------------------
+
+  avanzamento(0, 100);
 }
 
 //-------------------------------------------------------------------------------
@@ -78,38 +90,20 @@ void loop() {
 //-------------------------------------------------------------------------------
 //MOVIMENTAZIONE
 
-void avanzamento(float distanzaVoluta, float velocita, bool pid) {
-  double gradiIniziali = gyroscope(0);
+void avanzamento(float distanzaVoluta, float velocita) {
+  float gradiIniziali = gyroscope(0);
   float correzione = 0;
-  float distanzaIniziale = distanza(0);
+  //  float distanzaIniziale = distanza(0);
   float errore = 0;
-  double giroscopio0 = gyroscope(0);
-  double potenzaM1 = 0;
-  double potenzaM2 = 0;
+  float Kp = 5;
+  int i = 0;
+  while (i < 100) {
+    //    while (distanzaIniziale - distanza(0) <= distanzaVoluta) {
+    errore = gradiIniziali - gyroscope(0);
+    Serial.print("ERRORE= ") && Serial.print(errore)  && Serial.print("\t GYRO= ") && Serial.println(gyroscope(0));
 
-  if (pid) {
-    double Kp = 2, Ki = 5, Kd = 1;
-    PID pidM1(&giroscopio0, &potenzaM1, &gradiIniziali, Kp, Ki, Kd, DIRECT);
-    PID pidM2(&giroscopio0, &potenzaM2, &gradiIniziali, Kp, Ki, Kd, DIRECT);
-    pidM1.SetMode(AUTOMATIC);
-    pidM2.SetMode(AUTOMATIC);
-
-    while (distanzaIniziale - distanza(0) <= distanzaVoluta) {
-      giroscopio0 = gyroscope(0);
-      pidM1.Compute();
-      pidM2.Compute();
-      motori (velocita + potenzaM1, velocita - potenzaM2);
-    }
-
-    pidM1.SetMode(MANUAL);
-    pidM2.SetMode(MANUAL);
-  }
-
-  else {
-    while (distanzaIniziale - distanza(0) <= distanzaVoluta) {
-      errore = gradiIniziali - gyroscope(0);
-      motori (velocita + errore, velocita - errore);
-    }
+    motori (velocita + errore * Kp, velocita - errore * Kp);
+    i++;
   }
 
   motori (0, 0);
@@ -196,29 +190,32 @@ void seriale(float powerMotoreA, float powerMotoreB, int numeroMorto) {
 //-------------------------------------------------------------------------------
 //GESTIONE MOTORI
 
-void motori(int powerM1, int powerM2) {
+void motori(float powerM2, float powerM1) {
+  powerM2 = constrain(powerM2, -255, 255);
+  powerM1 = constrain(powerM1, -255, 255);
+
   if (powerM1 > 0) {
-    analogWrite (M1D, 0);
-    analogWrite (M1P, powerM1);
-    digitalWrite (M1E, HIGH);
+    analogWrite(M1F, powerM1);
+    analogWrite(M1R, 0);
+    digitalWrite(M1E, HIGH);
   }
   else if (powerM1 < 0) {
-    analogWrite (M1D, 1);
-    analogWrite (M1P, powerM1);
-    digitalWrite (M1E, HIGH);
+    analogWrite(M1F, 0);
+    analogWrite(M1R, -powerM1);
+    digitalWrite(M1E, HIGH);
   }
   else
-    digitalWrite (M1E, LOW);
+    digitalWrite(M1E, LOW);
 
   if (powerM2 > 0) {
-    analogWrite (M2D, 0);
-    analogWrite (M2P, powerM2);
-    digitalWrite (M2E, HIGH);
+    analogWrite(M2F, powerM2);
+    analogWrite(M2R, 0);
+    digitalWrite(M2E, HIGH);
   }
   else if (powerM2 < 0) {
-    analogWrite (M2D, 1);
-    analogWrite (M2P, powerM2);
-    digitalWrite (M2E, HIGH);
+    analogWrite(M2F, 0);
+    analogWrite(M2R, -powerM2);
+    digitalWrite(M2E, HIGH);
   }
   else
     digitalWrite (M2E, LOW);

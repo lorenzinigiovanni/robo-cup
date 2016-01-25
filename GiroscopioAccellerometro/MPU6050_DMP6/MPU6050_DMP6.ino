@@ -115,7 +115,7 @@ void setup() {
   // join I2C bus (I2Cdev library doesn't do this automatically)
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
-  TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
+//  TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
 #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
   Fastwire::setup(400, true);
 #endif
@@ -151,15 +151,16 @@ void setup() {
   devStatus = mpu.dmpInitialize();
 
   //-2866  -1038 1061  91  -48 12
+//Your offsets:  -2766 -1056 1002  1 -15 73
 
 
   // supply your own gyro offsets here, scaled for min sensitivity
-  mpu.setXAccelOffset(-2866);
-  mpu.setYAccelOffset(-1038);
-  mpu.setZAccelOffset(1061);
-  mpu.setXGyroOffset(91);
-  mpu.setYGyroOffset(-48);
-  mpu.setZGyroOffset(12);
+  mpu.setXAccelOffset(-2766);
+  mpu.setYAccelOffset(-1056);
+  mpu.setZAccelOffset(1002);
+  mpu.setXGyroOffset(1);
+  mpu.setYGyroOffset(-15);
+  mpu.setZGyroOffset(73);
 
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {
