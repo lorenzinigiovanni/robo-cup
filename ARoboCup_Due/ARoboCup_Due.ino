@@ -1,12 +1,21 @@
 //-------------------------------------------------------------------------------
 //PIN
 
-#define M1E 12
-#define M1F 11
-#define M1R 10
-#define M2F 9
-#define M2R 8
-#define M2E 7
+//Servo Motori
+#define SM1 10
+
+//Motori
+#define M1E 8
+#define M1F 7
+#define M1R 6
+#define M2F 5
+#define M2R 4
+#define M2E 3
+
+//-------------------------------------------------------------------------------
+
+#include <Servo.h>
+Servo servoTorretta;
 
 //-------------------------------------------------------------------------------
 
@@ -43,6 +52,9 @@ void setup() {
   pinMode(M2F, OUTPUT);
   pinMode(M2R, OUTPUT);
   pinMode(M2E, OUTPUT);
+
+  servoTorretta.attach(SM1);
+
   pinMode(13, OUTPUT);
 
   //-------------------------------------------------------------------------------
@@ -98,9 +110,9 @@ void avanzamento(float distanzaVoluta, float velocita) {
   float Kp = 5;
   int i = 0;
   while (i < 100) {
-    //    while (distanzaIniziale - distanza(0) <= distanzaVoluta) {
+    //while (distanzaIniziale - distanza(0) <= distanzaVoluta) {
     errore = gradiIniziali - gyroscope(0);
-    Serial.print("ERRORE= ") && Serial.print(errore)  && Serial.print("\t GYRO= ") && Serial.println(gyroscope(0));
+    //Serial.print("ERRORE= ") && Serial.print(errore)  && Serial.print("\t GYRO= ") && Serial.println(gyroscope(0));
 
     motori (velocita + errore * Kp, velocita - errore * Kp);
     i++;
@@ -123,14 +135,20 @@ void rotazione(float gradiVoluti, float velocita) {
 //GIROSCOPIO
 
 float gyroscope(int scelta) {
-  while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-  mpu.getFIFOBytes(fifoBuffer, packetSize);
-  fifoCount -= packetSize;
+  float misura = 0;
+  for (int i = 0; i < 5, i++) {
+    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+    mpu.getFIFOBytes(fifoBuffer, packetSize);
+    fifoCount -= packetSize;
 
-  mpu.dmpGetQuaternion(&q, fifoBuffer);
-  mpu.dmpGetGravity(&gravity, &q);
-  mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-  return ypr[scelta] * 180 / M_PI;
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    mpu.dmpGetGravity(&gravity, &q);
+    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+
+    misura += ypr[scelta];
+  }
+  misura /= 5;
+  return misura * 180 / M_PI;
 }
 
 //-------------------------------------------------------------------------------
@@ -169,14 +187,25 @@ float distanza(int gradiMisura) {
 }
 
 float sensoreDistanza (int numeroSensore) {
-  return 1;
+  float misura = 1;
+  for (int i = 0; i < 5, i++) {
+    misura += misura;
+  }
+  misura /= 5;
+  return misura;
 }
 
 float sensoreTemperatura () {
-  return 1;
+  float misura = 1;
+  for (int i = 0; i < 5, i++) {
+    misura += misura;
+  }
+  misura /= 5;
+  return misura;
 }
 
 bool servoTorreta (int gradi) {
+  servoTorretta.write(gradi);
   return true;
 }
 
