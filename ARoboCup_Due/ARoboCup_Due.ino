@@ -38,6 +38,8 @@ Quaternion q;           // [w, x, y, z]         quaternion container
 VectorFloat gravity;    // [x, y, z]            gravity vector
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
+float previousypr[3];
+
 //-------------------------------------------------------------------------------
 
 int numeroMorto = 0;
@@ -148,7 +150,11 @@ float gyroscope(int scelta) {
     misura += ypr[scelta];
   }
   misura /= 5;
-  return misura * 180 / M_PI;
+  misura = misura * 180 / M_PI
+
+
+  
+  return misura;
 }
 
 //-------------------------------------------------------------------------------
