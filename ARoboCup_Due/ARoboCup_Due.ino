@@ -48,9 +48,7 @@ int numeroMorto = 0;
 
 //-------------------------------------------------------------------------------
 
-#define ledPin 9
-
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(15, ledPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(3, 22, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   pinMode(M1E, OUTPUT);
@@ -92,9 +90,9 @@ void setup() {
   }
 
   //for(int i = 16; i < -1; i--)
-    pixels.setPixelColor(15, pixels.Color(0,150,0));
-    pixels.setPixelColor(14, pixels.Color(0,150,0));
-    pixels.setPixelColor(13, pixels.Color(0,150,0));
+  pixels.setPixelColor(15, pixels.Color(0, 150, 0));
+  pixels.setPixelColor(14, pixels.Color(0, 150, 0));
+  pixels.setPixelColor(13, pixels.Color(0, 150, 0));
 
   devStatus = mpu.dmpInitialize();
   mpu.setXAccelOffset(-2766);
@@ -112,18 +110,12 @@ void setup() {
 
   //-------------------------------------------------------------------------------
 
-  for (int i = 0; i < 20; i++) {
-    //avanzamento(0, 100);
-    rotazione(90, 100);
-    //avanzamento(0, 80);
-    rotazione(-90, 100);
-  }
 }
 
 //-------------------------------------------------------------------------------
 
 void loop() {
-  //Serial.println(gyroscope(0));
+
 }
 
 //-------------------------------------------------------------------------------
@@ -294,3 +286,21 @@ void motori(float powerM2, float powerM1) {
   else
     digitalWrite (M2E, LOW);
 }
+
+//-------------------------------------------------------------------------------
+//GESTIONE LED
+
+void led(int R, int G, int B, int ritardo) {
+  for (int i = 0; i < 3; i++) {
+    pixels.setPixelColor(i, pixels.Color(R, G, B));
+    pixels.show();
+  }
+  if (ritardo > 0) {
+    delay (ritardo);
+    for (int i = 0; i < 3; i++) {
+      pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+      pixels.show();
+    }
+  }
+}
+
