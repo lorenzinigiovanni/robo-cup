@@ -39,6 +39,7 @@ VectorFloat gravity;    // [x, y, z]            gravity vector
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
 float previousypr[3];
+int rotationypr[3];
 
 //-------------------------------------------------------------------------------
 
@@ -92,13 +93,13 @@ void setup() {
 
   //-------------------------------------------------------------------------------
 
-  avanzamento(0, 100);
+  //avanzamento(0, 100);
 }
 
 //-------------------------------------------------------------------------------
 
 void loop() {
-
+  Serial.println(gyroscope(0));
 }
 
 //-------------------------------------------------------------------------------
@@ -138,7 +139,7 @@ void rotazione(float gradiVoluti, float velocita) {
 
 float gyroscope(int scelta) {
   float misura = 0;
-  for (int i = 0; i < 5, i++) {
+  for (int i = 0; i < 5; i++) {
     while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
     mpu.getFIFOBytes(fifoBuffer, packetSize);
     fifoCount -= packetSize;
@@ -150,10 +151,20 @@ float gyroscope(int scelta) {
     misura += ypr[scelta];
   }
   misura /= 5;
-  misura = misura * 180 / M_PI
+  misura = misura * 180 / M_PI;
 
+  float errore = previousypr[scelta] - misura;
 
-  
+  if (errore > 200) {
+    rotationypr[scelta] += 1;
+  }
+  else if (errore < -200) {
+    rotationypr[scelta] -= 1;
+  }
+
+  previousypr[scelta] = misura;
+
+  misura = misura + rotationypr[scelta] * 360 - 180;
   return misura;
 }
 
@@ -194,7 +205,7 @@ float distanza(int gradiMisura) {
 
 float sensoreDistanza (int numeroSensore) {
   float misura = 1;
-  for (int i = 0; i < 5, i++) {
+  for (int i = 0; i < 5; i++) {
     misura += misura;
   }
   misura /= 5;
@@ -203,7 +214,7 @@ float sensoreDistanza (int numeroSensore) {
 
 float sensoreTemperatura () {
   float misura = 1;
-  for (int i = 0; i < 5, i++) {
+  for (int i = 0; i < 5; i++) {
     misura += misura;
   }
   misura /= 5;
