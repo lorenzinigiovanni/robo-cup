@@ -19,6 +19,7 @@ Servo servoTorretta;
 
 //-------------------------------------------------------------------------------
 
+#include <Adafruit_NeoPixel.h>
 #include <PID_v1.h>
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
@@ -47,6 +48,9 @@ int numeroMorto = 0;
 
 //-------------------------------------------------------------------------------
 
+#define ledPin 9
+
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(15, ledPin, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   pinMode(M1E, OUTPUT);
@@ -59,8 +63,13 @@ void setup() {
   servoTorretta.attach(SM1);
 
   pinMode(13, OUTPUT);
+  pinMode(12, OUTPUT);
+
+  pixels.begin();
 
   //-------------------------------------------------------------------------------
+
+  digitalWrite(12, HIGH);
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
@@ -74,9 +83,19 @@ void setup() {
   mpu.initialize();
   digitalWrite(13, LOW);
   digitalWrite(13, mpu.testConnection() ? HIGH : LOW);
+
   delay(500);
-  if (!mpu.testConnection())
+
+  if (!mpu.testConnection()) {
+    digitalWrite(12, LOW);
     setup();
+  }
+
+  //for(int i = 16; i < -1; i--)
+    pixels.setPixelColor(15, pixels.Color(0,150,0));
+    pixels.setPixelColor(14, pixels.Color(0,150,0));
+    pixels.setPixelColor(13, pixels.Color(0,150,0));
+
   devStatus = mpu.dmpInitialize();
   mpu.setXAccelOffset(-2766);
   mpu.setYAccelOffset(-1056);
@@ -93,13 +112,18 @@ void setup() {
 
   //-------------------------------------------------------------------------------
 
-  //avanzamento(0, 100);
+  for (int i = 0; i < 20; i++) {
+    //avanzamento(0, 100);
+    rotazione(90, 100);
+    //avanzamento(0, 80);
+    rotazione(-90, 100);
+  }
 }
 
 //-------------------------------------------------------------------------------
 
 void loop() {
-  Serial.println(gyroscope(0));
+  //Serial.println(gyroscope(0));
 }
 
 //-------------------------------------------------------------------------------
@@ -128,8 +152,14 @@ void rotazione(float gradiVoluti, float velocita) {
   float gradiIniziali = gyroscope(0);
   float gradiFinali = gradiIniziali + gradiVoluti;
 
-  while (gradiFinali >= gyroscope(0))
-    motori (velocita, -velocita);
+  if (gradiVoluti > 0) {
+    while (gradiFinali >= gyroscope(0))
+      motori (velocita, -velocita);
+  }
+  else if (gradiVoluti < 0) {
+    while (gradiFinali <= gyroscope(0))
+      motori (-velocita, velocita);
+  }
 
   motori (0, 0);
 }
@@ -151,20 +181,18 @@ float gyroscope(int scelta) {
     misura += ypr[scelta];
   }
   misura /= 5;
-  misura = misura * 180 / M_PI;
+  misura *= 180 / M_PI;
 
   float errore = previousypr[scelta] - misura;
 
-  if (errore > 200) {
+  if (errore > 200)
     rotationypr[scelta] += 1;
-  }
-  else if (errore < -200) {
+  else if (errore < -200)
     rotationypr[scelta] -= 1;
-  }
 
   previousypr[scelta] = misura;
 
-  misura = misura + rotationypr[scelta] * 360 - 180;
+  misura += rotationypr[scelta] * 360;
   return misura;
 }
 
