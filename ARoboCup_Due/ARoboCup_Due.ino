@@ -1,6 +1,9 @@
 //-------------------------------------------------------------------------------
 //PIN
 
+#define sizeX 20
+#define sizeY 20
+
 //Servo Motori
 #define SM1 10
 
@@ -39,6 +42,9 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 
 float previousypr[3];
 int rotationypr[3];
+
+unsigned int matriceLvl1[sizeX][sizeY];
+unsigned int matriceLvl2[sizeX][sizeY];
 
 //-------------------------------------------------------------------------------
 
@@ -126,7 +132,7 @@ void loop() {
 //MOVIMENTAZIONE
 
 void avanzamento(float distanzaVoluta, float velocita) {
-  float gradiIniziali = gyroscope(0);
+  float gradiIniziali = gyroscope(0, true);;
   float correzione = 0;
   //  float distanzaIniziale = distanza(0);
   float errore = 0;
@@ -134,7 +140,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
   int i = 0;
   while (i < 100) {
     //while (distanzaIniziale - distanza(0) <= distanzaVoluta) {
-    errore = gradiIniziali - gyroscope(0);
+    errore = gradiIniziali - gyroscope(0, true);;
     //Serial.print("ERRORE= ") && Serial.print(errore)  && Serial.print("\t GYRO= ") && Serial.println(gyroscope(0));
 
     motori(velocita + errore * Kp, velocita - errore * Kp);
@@ -145,20 +151,20 @@ void avanzamento(float distanzaVoluta, float velocita) {
 }
 
 void rotazione(float gradiVoluti, float velocita) {
-  float gradiIniziali = gyroscope(0);
+  float gradiIniziali = gyroscope(0, true);
   float gradiFinali = gradiIniziali + gradiVoluti;
   float K = 0.2;
 
   if (gradiVoluti > 0) {
-    while (gradiFinali >= gyroscope(0)) {
-      float errore = gradiFinali - gyroscope(0);
-      motori (velocita + errore*K, -velocita - errore*K);
+    while (gradiFinali >= gyroscope(0, true)) {
+      float errore = gradiFinali - gyroscope(0, true);
+      motori (velocita + errore * K, -velocita - errore * K);
     }
   }
   else if (gradiVoluti < 0) {
-    while (gradiFinali <= gyroscope(0)) {
-      float errore = gyroscope(0) - gradiFinali;
-      motori (-velocita - errore*K, velocita + errore*K);
+    while (gradiFinali <= gyroscope(0, true)) {
+      float errore = gyroscope(0, true); - gradiFinali;
+      motori (-velocita - errore * K, velocita + errore * K);
     }
   }
 
@@ -168,7 +174,7 @@ void rotazione(float gradiVoluti, float velocita) {
 //-------------------------------------------------------------------------------
 //GIROSCOPIO
 
-float gyroscope(int scelta) {
+float gyroscope(int scelta, bool rotazioneContinua) {
   float misura = 0;
   for (int i = 0; i < 5; i++) {
     while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
@@ -193,8 +199,12 @@ float gyroscope(int scelta) {
 
   previousypr[scelta] = misura;
 
-  misura += rotationypr[scelta] * 360;
-  return misura;
+  if (rotazioneContinua) {
+    misura += rotationypr[scelta] * 360;
+    return misura;
+  }
+  else
+    return misura;
 }
 
 //-------------------------------------------------------------------------------
@@ -316,3 +326,58 @@ void led(int R, int G, int B, int ritardo) {
   }
 }
 
+//-------------------------------------------------------------------------------
+//DESMAPPATURA
+
+bool mappa(int prop, int x, int y, unsigned int matrix[sizeX][sizeY]) {
+  if (matrix[x][y] >= 16) {
+    if (prop == 4)
+      return true;
+    else
+      matrix[x][y] -= 16;
+  }
+  else if (prop == 4)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 8) {
+    if (prop == 3)
+      return true;
+    else
+      matrix[x][y] -= 8;
+  }
+  else if (prop == 3)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 4) {
+    if (prop == 2)
+      return true;
+    else
+      matrix[x][y] -= 4;
+  }
+  else if (prop == 2)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 2) {
+    if (prop == 1)
+      return true;
+    else
+      matrix[x][y] -= 2;
+  }
+  else if (prop == 1)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 1) {
+    if (prop == 0)
+      return true;
+  }
+  else if (prop == 0)
+    return false;
+}
