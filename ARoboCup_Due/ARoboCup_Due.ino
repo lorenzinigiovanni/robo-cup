@@ -50,17 +50,16 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 float previousypr[3];
 int rotationypr[3];
 
-<<<<<<< HEAD
 byte gammatable[256];
-=======
+
 unsigned int matriceLvl1[sizeX][sizeY];
 unsigned int matriceLvl2[sizeX][sizeY];
->>>>>>> 5d9c3dae7463b2d5bbaee2e2a8c85a685c64aba9
 
 //-------------------------------------------------------------------------------
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(3, 22, NEO_GRB + NEO_KHZ800);
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
+
 //-------------------------------------------------------------------------------
 
 #include <SparkFunMLX90614.h>
@@ -175,27 +174,20 @@ void avanzamento(float distanzaVoluta, float velocita) {
 void rotazione(float gradiVoluti, float velocita) {
   float gradiIniziali = gyroscope(0, true);
   float gradiFinali = gradiIniziali + gradiVoluti;
+  float K = 0.2;
 
   if (gradiVoluti > 0) {
-<<<<<<< HEAD
-    while (gradiFinali >= gyroscope(0))
-      motori (velocita, -velocita);
-  }
-  else if (gradiVoluti < 0) {
-    while (gradiFinali <= gyroscope(0))
-      motori (-velocita, velocita);
-=======
     while (gradiFinali >= gyroscope(0, true)) {
       float errore = gradiFinali - gyroscope(0, true);
       motori (velocita + errore * K, -velocita - errore * K);
     }
   }
+
   else if (gradiVoluti < 0) {
     while (gradiFinali <= gyroscope(0, true)) {
       float errore = gyroscope(0, true); - gradiFinali;
       motori (-velocita - errore * K, velocita + errore * K);
     }
->>>>>>> 5d9c3dae7463b2d5bbaee2e2a8c85a685c64aba9
   }
 
   motori (0, 0);
@@ -233,16 +225,44 @@ float gyroscope(int scelta, bool rotazioneContinua) {
     misura += rotationypr[scelta] * 360;
     return misura;
   }
-  else
-    return misura;
+  else {
+    if (misura < 10 && misura > -10)
+      return 0;
+    else if (misura < 100 && misura > 80)
+      return 1;
+    else if (misura < -170 || misura > 170)
+      return 2;
+    else if (misura < -80 && misura > -100)
+      return 3;
+  }
 }
 
 //-------------------------------------------------------------------------------
 //SENSORI TORRETTA
 
-float temperatura(int gradiMisura) {
+float temperatura(int posizione, bool relativa) {
   int servo = 90;
-  servo += gradiMisura;
+
+  if (relativa) {
+    switch (posizione) {
+      case -1:
+        servo = 0;
+        break;
+      case 0:
+        servo = 90;
+        break;
+      case 1:
+        servo = 180;
+        break;
+    }
+  }
+
+  else {
+    posizione = posizione - gyroscope(0, false);
+    if (posizione > 1 || posizione < -1)
+      return -1;
+    servo = posizione * 90 + 90;
+  }
 
   while (!servoTorreta(servo)) {}
 
@@ -252,20 +272,63 @@ float temperatura(int gradiMisura) {
 
 //-------------------------------------------------------------------------------
 
-float distanza(int gradiMisura) {
-  int numeroSensore = 0;
+float distanza(int posizione, bool relativa) {
   int servo = 90;
-  if (gradiMisura <= -90) {
-    numeroSensore = -1;
-    servo += gradiMisura + 90;
+  int numeroSensore = 0;
+
+  if (relativa) {
+    switch (posizione) {
+      case -1:
+        servo = 90;
+        numeroSensore = -1;
+        break;
+      case 0:
+        servo = 90;
+        numeroSensore = 0;
+        break;
+      case 1:
+        servo = 90;
+        numeroSensore = 1;
+        break;
+      case 2:
+        servo = 180;
+        numeroSensore = 1;
+        break;
+    }
   }
-  else if (gradiMisura >= 90) {
-    numeroSensore = 1;
-    servo += gradiMisura - 90;
-  }
+
   else {
-    numeroSensore = 0;
-    servo += gradiMisura;
+    posizione = posizione - gyroscope(0, false);
+    switch (posizione) {
+      case -3:
+        servo = 90;
+        numeroSensore = 1;
+        break;
+      case -2:
+        servo = 0;
+        numeroSensore = -1;
+        break;
+      case -1:
+        servo = 90;
+        numeroSensore = -1;
+        break;
+      case 0:
+        servo = 90;
+        numeroSensore = 0;
+        break;
+      case 1:
+        servo = 90;
+        numeroSensore = 1;
+        break;
+      case 2:
+        servo = 180;
+        numeroSensore = 1;
+        break;
+      case 3:
+        servo = 90;
+        numeroSensore = -1;
+        break;
+    }
   }
 
   while (!servoTorreta(servo)) {}
@@ -282,13 +345,13 @@ float sensoreDistanza(int numeroSensore) {
   int indirizzo = 0;
 
   switch (numeroSensore) {
-    case 0:
+    case -1:
       indirizzo = 112;
       break;
-    case 1:
+    case 0:
       indirizzo = 113;
       break;
-    case 2:
+    case 1:
       indirizzo = 114;
       break;
   }
@@ -439,8 +502,6 @@ void led(int R, int G, int B, int ritardo) {
     }
   }
 }
-<<<<<<< HEAD
-=======
 
 //-------------------------------------------------------------------------------
 //DESMAPPATURA
@@ -497,4 +558,3 @@ bool mappa(int prop, int x, int y, unsigned int matrix[sizeX][sizeY]) {
   else if (prop == 0)
     return false;
 }
->>>>>>> 5d9c3dae7463b2d5bbaee2e2a8c85a685c64aba9
