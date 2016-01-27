@@ -4,13 +4,18 @@
 //Servo Motori
 #define SM1 10
 
+#define ENGYRO 24
+#define ENRGB 25
+#define ENTMP 26
+#define LED 13
+
 //Motori
-#define M1E 8
-#define M1F 7
-#define M1R 6
-#define M2F 5
-#define M2R 4
-#define M2E 3
+#define M1E 7
+#define M1F 6
+#define M1R 5
+#define M2F 4
+#define M2R 3
+#define M2E 2
 
 //-------------------------------------------------------------------------------
 
@@ -21,6 +26,8 @@ Servo servoTorretta;
 
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
+#include "Adafruit_TCS34725.h"
+#include <Adafruit_NeoPixel.h>
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #include "Wire.h"
@@ -40,11 +47,12 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 float previousypr[3];
 int rotationypr[3];
 
+byte gammatable[256];
+
 //-------------------------------------------------------------------------------
 
-#include <Adafruit_NeoPixel.h>
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(3, 22, NEO_GRB + NEO_KHZ800);
-
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 //-------------------------------------------------------------------------------
 
 #include <SparkFunMLX90614.h>
@@ -66,14 +74,18 @@ void setup() {
 
   servoTorretta.attach(SM1);
 
-  pinMode(13, OUTPUT);
-  pinMode(12, OUTPUT);
+  pinMode(LED, OUTPUT);
+  pinMode(ENGYRO, OUTPUT);
+  pinMode(ENRGB, OUTPUT);
+  pinMode(ENTMP, OUTPUT);
 
   pixels.begin();
 
   //-------------------------------------------------------------------------------
 
-  digitalWrite(12, HIGH);
+  digitalWrite(ENGYRO, HIGH);
+  digitalWrite(ENRGB, HIGH);
+  digitalWrite(ENTMP, HIGH);
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
@@ -85,15 +97,27 @@ void setup() {
   Serial.begin(115200);
 
   mpu.initialize();
-  digitalWrite(13, LOW);
-  digitalWrite(13, mpu.testConnection() ? HIGH : LOW);
+  digitalWrite(LED, LOW);
+  digitalWrite(LED, mpu.testConnection() ? HIGH : LOW);
 
   delay(500);
 
   if (!mpu.testConnection()) {
-    digitalWrite(12, LOW);
+    digitalWrite(ENGYRO, LOW);
     setup();
   }
+  /*
+    if (!tcs.begin()) {
+      digitalWrite(ENRGB, LOW);
+      setup();
+    }
+
+    if (!therm.begin()) {
+      digitalWrite(ENTMP, LOW);
+      setup();
+    }
+  */
+  therm.setUnit(TEMP_C);
 
   devStatus = mpu.dmpInitialize();
   mpu.setXAccelOffset(-2766);
@@ -108,12 +132,6 @@ void setup() {
     dmpReady = true;
     packetSize = mpu.dmpGetFIFOPacketSize();
   }
-
-  //-------------------------------------------------------------------------------
-
-  therm.begin();
-  therm.setUnit(TEMP_C);
-
 }
 
 //-------------------------------------------------------------------------------
@@ -144,22 +162,19 @@ void avanzamento(float distanzaVoluta, float velocita) {
   motori (0, 0);
 }
 
+//-------------------------------------------------------------------------------
+
 void rotazione(float gradiVoluti, float velocita) {
   float gradiIniziali = gyroscope(0);
   float gradiFinali = gradiIniziali + gradiVoluti;
-  float K = 0.2;
 
   if (gradiVoluti > 0) {
-    while (gradiFinali >= gyroscope(0)) {
-      float errore = gradiFinali - gyroscope(0);
-      motori (velocita + errore*K, -velocita - errore*K);
-    }
+    while (gradiFinali >= gyroscope(0))
+      motori (velocita, -velocita);
   }
   else if (gradiVoluti < 0) {
-    while (gradiFinali <= gyroscope(0)) {
-      float errore = gyroscope(0) - gradiFinali;
-      motori (-velocita - errore*K, velocita + errore*K);
-    }
+    while (gradiFinali <= gyroscope(0))
+      motori (-velocita, velocita);
   }
 
   motori (0, 0);
@@ -210,6 +225,8 @@ float temperatura(int gradiMisura) {
   return misura;
 }
 
+//-------------------------------------------------------------------------------
+
 float distanza(int gradiMisura) {
   int numeroSensore = 0;
   int servo = 90;
@@ -232,16 +249,52 @@ float distanza(int gradiMisura) {
   return misura;
 }
 
-float sensoreDistanza (int numeroSensore) {
-  float misura = 1;
-  for (int i = 0; i < 5; i++) {
-    misura += misura;
+//-------------------------------------------------------------------------------
+
+float sensoreDistanza(int numeroSensore) {
+  float misura = 0;
+  int reading = 0;
+  int indirizzo = 0;
+
+  switch (numeroSensore) {
+    case 0:
+      indirizzo = 112;
+      break;
+    case 1:
+      indirizzo = 113;
+      break;
+    case 2:
+      indirizzo = 114;
+      break;
   }
+
+  for (int i = 0; i < 5; i++) {
+    Wire.beginTransmission(indirizzo);
+    Wire.write(byte(0x00));
+    Wire.write(byte(0x51));
+    Wire.endTransmission();
+
+    Wire.beginTransmission(indirizzo);
+    Wire.write(byte(0x02));
+    Wire.endTransmission();
+    Wire.requestFrom(indirizzo, 2);
+
+    if (2 <= Wire.available()) {
+      reading = Wire.read();
+      reading = reading << 8;
+      reading |= Wire.read();
+      Serial.println(reading);
+    }
+    misura += reading;
+  }
+
   misura /= 5;
   return misura;
 }
 
-float sensoreTemperatura () {
+//-------------------------------------------------------------------------------
+
+float sensoreTemperatura() {
   float misura = 0.0;
   for (int i = 0; i < 5; i++) {
     if (therm.read()) {
@@ -253,9 +306,55 @@ float sensoreTemperatura () {
   }
 }
 
-bool servoTorreta (int gradi) {
+//-------------------------------------------------------------------------------
+
+bool servoTorreta(int gradi) {
   servoTorretta.write(gradi);
   return true;
+}
+
+//-------------------------------------------------------------------------------
+//SENSORE COLORE
+
+bool colore(int color) {
+  uint16_t clear, red, green, blue;
+
+  tcs.setInterrupt(false);
+
+  delay(60);
+
+  tcs.getRawData(&red, &green, &blue, &clear);
+
+  tcs.setInterrupt(true);
+
+  //----------------DEBUG-------------------
+  Serial.print("C:\t"); Serial.print(clear);
+  Serial.print("\tR:\t"); Serial.print(red);
+  Serial.print("\tG:\t"); Serial.print(green);
+  Serial.print("\tB:\t"); Serial.print(blue);
+
+  uint32_t sum = clear;
+  float r, g, b;
+  r = red; r /= sum;
+  g = green; g /= sum;
+  b = blue; b /= sum;
+  r *= 256; g *= 256; b *= 256;
+
+  switch (color) {
+    case 0:
+      if (r > 210 && g > 210 && b > 210)
+        return true;
+      break;
+    case 1:
+      if (r < 10 && g < 10 && b < 10)
+        return true;
+      break;
+    case 2:
+      if (r > 180 && r < 200 && g > 180 && g < 200 && b > 180 && b < 200)
+        return true;
+      break;
+  }
+  return false;
 }
 
 //-------------------------------------------------------------------------------
@@ -315,4 +414,3 @@ void led(int R, int G, int B, int ritardo) {
     }
   }
 }
-
