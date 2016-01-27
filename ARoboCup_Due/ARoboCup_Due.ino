@@ -19,8 +19,6 @@ Servo servoTorretta;
 
 //-------------------------------------------------------------------------------
 
-#include <Adafruit_NeoPixel.h>
-#include <PID_v1.h>
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 
@@ -44,11 +42,19 @@ int rotationypr[3];
 
 //-------------------------------------------------------------------------------
 
-int numeroMorto = 0;
+#include <Adafruit_NeoPixel.h>
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(3, 22, NEO_GRB + NEO_KHZ800);
 
 //-------------------------------------------------------------------------------
 
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(3, 22, NEO_GRB + NEO_KHZ800);
+#include <SparkFunMLX90614.h>
+IRTherm therm;
+
+//-------------------------------------------------------------------------------
+
+int numeroMorto = 0;
+
+//-------------------------------------------------------------------------------
 
 void setup() {
   pinMode(M1E, OUTPUT);
@@ -89,11 +95,6 @@ void setup() {
     setup();
   }
 
-  //for(int i = 16; i < -1; i--)
-  pixels.setPixelColor(15, pixels.Color(0, 150, 0));
-  pixels.setPixelColor(14, pixels.Color(0, 150, 0));
-  pixels.setPixelColor(13, pixels.Color(0, 150, 0));
-
   devStatus = mpu.dmpInitialize();
   mpu.setXAccelOffset(-2766);
   mpu.setYAccelOffset(-1056);
@@ -109,6 +110,9 @@ void setup() {
   }
 
   //-------------------------------------------------------------------------------
+
+  therm.begin();
+  therm.setUnit(TEMP_C);
 
 }
 
@@ -133,7 +137,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
     errore = gradiIniziali - gyroscope(0);
     //Serial.print("ERRORE= ") && Serial.print(errore)  && Serial.print("\t GYRO= ") && Serial.println(gyroscope(0));
 
-    motori (velocita + errore * Kp, velocita - errore * Kp);
+    motori(velocita + errore * Kp, velocita - errore * Kp);
     i++;
   }
 
@@ -233,12 +237,15 @@ float sensoreDistanza (int numeroSensore) {
 }
 
 float sensoreTemperatura () {
-  float misura = 1;
+  float misura = 0.0;
   for (int i = 0; i < 5; i++) {
-    misura += misura;
+    if (therm.read()) {
+      misura += therm.object();
+      misura -= therm.ambient();
+    }
+    misura /= 5;
+    return misura;
   }
-  misura /= 5;
-  return misura;
 }
 
 bool servoTorreta (int gradi) {
