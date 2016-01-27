@@ -147,14 +147,19 @@ void avanzamento(float distanzaVoluta, float velocita) {
 void rotazione(float gradiVoluti, float velocita) {
   float gradiIniziali = gyroscope(0);
   float gradiFinali = gradiIniziali + gradiVoluti;
+  float K = 0.2;
 
   if (gradiVoluti > 0) {
-    while (gradiFinali >= gyroscope(0))
-      motori (velocita, -velocita);
+    while (gradiFinali >= gyroscope(0)) {
+      float errore = gradiFinali - gyroscope(0);
+      motori (velocita + errore*K, -velocita - errore*K);
+    }
   }
   else if (gradiVoluti < 0) {
-    while (gradiFinali <= gyroscope(0))
-      motori (-velocita, velocita);
+    while (gradiFinali <= gyroscope(0)) {
+      float errore = gyroscope(0) - gradiFinali;
+      motori (-velocita - errore*K, velocita + errore*K);
+    }
   }
 
   motori (0, 0);
