@@ -160,19 +160,28 @@ void loop() {
 //MOVIMENTAZIONE
 
 void avanzamento(float distanzaVoluta, float velocita) {
-  float gradiIniziali = gyroscope(0, true);;
-  float correzione = 0;
-  //  float distanzaIniziale = distanza(0);
-  float errore = 0;
+  float gradiIniziali = gyroscope(0, true);
+  //float distanzaIniziale = distanza(0, true);
   float Kp = 5;
-  int i = 0;
-  while (i < 100) {
-    //while (distanzaIniziale - distanza(0) <= distanzaVoluta) {
-    errore = gradiIniziali - gyroscope(0, true);;
-    //Serial.print("ERRORE= ") && Serial.print(errore)  && Serial.print("\t GYRO= ") && Serial.println(gyroscope(0));
 
-    motori(velocita + errore * Kp, velocita - errore * Kp);
-    i++;
+  if (distanzaVoluta > 0) {
+    int i = 0; //da cancellare
+    //while (distanzaIniziale - distanza(0, true) < distanzaVoluta) {
+    while (i < 100) { //da cancellare
+      float errore = gradiIniziali - gyroscope(0, true);
+      motori(velocita + errore * Kp, velocita - errore * Kp);
+      i++;
+    }
+  }
+
+  else if (distanzaVoluta < 0) {
+    int i = 0; //da cancellare
+    //while (distanzaIniziale - distanza(0, true) < distanzaVoluta) {
+    while (i < 100) { //da cancellare
+      float errore = gradiIniziali - gyroscope(0, true);
+      motori(-velocita + errore * Kp, -velocita - errore * Kp);
+      i++;
+    }
   }
 
   motori (0, 0);
@@ -186,14 +195,14 @@ void rotazione(float gradiVoluti, float velocita) {
   float K = 0.2;
 
   if (gradiVoluti > 0) {
-    while (gradiFinali >= gyroscope(0, true)) {
+    while (gradiFinali > gyroscope(0, true)) {
       float errore = gradiFinali - gyroscope(0, true);
       motori (velocita + errore * K, -velocita - errore * K);
     }
   }
 
   else if (gradiVoluti < 0) {
-    while (gradiFinali <= gyroscope(0, true)) {
+    while (gradiFinali < gyroscope(0, true)) {
       float errore = gyroscope(0, true); - gradiFinali;
       motori (-velocita - errore * K, velocita + errore * K);
     }
