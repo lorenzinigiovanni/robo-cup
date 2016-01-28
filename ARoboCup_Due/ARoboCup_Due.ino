@@ -157,6 +157,55 @@ void loop() {
 }
 
 //-------------------------------------------------------------------------------
+//MOVIMENTI
+
+void muovi(int direzione) {
+  direzione = direzione - gyroscope(0, false);
+
+  switch (direzione) {
+    case -3:
+      destra();
+      break;
+    case -2:
+      dietro();
+      break;
+    case -1:
+      sinistra();
+      break;
+    case 0:
+      avanti();
+      break;
+    case 1:
+      destra();
+      break;
+    case 2:
+      dietro();
+      break;
+    case 3:
+      sinistra();
+      break;
+  }
+}
+
+void avanti() {
+  avanzamento(30, 100);
+}
+
+void destra() {
+  rotazione(90, 100);
+  avanzamento(30, 100);
+}
+
+void dietro() {
+  avanzamento(-30, 100);
+}
+
+void sinistra() {
+  rotazione(-90, 100);
+  avanzamento(30, 100);
+}
+
+//-------------------------------------------------------------------------------
 //MOVIMENTAZIONE
 
 void avanzamento(float distanzaVoluta, float velocita) {
@@ -522,9 +571,86 @@ void led(int R, int G, int B, int ritardo) {
 }
 
 //-------------------------------------------------------------------------------
-//DESMAPPATURA
+//PROPRIETA' CELLA
 
-bool mappa(int prop, int x, int y, unsigned int matrix[sizeX][sizeY]) {
+bool propieta(int prop, int x, int y, unsigned int matrix[sizeX][sizeY]) {
+  if (matrix[x][y] >= 2048) {
+    if (prop == 11)
+      return true;
+    else
+      matrix[x][y] -= 2048;
+  }
+  else if (prop == 11)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 1024) {
+    if (prop == 10)
+      return true;
+    else
+      matrix[x][y] -= 1024;
+  }
+  else if (prop == 10)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 512) {
+    if (prop == 9)
+      return true;
+    else
+      matrix[x][y] -= 512;
+  }
+  else if (prop == 9)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 256) {
+    if (prop == 8)
+      return true;
+    else
+      matrix[x][y] -= 256;
+  }
+  else if (prop == 8)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 128) {
+    if (prop == 7)
+      return true;
+    else
+      matrix[x][y] -= 128;
+  }
+  else if (prop == 7)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 64) {
+    if (prop == 6)
+      return true;
+    else
+      matrix[x][y] -= 64;
+  }
+  else if (prop == 6)
+    return false;
+
+  //-------------------------
+
+  if (matrix[x][y] >= 32) {
+    if (prop == 5)
+      return true;
+    else
+      matrix[x][y] -= 32;
+  }
+  else if (prop == 5)
+    return false;
+
+  //-------------------------
+
   if (matrix[x][y] >= 16) {
     if (prop == 4)
       return true;
@@ -576,3 +702,51 @@ bool mappa(int prop, int x, int y, unsigned int matrix[sizeX][sizeY]) {
   else if (prop == 0)
     return false;
 }
+
+//-------------------------------------------------------------------------------
+//MAPPATURA
+
+void mappatura(int x, int y, int livello) {
+  int prop = 0;
+  if (livello == 1)
+    prop = matriceLvl1[x][y];
+  else if (livello == 2)
+    prop = matriceLvl2[x][y];
+
+  if (prop == 0) {
+    prop += 1;
+
+    if (distanza(0, false) < 20) {
+      prop += 2;
+      if (temperatura(0, false) > 8)
+        prop += 32;
+    }
+    if (distanza(1, false) < 20) {
+      prop += 4;
+      if (temperatura(1, false) > 8)
+        prop += 64;
+    }
+    if (distanza(2, false) < 20) {
+      prop += 8;
+      if (temperatura(2, false) > 8)
+        prop += 128;
+    }
+    if (distanza(3, false) < 20) {
+      prop += 16;
+      if (temperatura(3, false) > 8)
+        prop += 256;
+    }
+
+    if (colore(1))
+      prop += 1024;
+    if (colore(2))
+      prop += 2048;
+  }
+
+  if (livello == 1)
+    matriceLvl1[x][y] = prop;
+  else if (livello == 2)
+    matriceLvl2[x][y] = prop;
+}
+
+//-------------------------------------------------------------------------------

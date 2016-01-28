@@ -2,30 +2,72 @@
 
 0
 1
-2 Enable motore 2
-3 Retromarcia motore 2
-4 Avanzamento motore 2
-5 Retromarcia motore 1
-6 Avanzamento motore 1
-7 Enable motore 1
+2	Enable motore 2
+3	Retromarcia motore 2
+4	Avanzamento motore 2
+5	Retromarcia motore 1
+6	Avanzamento motore 1
+7	Enable motore 1
 8 
 9
-10 Servo torretta
+10	Servo torretta
 11
 12
-13 LED
+13	LED
 
-22 Dati striscia LED
+22	Dati striscia LED
 23
-24 Alimentazione giroscopio
-25 Alimentazione sensore colore
-26 Alimentazione termometro infrarossi
+24	Alimentazione giroscopio
+25	Alimentazione sensore colore
+26	Alimentazione termometro infrarossi
 27 
 28
 
 //--------------------------------------------------------------------------------------------------------
 
+//MAPPATURA
+
+1	cella visitata		0
+2	muro posizione 0	1
+4	muro posizione 1	2
+8	muro posizione 2	3
+16	muro posizione 3	4
+32	vittima posizione 0	5
+64	vittima posizione 1	6
+128	vittima posizione 2	7
+256	vittima posizione 3	8
+512	vittime salvate		9
+1024	cella nera		10
+2048	cella grigia		11
+
+//--------------------------------------------------------------------------------------------------------
+
 //FUNZIONI
+
+muovi(int direzione)
+muovi il robot rispetto alla posizione iniziale di una cella, verso la direzione indicata
+
+//----------------------------
+
+avanti()
+muovi il robot avanti di una cella 
+
+//----------------------------
+
+destra()
+muovi il robot a destra di una cella 
+
+//----------------------------
+
+dietro()
+muovi il robot indietro di una cella 
+
+//----------------------------
+
+sinistra()
+muovi il robot a sinistra di una cella 
+
+//----------------------------
 
 avanzamento(float distanzaVoluta, float velocita)
 da testare con distanzaVoluta negativa per retromarcia
@@ -92,7 +134,7 @@ risponde la distanza in float
 //----------------------------
 
 sensoreTemperatura()
-risponde la temperatura in float
+risponde la differenza di temperatura in float
 //private
 
 //----------------------------
@@ -126,5 +168,12 @@ Se ritardo == 0 setta la striscia con i colori richiesti
 
 //----------------------------
 
-mappa(int prop, int x, int y, unsigned int matrix[sizeX][sizeY])
+propieta(int prop, int x, int y, unsigned int matrix[sizeX][sizeY])
 ritorna se la proprietà richiesta è presente in una data cella
+
+//----------------------------
+
+mappatura(int x, int y, int livello)
+funzione per la mappatura automatica di una cella
+
+//----------------------------
