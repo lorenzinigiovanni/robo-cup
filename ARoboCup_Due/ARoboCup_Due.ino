@@ -1,12 +1,10 @@
 //-------------------------------------------------------------------------------
 //PIN
 
-#define sizeX 20
-#define sizeY 20
-
 //Servo Motori
 #define SM1 10
 
+//Alimentazione Sensori
 #define ENGYRO 24
 #define ENRGB 25
 #define ENTMP 26
@@ -21,11 +19,13 @@
 #define M2E 2
 
 //-------------------------------------------------------------------------------
+//SERVO
 
 #include <Servo.h>
 Servo servoTorretta;
 
 //-------------------------------------------------------------------------------
+//GIROSCOPIO
 
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
@@ -52,24 +52,31 @@ int rotationypr[3];
 
 byte gammatable[256];
 
-unsigned int matriceLvl1[sizeX][sizeY];
-unsigned int matriceLvl2[sizeX][sizeY];
-
 //-------------------------------------------------------------------------------
+//STRISCIA LED
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(3, 22, NEO_GRB + NEO_KHZ800);
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
 //-------------------------------------------------------------------------------
+//TERMOMETRO INFRAROSSI
 
 #include <SparkFunMLX90614.h>
 IRTherm therm;
 
 //-------------------------------------------------------------------------------
+//VARIABILI PROGRAMMA
 
 int numeroMorto = 0;
 
+#define sizeX 20
+#define sizeY 20
+
+unsigned int matriceLvl1[sizeX][sizeY];
+unsigned int matriceLvl2[sizeX][sizeY];
+
 //-------------------------------------------------------------------------------
+//SETUP
 
 void setup() {
   pinMode(M1E, OUTPUT);
@@ -89,6 +96,7 @@ void setup() {
   pixels.begin();
 
   //-------------------------------------------------------------------------------
+  //SETUP GIROSCOPIO
 
   digitalWrite(ENGYRO, HIGH);
   digitalWrite(ENRGB, HIGH);
@@ -142,6 +150,7 @@ void setup() {
 }
 
 //-------------------------------------------------------------------------------
+//LOOP
 
 void loop() {
 

@@ -1,0 +1,130 @@
+//PIN
+
+0
+1
+2 Enable motore 2
+3 Retromarcia motore 2
+4 Avanzamento motore 2
+5 Retromarcia motore 1
+6 Avanzamento motore 1
+7 Enable motore 1
+8 
+9
+10 Servo torretta
+11
+12
+13 LED
+
+22 Dati striscia LED
+23
+24 Alimentazione giroscopio
+25 Alimentazione sensore colore
+26 Alimentazione termometro infrarossi
+27 
+28
+
+//--------------------------------------------------------------------------------------------------------
+
+//FUNZIONI
+
+avanzamento(float distanzaVoluta, float velocita)
+da testare con distanzaVoluta negativa per retromarcia
+
+//----------------------------
+
+rotazione(float gradiVoluti, float velocita)
+gradiVoluti positivo per girare in senso orario, negativo per girare in senso antiorario
+
+//----------------------------
+
+gyroscope(int scelta, bool rotazioneContinua)
+scelta == 0 asse Z
+scelta == 1 asse 
+scelta == 2 asse 
+
+con rotazioneContinua == true restituisce gradi in float
+
+se false restituisce 0, 1, 2, 3 per indicare come è ruotato il robot. Sono relativi all'accensione del robot
+0 = 0°
+1 = 90°
+2 = 180°
+3 = 270°/-90°
+
+//----------------------------
+
+temperatura(int posizione, bool relativa)
+Se relativa == true le misurazioni sono effettuate rispetto alla posizione attuale del robot:
+-1 sinisra
+0 davanti
+1 destra
+
+Se relativa == false le misurazioni sono effettuate rispetto alla posizione iniziale del robot
+0 = 0°
+1 = 90°
+2 = 180°
+3 = 270°/-90°
+
+Se si richiede una misura della temperatura dietro al robot (impossibile da misurare) returna -1
+
+//----------------------------
+
+distanza(int posizione, bool relativa)
+Se relativa == true le misurazioni sono effettuate rispetto alla posizione attuale del robot:
+-1 sinisra
+0 davanti
+1 destra
+2 dietro
+
+Se relativa == false le misurazioni sono effettuate rispetto alla posizione iniziale del robot
+0 = 0°
+1 = 90°
+2 = 180°
+3 = 270°/-90°
+
+Vengono usati tutti e tre i sensori di distanza montati
+
+//----------------------------
+
+sensoreDistanza(int numeroSensore)
+risponde la distanza in float 
+//private
+
+//----------------------------
+
+sensoreTemperatura()
+risponde la temperatura in float
+//private
+
+//----------------------------
+
+servoTorreta(int gradi)
+porta il servo della torretta ai gradi indicati
+ritorna true quando la movimentazione è stata effettuata
+//private
+
+//----------------------------
+
+colore(int color)
+ritorna vero o false in base a se è presente il colore richiesto
+0 bianco
+1 nero
+2 argento
+
+//----------------------------
+
+motori(float powerM1, float powerM2)
+accetta numeri da -255 a 255 per ogni motore
+un numero negativo fa ruotare il motore al contrario
+//private
+
+//----------------------------
+
+led(int R, int G, int B, int ritardo)
+Setta la striscia LED ai colori richiesti
+Se ritardo > 0, setta la striscia con i colori richiesti e dopo un ritardo la spegne
+Se ritardo == 0 setta la striscia con i colori richiesti
+
+//----------------------------
+
+mappa(int prop, int x, int y, unsigned int matrix[sizeX][sizeY])
+ritorna se la proprietà richiesta è presente in una data cella
