@@ -5,11 +5,11 @@ void settup() {
 
   delay(500);
 
-  initGiroscopio();
-  /*
-    initColor();
+  //initGiroscopio();
 
-    initTermometro();*/
+  //initColor();
+
+  //initTermometro();
 }
 
 void pin() {

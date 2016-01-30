@@ -72,13 +72,7 @@ int numeroMorto = 0;
 #define sizeX 5
 #define sizeY 5
 
-unsigned int matriceLvl1[sizeX][sizeY] = {
-  (43891, 47457, 13671, 60598, 47990),
-  (100, 60, 50, 30, 40),
-  (100, 60, 50, 30, 40),
-  (100, 60, 50, 30, 40),
-  (100, 60, 50, 30, 40),
-};
+unsigned int matriceLvl1[sizeX][sizeY];
 unsigned int matriceLvl2[sizeX][sizeY];
 
 void setup() {

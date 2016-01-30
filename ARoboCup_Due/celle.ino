@@ -1,16 +1,14 @@
 bool proprieta(int prop, int x, int y, int livello) {
-  int matrice = 0;
+  unsigned int matrice = 0;
   if (livello == 1)
     matrice = matriceLvl1[x][y];
   else if (livello == 2)
     matrice = matriceLvl2[x][y];
 
   for (int i = 15; i > -1; i--) {
-    int powwa = pow(2, i);
-    Serial.println(i);
-    if (matrice - powwa >= 0) {
+    unsigned int powwa = pow(2, i);
+    if (int(matrice - powwa) >= 0) {
       matrice -= powwa;
-      Serial.print("PROP= ") && Serial.print(prop) && Serial.print("\ti= ") && Serial.println(i);
       if (prop == i)
         return true;
     }
