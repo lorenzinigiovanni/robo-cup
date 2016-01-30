@@ -67,10 +67,12 @@ IRTherm therm;
 //-------------------------------------------------------------------------------
 //VARIABILI PROGRAMMA
 
-int numeroMorto = 0;
+int actualX = 10;
+int actualY = 10;
+int actualLevel = 1;
 
-#define sizeX 5
-#define sizeY 5
+#define sizeX 20
+#define sizeY 20
 
 unsigned int matriceLvl1[sizeX][sizeY];
 unsigned int matriceLvl2[sizeX][sizeY];

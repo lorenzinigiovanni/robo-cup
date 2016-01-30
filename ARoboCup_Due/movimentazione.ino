@@ -1,4 +1,18 @@
 void muovi(int direzione) {
+  switch (direzione) {
+    case 0:
+    actualX ++;
+    break;
+    case 1:
+    actualY ++;
+    break;
+    case 2:
+    actualX --;
+    break;
+    case 3:
+    actualY --;
+    break;
+  }
   direzione = direzione - gyroscope(0, false);
 
   switch (direzione) {

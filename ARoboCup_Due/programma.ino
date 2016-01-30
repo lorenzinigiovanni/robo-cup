@@ -1,3 +1,4 @@
 void program() {
-  Serial.println(proprieta(0, 0, 0, 1));
+  mappatura(actualX, actualY, actualLevel);
+  percorso(actualX, actualY, actualLevel);
 }

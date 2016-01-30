@@ -1,19 +1,30 @@
 bool proprieta(int prop, int x, int y, int livello) {
-  unsigned int matrice = 0;
+  int matrice = 0;
   if (livello == 1)
     matrice = matriceLvl1[x][y];
   else if (livello == 2)
     matrice = matriceLvl2[x][y];
 
   for (int i = 15; i > -1; i--) {
-    unsigned int powwa = pow(2, i);
-    if (int(matrice - powwa) >= 0) {
+    int powwa = pow(2, i);
+    Serial.println(matrice);
+    if (matrice - powwa >= 0) {
       matrice -= powwa;
       if (prop == i)
         return true;
     }
   }
   return false;
+}
+
+//-------------------------------------------------------------------------------
+
+void aggiungiProprieta(int x, int y, int livello, int prop) {
+  prop = pow(2, prop);
+  if (livello == 1)
+    matriceLvl1[x][y] += prop;
+  else if (livello == 2)
+    matriceLvl2[x][y] += prop;
 }
 
 //-------------------------------------------------------------------------------
