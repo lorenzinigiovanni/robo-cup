@@ -1,18 +1,13 @@
-void settup() {
-  pin();
-
-  Serial.begin(115200);
-
-  delay(500);
-
-  //initGiroscopio();
-
-  //initColor();
-
-  //initTermometro();
+void sensorSetup() {
+  sensorEnabler();
+  initGiroscopio();
+  initColor();
+  initTermometro();
 }
 
-void pin() {
+//-------------------------------------------------------------------------------
+
+void pinSetup() {
   pinMode(M1E, OUTPUT);
   pinMode(M1F, OUTPUT);
   pinMode(M1R, OUTPUT);
@@ -25,13 +20,21 @@ void pin() {
   pinMode(ENRGB, OUTPUT);
   pinMode(ENTMP, OUTPUT);
 
-  digitalWrite(ENGYRO, HIGH);
-  digitalWrite(ENRGB, HIGH);
-  digitalWrite(ENTMP, HIGH);
-
   servoTorretta.attach(SM1);
   pixels.begin();
 }
+
+//-------------------------------------------------------------------------------
+
+void sensorEnabler() {
+  delay(500);
+  digitalWrite(ENGYRO, HIGH);
+  digitalWrite(ENRGB, HIGH);
+  digitalWrite(ENTMP, HIGH);
+  delay(500);
+}
+
+//-------------------------------------------------------------------------------
 
 void initGiroscopio() {
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
@@ -47,7 +50,7 @@ void initGiroscopio() {
 
   if (!mpu.testConnection()) {
     digitalWrite(ENGYRO, LOW);
-    setup();
+    sensorSetup();
   }
 
   devStatus = mpu.dmpInitialize();
@@ -65,17 +68,21 @@ void initGiroscopio() {
   }
 }
 
+//-------------------------------------------------------------------------------
+
 void initColor() {
   if (!tcs.begin()) {
     digitalWrite(ENRGB, LOW);
-    setup();
+    sensorSetup();
   }
 }
+
+//-------------------------------------------------------------------------------
 
 void initTermometro() {
   if (!therm.begin()) {
     digitalWrite(ENTMP, LOW);
-    setup();
+    sensorSetup();
   }
 
   therm.setUnit(TEMP_C);

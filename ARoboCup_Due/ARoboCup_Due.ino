@@ -67,20 +67,31 @@ IRTherm therm;
 //-------------------------------------------------------------------------------
 //VARIABILI PROGRAMMA
 
-int actualX = 10;
-int actualY = 10;
+int actualX = 25;
+int actualY = 25;
 int actualLevel = 1;
 
-#define sizeX 20
-#define sizeY 20
+#define sizeX 50
+#define sizeY 50
 
 unsigned int matriceLvl1[sizeX][sizeY];
 unsigned int matriceLvl2[sizeX][sizeY];
 
+short passaggiLvl1[sizeX][sizeY];
+short passaggiLvl2[sizeX][sizeY];
+
+//-------------------------------------------------------------------------------
+//SETUP
+
 void setup() {
-  settup();
+  Serial.begin(115200);
+  pinSetup();
+  //sensorSetup();
   program();
 }
+
+//-------------------------------------------------------------------------------
+//LOOP
 
 void loop() {
 

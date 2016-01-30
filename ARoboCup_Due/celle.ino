@@ -19,12 +19,16 @@ bool proprieta(int prop, int x, int y, int livello) {
 
 //-------------------------------------------------------------------------------
 
-void aggiungiProprieta(int x, int y, int livello, int prop) {
-  prop = pow(2, prop);
-  if (livello == 1)
-    matriceLvl1[x][y] += prop;
-  else if (livello == 2)
-    matriceLvl2[x][y] += prop;
+bool aggiungiProprieta(int x, int y, int livello, int prop) {
+  if (proprieta(prop, x, y, livello) == false) {
+    prop = pow(2, prop);
+    if (livello == 1)
+      matriceLvl1[x][y] += prop;
+    else if (livello == 2)
+      matriceLvl2[x][y] += prop;
+    return true;
+  }
+  return false;
 }
 
 //-------------------------------------------------------------------------------

@@ -2,12 +2,12 @@
 
 0
 1
-2	Enable motore 2
-3	Retromarcia motore 2
-4	Avanzamento motore 2
-5	Retromarcia motore 1
-6	Avanzamento motore 1
-7	Enable motore 1
+2	Enable motore		2
+3	Retromarcia motore	2
+4	Avanzamento motore	2
+5	Retromarcia motore	1
+6	Avanzamento motore	1
+7	Enable motore		1
 8 
 9
 10	Servo torretta
@@ -27,25 +27,25 @@
 
 //MAPPATURA
 
-1	cella visitata		0
-2	muro posizione 0	1
-4	muro posizione 1	2
-8	muro posizione 2	3
-16	muro posizione 3	4
-32	vittima posizione 0	5
-64	vittima posizione 1	6
-128	vittima posizione 2	7
-256	vittima posizione 3	8
-512	vittime salvate		9
-1024	cella nera		10
-2048	cella grigia		11
+1		cella visitata			0
+2		muro posizione 0		1
+4		muro posizione 1		2
+8		muro posizione 2		3
+16		muro posizione 3		4
+32		vittima posizione 0		5
+64		vittima posizione 1		6
+128		vittima posizione 2		7
+256		vittima posizione 3		8
+512		vittime salvate			9
+1024	cella nera				10
+2048	cella grigia			11
 
 //--------------------------------------------------------------------------------------------------------
 
 //FUNZIONI
 
 muovi(int direzione)
-muovi il robot rispetto alla posizione iniziale di una cella, verso la direzione indicata
+muovi il robot di una cella rispetto alla posizione iniziale, verso la direzione indicata
 
 //----------------------------
 
