@@ -65,6 +65,17 @@ Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS3472
 IRTherm therm;
 
 //-------------------------------------------------------------------------------
+//LCD
+
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+//-------------------------------------------------------------------------------
+//SCHEDULER
+
+#include <Scheduler.h>
+
+//-------------------------------------------------------------------------------
 //VARIABILI PROGRAMMA
 
 int actualX = 25;
@@ -80,19 +91,24 @@ unsigned int matriceLvl2[sizeX][sizeY];
 short passaggiLvl1[sizeX][sizeY];
 short passaggiLvl2[sizeX][sizeY];
 
+int kitCounter = 15;
+
 //-------------------------------------------------------------------------------
 //SETUP
 
 void setup() {
   Serial.begin(115200);
   pinSetup();
-  //sensorSetup();
-  program();
+  sensorSetup();
+
+ Scheduler.startLoop(seriale);
+  //Scheduler.startLoop(program);
 }
 
 //-------------------------------------------------------------------------------
 //LOOP
 
 void loop() {
-
+  program();
+  yield();
 }

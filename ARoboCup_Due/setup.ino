@@ -1,8 +1,8 @@
 void sensorSetup() {
   sensorEnabler();
   initGiroscopio();
-  initColor();
-  initTermometro();
+  //initColor();
+  //initTermometro();
 }
 
 //-------------------------------------------------------------------------------
@@ -22,6 +22,9 @@ void pinSetup() {
 
   servoTorretta.attach(SM1);
   pixels.begin();
+  
+  Wire.begin();
+  lcd.begin();
 }
 
 //-------------------------------------------------------------------------------
@@ -52,14 +55,15 @@ void initGiroscopio() {
     digitalWrite(ENGYRO, LOW);
     sensorSetup();
   }
+//-2678  -1053 1165  34  -42 65
 
   devStatus = mpu.dmpInitialize();
-  mpu.setXAccelOffset(-2766);
-  mpu.setYAccelOffset(-1056);
-  mpu.setZAccelOffset(1002);
-  mpu.setXGyroOffset(1);
-  mpu.setYGyroOffset(-15);
-  mpu.setZGyroOffset(73);
+  mpu.setXAccelOffset(-2678);
+  mpu.setYAccelOffset(-1053);
+  mpu.setZAccelOffset(1165);
+  mpu.setXGyroOffset(34);
+  mpu.setYGyroOffset(-42);
+  mpu.setZGyroOffset(65);
 
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);

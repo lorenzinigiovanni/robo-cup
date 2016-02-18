@@ -69,7 +69,8 @@ void setup() {
 
   // initialize serial communication
   Serial.begin(115200);
-
+  pinMode(24, OUTPUT);
+  digitalWrite(24, HIGH);
   // initialize device
   accelgyro.initialize();
 

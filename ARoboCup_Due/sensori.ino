@@ -42,21 +42,36 @@ bool colore(int color) {
 //-------------------------------------------------------------------------------
 
 float sensoreTemperatura() {
-  float misura = 0.0;
+  float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
+  float misura = 0;
+  float massimo = 0;
+  float minimo = 1000;
+
   for (int i = 0; i < 5; i++) {
     if (therm.read()) {
-      misura += therm.object();
-      misura -= therm.ambient();
+      misure[i] = therm.object();
+      misure[i] -= therm.ambient();
+      massimo = max(massimo, misure[i]);
+      minimo = min(minimo, misure[i]);
     }
-    misura /= 5;
-    return misura;
   }
+
+  for (int i = 0; i < 5; i++)
+    misura += misure[i];
+
+  misura -= massimo;
+  misura -= minimo;
+  misura /= 3;
+  return misura;
 }
 
 //-------------------------------------------------------------------------------
 
 float sensoreDistanza(int numeroSensore) {
+  float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
   float misura = 0;
+  float massimo = 0;
+  float minimo = 1000;
   int reading = 0;
   int indirizzo = 0;
 
@@ -89,29 +104,48 @@ float sensoreDistanza(int numeroSensore) {
       reading |= Wire.read();
       Serial.println(reading);
     }
-    misura += reading;
+    misure[i] = reading;
+    massimo = max(massimo, misure[i]);
+    minimo = min(minimo, misure[i]);
   }
 
-  misura /= 5;
+  for (int i = 0; i < 5; i++)
+    misura += misure[i];
+
+  misura -= massimo;
+  misura -= minimo;
+  misura /= 3;
   return misura;
 }
 
 //-------------------------------------------------------------------------------
 
 float gyroscope(int scelta, bool rotazioneContinua) {
+  float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
   float misura = 0;
+  float massimo = 0;
+  float minimo = 1000;
+
   for (int i = 0; i < 5; i++) {
     while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
     mpu.getFIFOBytes(fifoBuffer, packetSize);
     fifoCount -= packetSize;
-
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
-    misura += ypr[scelta];
+    misure[i] = ypr[scelta];
+    
+    massimo = max(massimo, misure[i]);
+    minimo = min(minimo, misure[i]);
   }
-  misura /= 5;
+
+  for (int i = 0; i < 5; i++)
+    misura += misure[i];
+
+  misura -= massimo;
+  misura -= minimo;
+  misura /= 3;
   misura *= 180 / M_PI;
 
   float errore = previousypr[scelta] - misura;
