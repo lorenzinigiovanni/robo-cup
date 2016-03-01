@@ -121,32 +121,18 @@ float sensoreDistanza(int numeroSensore) {
 //-------------------------------------------------------------------------------
 
 float gyroscope(int scelta, bool rotazioneContinua) {
-  float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
   float misura = 0;
-  float massimo = 0;
-  float minimo = 1000;
 
-  for (int i = 0; i < 5; i++) {
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-    mpu.getFIFOBytes(fifoBuffer, packetSize);
-    fifoCount -= packetSize;
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
-    mpu.dmpGetGravity(&gravity, &q);
-    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+  while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+  mpu.getFIFOBytes(fifoBuffer, packetSize);
+  fifoCount -= packetSize;
+  
+  mpu.dmpGetQuaternion(&q, fifoBuffer);
+  mpu.dmpGetGravity(&gravity, &q);
+  mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
-    misure[i] = ypr[scelta];
-    
-    massimo = max(massimo, misure[i]);
-    minimo = min(minimo, misure[i]);
-  }
-
-  for (int i = 0; i < 5; i++)
-    misura += misure[i];
-
-  misura -= massimo;
-  misura -= minimo;
-  misura /= 3;
-  misura *= 180 / M_PI;
+  misura = ypr[scelta];
+  misura = misura * 180 / M_PI;
 
   float errore = previousypr[scelta] - misura;
 

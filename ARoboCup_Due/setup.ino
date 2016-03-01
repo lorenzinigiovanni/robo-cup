@@ -24,7 +24,7 @@ void pinSetup() {
   pixels.begin();
   
   Wire.begin();
-  lcd.begin();
+  //lcd.begin();
 }
 
 //-------------------------------------------------------------------------------
@@ -56,14 +56,15 @@ void initGiroscopio() {
     sensorSetup();
   }
 //-2678  -1053 1165  34  -42 65
+//-2681  -1059 1145  36  -37 57
 
   devStatus = mpu.dmpInitialize();
-  mpu.setXAccelOffset(-2678);
-  mpu.setYAccelOffset(-1053);
-  mpu.setZAccelOffset(1165);
-  mpu.setXGyroOffset(34);
-  mpu.setYGyroOffset(-42);
-  mpu.setZGyroOffset(65);
+  mpu.setXAccelOffset(-2681);
+  mpu.setYAccelOffset(-1059);
+  mpu.setZAccelOffset(1145);
+  mpu.setXGyroOffset(36);
+  mpu.setYGyroOffset(-37);
+  mpu.setZGyroOffset(57);
 
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);

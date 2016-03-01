@@ -101,8 +101,7 @@ void setup() {
   pinSetup();
   sensorSetup();
 
- Scheduler.startLoop(seriale);
-  //Scheduler.startLoop(program);
+  Scheduler.startLoop(seriale);
 }
 
 //-------------------------------------------------------------------------------

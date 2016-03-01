@@ -74,10 +74,10 @@ void display() {
 //-------------------------------------------------------------------------------
 
 void seriale() {
-  int g0t = gyroscope(0, true);
-  int g2t = gyroscope(2, true);
-  int g0f = gyroscope(0, false);
-  int g2f = gyroscope(2, false);
+  float g0t = gyroscope(0, true);
+  float g2t = gyroscope(2, true);
+  float g0f = gyroscope(0, false);
+  float g2f = gyroscope(2, false);
   
   Serial.print(g0t);
   Serial.print("\t");
