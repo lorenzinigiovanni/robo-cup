@@ -18,6 +18,10 @@
 #define M2R 3
 #define M2E 2
 
+//Striscia LED
+#define strisciaPin 8
+#define strisciaLed 3
+
 //-------------------------------------------------------------------------------
 //SERVO
 
@@ -50,12 +54,14 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 float previousypr[3];
 int rotationypr[3];
 
-byte gammatable[256];
+int16_t ax, ay, az, gx, gy, gz;
+int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
+int ax_offset, ay_offset, az_offset, gx_offset, gy_offset, gz_offset;
 
 //-------------------------------------------------------------------------------
 //STRISCIA LED
 
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(3, 22, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(strisciaLed, strisciaPin, NEO_GRB + NEO_KHZ800);
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
 //-------------------------------------------------------------------------------
@@ -100,7 +106,7 @@ void setup() {
   Serial.begin(115200);
   pinSetup();
   sensorSetup();
-
+  sensorCalibration();
   Scheduler.startLoop(seriale);
 }
 

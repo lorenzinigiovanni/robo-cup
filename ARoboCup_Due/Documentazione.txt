@@ -8,14 +8,14 @@
 5	Retromarcia motore	1
 6	Avanzamento motore	1
 7	Enable motore		1
-8 
+8	Dati striscia LED
 9
 10	Servo torretta
 11
 12
 13	LED
 
-22	Dati striscia LED
+22	
 23
 24	Alimentazione giroscopio
 25	Alimentazione sensore colore
