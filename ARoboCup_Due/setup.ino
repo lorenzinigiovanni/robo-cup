@@ -24,7 +24,8 @@ void pinSetup() {
   pinMode(LED, OUTPUT);
   pinMode(ENGYRO, OUTPUT);
   pinMode(ENRGB, OUTPUT);
-  pinMode(ENTMP, OUTPUT);
+  pinMode(ENTMP1, OUTPUT);
+  pinMode(ENTMP2, OUTPUT);
 
   servoTorretta.attach(SM1);
   pixels.begin();
@@ -39,7 +40,6 @@ void sensorEnabler() {
   delay(500);
   digitalWrite(ENGYRO, HIGH);
   digitalWrite(ENRGB, HIGH);
-  digitalWrite(ENTMP, HIGH);
   delay(500);
 }
 
@@ -82,12 +82,9 @@ void initColor() {
 //-------------------------------------------------------------------------------
 
 void initTermometro() {
-  if (!therm.begin()) {
-    digitalWrite(ENTMP, LOW);
-    sensorSetup();
-  }
-
-  therm.setUnit(TEMP_C);
+  Wire1_Init();
+  pTwi->TWI_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
+  TWI_ConfigureMaster(pTwi, TWI_CLOCK, VARIANT_MCK);
 }
 
 //-------------------------------------------------------------------------------

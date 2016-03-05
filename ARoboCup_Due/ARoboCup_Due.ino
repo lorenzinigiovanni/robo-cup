@@ -7,7 +7,8 @@
 //Alimentazione Sensori
 #define ENGYRO 24
 #define ENRGB 25
-#define ENTMP 26
+#define ENTMP1 26
+#define ENTMP2 27
 #define LED 13
 
 //Motori
@@ -67,8 +68,13 @@ Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS3472
 //-------------------------------------------------------------------------------
 //TERMOMETRO INFRAROSSI
 
-#include <SparkFunMLX90614.h>
-IRTherm therm;
+static const uint32_t TWI_CLOCK = 100000;
+static const uint32_t RECV_TIMEOUT = 100000;
+static const uint32_t XMIT_TIMEOUT = 100000;
+
+#include <Arduino.h>
+#include <include/twi.h>
+Twi *pTwi = WIRE1_INTERFACE;
 
 //-------------------------------------------------------------------------------
 //LCD

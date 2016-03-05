@@ -29,7 +29,7 @@ SparkFun IR Thermometer Evaluation Board - MLX90614
 
 IRTherm therm; // Create an IRTherm object to interact with throughout
 
-const byte LED_PIN = 8; // Optional LED attached to pin 8 (active low)
+const byte LED_PIN = 13; // Optional LED attached to pin 8 (active low)
 
 void setup() 
 {
@@ -54,10 +54,8 @@ void loop()
 	// temperatures.
 	// They'll be floats, calculated out to the unit you set with setUnit().
     Serial.print("Object: " + String(therm.object(), 2));
-    Serial.write('°'); // Degree Symbol
     Serial.println("F");
     Serial.print("Ambient: " + String(therm.ambient(), 2));
-    Serial.write('°'); // Degree Symbol
     Serial.println("F");
     Serial.println();
   }
@@ -67,7 +65,7 @@ void loop()
 
 void setLED(bool on)
 {
-  if (on)
+  if (!on)
     digitalWrite(LED_PIN, LOW);
   else
     digitalWrite(LED_PIN, HIGH);
