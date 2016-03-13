@@ -12,7 +12,7 @@ Serial port;
  
 void setup(){
  size(200,200);
- port = new Serial(this, "COM4", 9600); //remember to replace COM20 with the appropriate serial port on your computer
+ port = new Serial(this, "COM15", 9600); //remember to replace COM20 with the appropriate serial port on your computer
 }
  
  
@@ -43,7 +43,7 @@ void serialEvent(int serial) {
    if(clear >=0){
      String val = buff.substring(clear+3);
      val = val.split("\t")[0]; 
-     wClear = Integer.parseInt(val.trim());
+     wClear = int(val.trim());//Integer.parseInt(val.trim());
    } else { return; }
    
    if(cRed >=0){
@@ -69,10 +69,14 @@ void serialEvent(int serial) {
    print("\tBlue: "); print(wBlue);
    print("\tClr: "); println(wClear);
    
+   try{
    wRed *= 255; wRed /= wClear;
    wGreen *= 255; wGreen /= wClear; 
    wBlue *= 255; wBlue /= wClear; 
-
+   }
+   catch (Exception ex){
+     println(ex);
+   }
    hexColor = hex(color(wRed, wGreen, wBlue), 6);
    println(hexColor);
    buff = "";

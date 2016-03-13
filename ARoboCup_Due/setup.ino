@@ -3,12 +3,13 @@ void sensorSetup() {
   initGiroscopio();
   initColor();
   initTermometro();
+  initDistanziometro();
 }
 
 //-------------------------------------------------------------------------------
 
 void sensorCalibration() {
-  calGiroscopio(100, 8, 1);
+  //calGiroscopio(100, 8, 1);
 }
 
 //-------------------------------------------------------------------------------
@@ -27,6 +28,9 @@ void pinSetup() {
   pinMode(ENTMP1, OUTPUT);
   pinMode(ENTMP2, OUTPUT);
 
+  pinMode(colorLED, OUTPUT);
+  analogWrite(colorLED, 255);
+
   servoTorretta.attach(SM1);
   pixels.begin();
 
@@ -40,6 +44,8 @@ void sensorEnabler() {
   delay(500);
   digitalWrite(ENGYRO, HIGH);
   digitalWrite(ENRGB, HIGH);
+  digitalWrite(ENTMP1, HIGH);
+  digitalWrite(ENTMP2, HIGH);
   delay(500);
 }
 
@@ -85,6 +91,31 @@ void initTermometro() {
   Wire1_Init();
   pTwi->TWI_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
   TWI_ConfigureMaster(pTwi, TWI_CLOCK, VARIANT_MCK);
+}
+
+//-------------------------------------------------------------------------------
+
+void initDistanziometro() {
+  setGain(112, 3);
+  setGain(113, 3);
+  setGain(114, 3);
+  setRange(112, 255);
+  setRange(113, 255);
+  setRange(114, 255);
+}
+
+void setGain(byte address, byte range) {
+  Wire.beginTransmission(address);
+  Wire.write(byte(0x01));
+  Wire.write(byte(range));
+  Wire.endTransmission();
+}
+
+void setRange(byte address, byte range) {
+  Wire.beginTransmission(address);
+  Wire.write(byte(0x02));
+  Wire.write(byte(range));
+  Wire.endTransmission();
 }
 
 //-------------------------------------------------------------------------------

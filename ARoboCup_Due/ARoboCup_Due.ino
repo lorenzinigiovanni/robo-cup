@@ -10,6 +10,7 @@
 #define ENTMP1 26
 #define ENTMP2 27
 #define LED 13
+#define colorLED 12
 
 //Motori
 #define M1E 7

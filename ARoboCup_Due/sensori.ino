@@ -37,17 +37,23 @@ bool colore(int color) {
 
 //-------------------------------------------------------------------------------
 
-float sensoreTemperatura() {
+float sensoreTemperatura(int numeroSensore) {
   float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
   float misura = 0;
   float massimo = 0;
   float minimo = 1000;
+  bool sensor = false;
+  
+  if (numeroSensore == -1)
+    sensor = false;
+  if (numeroSensore == 1)
+    sensor = true;
 
   for (int i = 0; i < 5; i++) {
-      misure[i] += MLX90614(true, true);
-      misure[i] -= MLX90614(true, false);
-      massimo = max(massimo, misure[i]);
-      minimo = min(minimo, misure[i]);
+    misure[i] += MLX90614(sensor, true);
+    misure[i] -= MLX90614(sensor, false);
+    massimo = max(massimo, misure[i]);
+    minimo = min(minimo, misure[i]);
   }
 
   for (int i = 0; i < 5; i++)
@@ -67,19 +73,8 @@ float sensoreDistanza(int numeroSensore) {
   float massimo = 0;
   float minimo = 1000;
   int reading = 0;
-  int indirizzo = 0;
-
-  switch (numeroSensore) {
-    case -1:
-      indirizzo = 112;
-      break;
-    case 0:
-      indirizzo = 113;
-      break;
-    case 1:
-      indirizzo = 114;
-      break;
-  }
+  int indirizzo = 113;
+  indirizzo += numeroSensore;
 
   for (int i = 0; i < 5; i++) {
     misure[i] = SRF10(indirizzo);
@@ -141,6 +136,7 @@ float gyroscope(int scelta, bool rotazioneContinua) {
 
 float SRF10(byte address) {
   int reading = 0;
+  
   Wire.beginTransmission(address);
   Wire.write(byte(0x00));
   Wire.write(byte(0x51));
@@ -175,14 +171,8 @@ float MLX90614(bool sensor, bool measure) {
   else
     memoryAddress = 0x06;
 
-  if (sensor) {
-    digitalWrite(ENTMP2, LOW);
-    digitalWrite(ENTMP1, HIGH);
-  }
-  else {
-    digitalWrite(ENTMP1, LOW);
-    digitalWrite(ENTMP2, HIGH);
-  }
+  if (sensor)
+    sensorAddress += 1;
 
   TWI_StartRead(pTwi, sensorAddress, memoryAddress, 1);
 

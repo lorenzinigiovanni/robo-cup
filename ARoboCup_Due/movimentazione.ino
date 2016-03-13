@@ -64,26 +64,20 @@ void sinistra() {
 
 void avanzamento(float distanzaVoluta, float velocita) {
   float gradiIniziali = gyroscope(0, true);
-  //float distanzaIniziale = distanza(0, true);
+  float distanzaIniziale = distanza(0, true);
   float Kp = 5;
 
   if (distanzaVoluta > 0) {
-    int i = 0; //da cancellare
-    //while (distanzaIniziale - distanza(0, true) < distanzaVoluta) {
-    while (i < 100) { //da cancellare
+    while (distanzaIniziale - distanza(0, true) < distanzaVoluta) {
       float errore = gradiIniziali - gyroscope(0, true);
       motori(velocita + errore * Kp, velocita - errore * Kp);
-      i++;
     }
   }
 
   else if (distanzaVoluta < 0) {
-    int i = 0; //da cancellare
-    //while (distanzaIniziale - distanza(0, true) < distanzaVoluta) {
-    while (i < 100) { //da cancellare
+    while (distanzaIniziale - distanza(0, true) < distanzaVoluta) {
       float errore = gradiIniziali - gyroscope(0, true);
       motori(-velocita + errore * Kp, -velocita - errore * Kp);
-      i++;
     }
   }
 

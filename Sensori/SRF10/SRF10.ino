@@ -6,11 +6,27 @@ void setup() {
   Wire.begin();
   Serial.begin(9600);
   delay(1000);
-  changeAddress(112, 226); //aggiungere 1-2-3... a 112 e moltiplicare per due
+  //changeAddress(114, 224); //aggiungere 1-2-3... a 112 e moltiplicare per due
+  setGain(112, 3);
+  setRange(112, 255);
 }
 
 void loop() {
-  lettura(0x71);
+  lettura(112);
+}
+
+void setGain(byte address, byte range) {
+  Wire.beginTransmission(address);
+  Wire.write(byte(0x01));
+  Wire.write(byte(range));
+  Wire.endTransmission();
+}
+
+void setRange(byte address, byte range) {
+  Wire.beginTransmission(address);
+  Wire.write(byte(0x02));
+  Wire.write(byte(range));
+  Wire.endTransmission();
 }
 
 void lettura(byte address) {
