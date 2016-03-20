@@ -16,8 +16,8 @@
 #define M1E 7
 #define M1F 6
 #define M1R 5
-#define M2F 4
-#define M2R 3
+#define M2F 3
+#define M2R 4
 #define M2E 2
 
 //Striscia LED

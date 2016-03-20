@@ -54,7 +54,7 @@ MPU6050 mpu;
 // from the FIFO. Note this also requires gravity vector calculations.
 // Also note that yaw/pitch/roll angles suffer from gimbal lock (for
 // more info, see: http://en.wikipedia.org/wiki/Gimbal_lock)
-//#define OUTPUT_READABLE_YAWPITCHROLL
+#define OUTPUT_READABLE_YAWPITCHROLL
 
 // uncomment "OUTPUT_READABLE_REALACCEL" if you want to see acceleration
 // components with gravity removed. This acceleration reference frame is
@@ -71,7 +71,7 @@ MPU6050 mpu;
 
 // uncomment "OUTPUT_TEAPOT" if you want output that matches the
 // format used for the InvenSense teapot demo
-#define OUTPUT_TEAPOT
+//#define OUTPUT_TEAPOT
 
 
 // MPU control/status vars
@@ -150,17 +150,16 @@ void setup() {
   Serial.println(F("Initializing DMP..."));
   devStatus = mpu.dmpInitialize();
 
-  //-2866  -1038 1061  91  -48 12
-//Your offsets:  -2766 -1056 1002  1 -15 73
+//-2849  -1053 1069  115 -55 -14
 
 
   // supply your own gyro offsets here, scaled for min sensitivity
-  mpu.setXAccelOffset(-2766);
-  mpu.setYAccelOffset(-1056);
-  mpu.setZAccelOffset(1002);
-  mpu.setXGyroOffset(1);
-  mpu.setYGyroOffset(-15);
-  mpu.setZGyroOffset(73);
+  mpu.setXAccelOffset(-2849);
+  mpu.setYAccelOffset(-1053);
+  mpu.setZAccelOffset(1069);
+  mpu.setXGyroOffset(115);
+  mpu.setYGyroOffset(-55);
+  mpu.setZGyroOffset(-14);
 
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {

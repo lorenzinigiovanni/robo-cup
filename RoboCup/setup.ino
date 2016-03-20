@@ -2,7 +2,7 @@ void sensorSetup() {
   sensorEnabler();
   initGiroscopio();
   initColor();
-  initTermometro();
+  //initTermometro();
   initDistanziometro();
 }
 
@@ -96,9 +96,9 @@ void initTermometro() {
 //-------------------------------------------------------------------------------
 
 void initDistanziometro() {
-  setGain(112, 3);
-  setGain(113, 3);
-  setGain(114, 3);
+  setGain(112, 6);
+  setGain(113, 6);
+  setGain(114, 6);
   setRange(112, 255);
   setRange(113, 255);
   setRange(114, 255);

@@ -5,7 +5,7 @@ bool servoTorreta(int gradi) {
 
 //-------------------------------------------------------------------------------
 
-void motori(float powerM2, float powerM1) {
+void motori(float powerM1, float powerM2) {
   powerM2 = constrain(powerM2, -255, 255);
   powerM1 = constrain(powerM1, -255, 255);
 
@@ -74,5 +74,5 @@ void display() {
 //-------------------------------------------------------------------------------
 
 void seriale() {
-
+  Serial.println(gyroscope(0, true));
 }
