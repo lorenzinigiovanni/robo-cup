@@ -1,12 +1,11 @@
 bool colore(int color) {
+  analogWrite(colorLED, powerColorLED);
+
   uint16_t clear, red, green, blue;
 
-  tcs.setInterrupt(false);
-
-  delay(60);
-
   tcs.getRawData(&red, &green, &blue, &clear);
-  tcs.setInterrupt(true);
+
+  analogWrite(colorLED, 0);
 
   uint32_t sum = clear;
   float r, g, b;
@@ -20,18 +19,14 @@ bool colore(int color) {
     case 0:
       if (r > 210 && g > 210 && b > 210)
         return true;
-      break;
     case 1:
       if (r < 10 && g < 10 && b < 10)
         return true;
-      break;
     case 2:
       if (r > 180 && r < 200 && g > 180 && g < 200 && b > 180 && b < 200)
         return true;
-      break;
     default:
       return false;
-      break;
   }
 }
 
@@ -41,9 +36,9 @@ float sensoreTemperatura(int numeroSensore) {
   float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
   float misura = 0;
   float massimo = 0;
-  float minimo = 1000;
+  float minimo = 100000;
   bool sensor = false;
-  
+
   if (numeroSensore == -1)
     sensor = false;
   if (numeroSensore == 1)
@@ -71,7 +66,7 @@ float sensoreDistanza(int numeroSensore) {
   float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
   float misura = 0;
   float massimo = 0;
-  float minimo = 1000;
+  float minimo = 100000;
   int reading = 0;
   int indirizzo = 113;
   indirizzo += numeroSensore;
@@ -121,13 +116,13 @@ float gyroscope(int scelta, bool rotazioneContinua) {
     return misura;
   }
   else {
-    if (misura < 10 && misura > -10)
+    if (misura < errorePosizioni && misura > -errorePosizioni)
       return 0;
-    else if (misura < 100 && misura > 80)
+    else if (misura < 90 + errorePosizioni && misura > 90 - errorePosizioni)
       return 1;
-    else if (misura < -170 || misura > 170)
+    else if (misura < -180 + errorePosizioni || misura > 180 - errorePosizioni)
       return 2;
-    else if (misura < -80 && misura > -100)
+    else if (misura < -90 + errorePosizioni && misura > -90 - errorePosizioni)
       return 3;
   }
 }
@@ -136,7 +131,7 @@ float gyroscope(int scelta, bool rotazioneContinua) {
 
 float SRF10(byte address) {
   int reading = 0;
-  
+
   Wire.beginTransmission(address);
   Wire.write(byte(0x00));
   Wire.write(byte(0x51));

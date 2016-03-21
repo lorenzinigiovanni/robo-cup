@@ -7,10 +7,14 @@
 //Alimentazione Sensori
 #define ENGYRO 24
 #define ENRGB 25
-#define ENTMP1 26
-#define ENTMP2 27
+#define ENTMP 26
 #define LED 13
 #define colorLED 12
+#define powerColorLED 255
+
+//Parametri SRF10
+int gain = 6;
+int range = 255;
 
 //Motori
 #define M1E 7
@@ -33,10 +37,10 @@ Servo servoTorretta;
 //-------------------------------------------------------------------------------
 //GIROSCOPIO
 
+#define errorePosizioni 20
+
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
-#include "Adafruit_TCS34725.h"
-#include <Adafruit_NeoPixel.h>
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #include "Wire.h"
@@ -61,8 +65,14 @@ int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 int ax_offset, ay_offset, az_offset, gx_offset, gy_offset, gz_offset;
 
 //-------------------------------------------------------------------------------
+//COLOR
+
+#include "Adafruit_TCS34725.h"
+
+//-------------------------------------------------------------------------------
 //STRISCIA LED
 
+#include <Adafruit_NeoPixel.h>
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(strisciaLed, strisciaPin, NEO_GRB + NEO_KHZ800);
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 

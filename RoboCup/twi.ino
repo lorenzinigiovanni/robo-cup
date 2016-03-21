@@ -17,6 +17,8 @@ static void Wire_Init(void) {
   NVIC_EnableIRQ(TWI1_IRQn);
 }
 
+//-------------------------------------------------------------------------------
+
 static void Wire1_Init(void) {
   pmc_enable_periph_clk(WIRE1_INTERFACE_ID);
   PIO_Configure(
@@ -36,12 +38,16 @@ static void Wire1_Init(void) {
   NVIC_EnableIRQ(TWI0_IRQn);
 }
 
+//-------------------------------------------------------------------------------
+
 uint8_t readByte() {
   TWI_WaitByteReceived(pTwi, RECV_TIMEOUT);
   while (!TWI_ByteReceived(pTwi))
     ;
   return TWI_ReadByte(pTwi);
 }
+
+//-------------------------------------------------------------------------------
 
 static inline bool TWI_WaitTransferComplete(Twi *_twi, uint32_t _timeout) {
   while (!TWI_TransferComplete(_twi)) {
@@ -53,6 +59,8 @@ static inline bool TWI_WaitTransferComplete(Twi *_twi, uint32_t _timeout) {
   return true;
 }
 
+//-------------------------------------------------------------------------------
+
 static inline bool TWI_WaitByteReceived(Twi *_twi, uint32_t _timeout) {
   while (!TWI_ByteReceived(_twi)) {
     if (TWI_FailedAcknowledge(_twi))
@@ -62,6 +70,8 @@ static inline bool TWI_WaitByteReceived(Twi *_twi, uint32_t _timeout) {
   }
   return true;
 }
+
+//-------------------------------------------------------------------------------
 
 static inline bool TWI_FailedAcknowledge(Twi *pTwi) {
   return pTwi->TWI_SR & TWI_SR_NACK;

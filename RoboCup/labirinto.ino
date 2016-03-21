@@ -1,7 +1,7 @@
 void percorso(int x, int y, int livello) {
   bool prop[16];
   for (int i = 0; i < 16; i++)
-    prop[i] = proprieta(i, x, y, livello);
+    prop[i] = proprieta(x, y, livello, i);
 
   if (prop[5])
     vittima(x, y, livello, 0);
@@ -21,7 +21,7 @@ void percorso(int x, int y, int livello) {
 int scegliDirezione(int x, int y, int livello) {
   bool prop[16];
   for (int i = 0; i < 16; i++) {
-    prop[i] = proprieta(i, x, y, livello);
+    prop[i] = proprieta(x, y, livello, i);
   }
   int direzione = gyroscope(0, false);
 

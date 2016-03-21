@@ -1,4 +1,4 @@
-bool proprieta(int prop, int x, int y, int livello) {
+bool proprieta(int x, int y, int livello, int prop) {
   int matrice = 0;
   if (livello == 1)
     matrice = matriceLvl1[x][y];
@@ -20,7 +20,7 @@ bool proprieta(int prop, int x, int y, int livello) {
 //-------------------------------------------------------------------------------
 
 bool aggiungiProprieta(int x, int y, int livello, int prop) {
-  if (proprieta(prop, x, y, livello) == false) {
+  if (proprieta(x, y, livello, prop) == false) {
     prop = pow(2, prop);
     if (livello == 1)
       matriceLvl1[x][y] += prop;

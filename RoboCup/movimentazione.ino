@@ -13,6 +13,7 @@ void muovi(int direzione) {
       actualY--;
       break;
   }
+  
   direzione = direzione - gyroscope(0, false);
 
   switch (direzione) {
