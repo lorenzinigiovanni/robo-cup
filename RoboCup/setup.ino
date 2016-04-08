@@ -2,7 +2,7 @@ void sensorSetup() {
   sensorEnabler();
   initGiroscopio();
   initColor();
-  //initTermometro();
+  initTermometro();
   initDistanziometro();
 }
 

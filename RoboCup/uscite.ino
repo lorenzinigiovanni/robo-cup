@@ -1,5 +1,6 @@
 bool servoTorreta(int gradi) {
   servoTorretta.write(gradi);
+  delay(1000);
   return true;
 }
 

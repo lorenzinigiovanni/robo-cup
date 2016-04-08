@@ -167,7 +167,7 @@ float MLX90614(bool sensor, bool measure) {
     memoryAddress = 0x06;
 
   if (sensor)
-    sensorAddress += 1;
+    sensorAddress = 0x36;
 
   TWI_StartRead(pTwi, sensorAddress, memoryAddress, 1);
 
