@@ -44,21 +44,21 @@ void muovi(int direzione) {
 //-------------------------------------------------------------------------------
 
 void avanti() {
-  avanzamento(30, 100);
+  avanzamento(30, 150);
 }
 
 void destra() {
-  rotazione(90, 100);
-  avanzamento(30, 100);
+  rotazione(90, 150);
+  avanzamento(30, 150);
 }
 
 void dietro() {
-  avanzamento(-30, 100);
+  avanzamento(-30, 150);
 }
 
 void sinistra() {
-  rotazione(-90, 100);
-  avanzamento(30, 100);
+  rotazione(-90, 150);
+  avanzamento(30, 150);
 }
 
 //-------------------------------------------------------------------------------

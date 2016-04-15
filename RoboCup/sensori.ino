@@ -101,16 +101,14 @@ float gyroscope(int scelta, bool rotazioneContinua) {
       break;
   }
 
-  Serial1.readStringUntil(10).toCharArray(tmp, sizeof(tmp) / sizeof(char));
-  pch = strtok(tmp, ",");
+  String str = Serial1.readStringUntil(10);
 
-  while (pch != NULL) {
-    gyroArray[i] = atof(pch);
-    pch = strtok(NULL, ",");
-    i++;
+  for (int i = 0; i < 6; i++) {
+    gyroArray[i] = str.substring(0, str.indexOf(',')).toFloat();
+    str.remove(0, str.indexOf(',') + 1);
   }
 
-  if (rotazioneContinua)
+  if (!rotazioneContinua)
     return gyroArray[scelta];
   else
     return gyroArray[scelta + 3];
