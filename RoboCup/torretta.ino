@@ -1,5 +1,5 @@
 float temperatura(int posizione, bool relativa) {
-  int servo = 90;
+  int servo = posAVSM1;
   int numeroSensore = 0;
 
   if (!relativa)
@@ -7,31 +7,46 @@ float temperatura(int posizione, bool relativa) {
 
   switch (posizione) {
     case -3:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = 1;
       break;
     case -2:
-      servo = 0;
-      numeroSensore = -1;
+      if (posizioneSM1 == posSXSM1) {
+        servo = posSXSM1;
+        numeroSensore = -1;
+      } else {
+        servo = posDXSM1;
+        numeroSensore = 1;
+      }
       break;
     case -1:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = -1;
       break;
     case 0:
-      servo = 180;
-      numeroSensore = -1;
+      if (posizioneSM1 == posDXSM1) {
+        servo = posDXSM1;
+        numeroSensore = -1;
+      } else {
+        servo = posSXSM1;
+        numeroSensore = 1;
+      }
       break;
     case 1:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = 1;
       break;
     case 2:
-      servo = 180;
-      numeroSensore = 1;
+      if (posizioneSM1 == posSXSM1) {
+        servo = posSXSM1;
+        numeroSensore = -1;
+      } else {
+        servo = posDXSM1;
+        numeroSensore = 1;
+      }
       break;
     case 3:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = -1;
       break;
   }
@@ -45,7 +60,7 @@ float temperatura(int posizione, bool relativa) {
 //-------------------------------------------------------------------------------
 
 float distanza(int posizione, bool relativa) {
-  int servo = 90;
+  int servo = posAVSM1;
   int numeroSensore = 0;
 
   if (!relativa)
@@ -53,31 +68,41 @@ float distanza(int posizione, bool relativa) {
 
   switch (posizione) {
     case -3:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = 1;
       break;
     case -2:
-      servo = 0;
-      numeroSensore = -1;
+      if (posizioneSM1 == posSXSM1) {
+        servo = posSXSM1;
+        numeroSensore = -1;
+      } else {
+        servo = posDXSM1;
+        numeroSensore = 1;
+      }
       break;
     case -1:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = -1;
       break;
     case 0:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = 0;
       break;
     case 1:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = 1;
       break;
     case 2:
-      servo = 180;
-      numeroSensore = 1;
+      if (posizioneSM1 == posSXSM1) {
+        servo = posSXSM1;
+        numeroSensore = -1;
+      } else {
+        servo = posDXSM1;
+        numeroSensore = 1;
+      }
       break;
     case 3:
-      servo = 90;
+      servo = posAVSM1;
       numeroSensore = -1;
       break;
   }

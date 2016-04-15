@@ -2,10 +2,14 @@
 //PIN
 
 //Servo Motori
-#define SM1 10
+#define SM1 9
+int posizioneSM1 = 90;
+#define timeSM1 5
+#define posSXSM1 0
+#define posAVSM1 90
+#define posDXSM1 180
 
 //Alimentazione Sensori
-#define ENGYRO 24
 #define ENRGB 25
 #define ENTMP 26
 #define LED 13
@@ -29,6 +33,22 @@ int range = 255;
 #define strisciaLed 3
 
 //-------------------------------------------------------------------------------
+//PROPRIETA
+
+#define pCellaVisitata 0
+#define pMuroPosizione0 1
+#define pMuroPosizione1 2
+#define pMuroPosizione2 3
+#define pMuroPosizione3 4
+#define pVittimaPosizione0 5
+#define pVittimaPosizione1 6
+#define pVittimaPosizione2 7
+#define pVittimaPosizione3 8
+#define pVittimeSalvate 9
+#define pCellaNera 10
+#define pCellaGrigia 11
+
+//-------------------------------------------------------------------------------
 //SERVO
 
 #include <Servo.h>
@@ -37,32 +57,17 @@ Servo servoTorretta;
 //-------------------------------------------------------------------------------
 //GIROSCOPIO
 
+#include <string.h>
+#define gyroscopeTimeOut 1000
 #define errorePosizioni 20
 
+float gyroArray[6];
+
+//-------------------------------------------------------------------------------
+//I2C
+
 #include "I2Cdev.h"
-#include "MPU6050_6Axis_MotionApps20.h"
-
-#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #include "Wire.h"
-#endif
-
-MPU6050 mpu;
-
-bool dmpReady = false;
-uint8_t devStatus;
-uint16_t packetSize;
-uint16_t fifoCount;
-uint8_t fifoBuffer[64];
-Quaternion q;           // [w, x, y, z]         quaternion container
-VectorFloat gravity;    // [x, y, z]            gravity vector
-float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
-
-float previousypr[3];
-int rotationypr[3];
-
-int16_t ax, ay, az, gx, gy, gz;
-int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
-int ax_offset, ay_offset, az_offset, gx_offset, gy_offset, gz_offset;
 
 //-------------------------------------------------------------------------------
 //COLOR
@@ -87,11 +92,13 @@ static const uint32_t XMIT_TIMEOUT = 100000;
 #include <include/twi.h>
 Twi *pTwi = WIRE1_INTERFACE;
 
+#define sogliaTemperatura 5
+
 //-------------------------------------------------------------------------------
 //LCD
 
-#include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+//#include <LiquidCrystal_I2C.h>
+//LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 //-------------------------------------------------------------------------------
 //SCHEDULER
@@ -103,16 +110,17 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 int actualX = 25;
 int actualY = 25;
-int actualLevel = 1;
+int actualL = 0;
+int previousX = 25;
+int previousY = 25;
+int previousL = 0;
 
 #define sizeX 50
 #define sizeY 50
+#define sizeL 2
 
-unsigned int matriceLvl1[sizeX][sizeY];
-unsigned int matriceLvl2[sizeX][sizeY];
-
-short passaggiLvl1[sizeX][sizeY];
-short passaggiLvl2[sizeX][sizeY];
+unsigned int mappa[sizeX][sizeY][sizeL];
+short passaggi[sizeX][sizeY][sizeL];
 
 int kitCounter = 15;
 
@@ -121,6 +129,7 @@ int kitCounter = 15;
 
 void setup() {
   Serial.begin(115200);
+  Serial1.begin(115200);
   pinSetup();
   sensorSetup();
   sensorCalibration();

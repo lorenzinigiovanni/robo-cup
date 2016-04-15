@@ -1,15 +1,11 @@
 bool proprieta(int x, int y, int livello, int prop) {
-  int matrice = 0;
-  if (livello == 1)
-    matrice = matriceLvl1[x][y];
-  else if (livello == 2)
-    matrice = matriceLvl2[x][y];
+  int var = 0;
+  var = mappa[x][y][livello];
 
   for (int i = 15; i > -1; i--) {
     int powwa = pow(2, i);
-    Serial.println(matrice);
-    if (matrice - powwa >= 0) {
-      matrice -= powwa;
+    if (var - powwa >= 0) {
+      var -= powwa;
       if (prop == i)
         return true;
     }
@@ -22,10 +18,7 @@ bool proprieta(int x, int y, int livello, int prop) {
 bool aggiungiProprieta(int x, int y, int livello, int prop) {
   if (proprieta(x, y, livello, prop) == false) {
     prop = pow(2, prop);
-    if (livello == 1)
-      matriceLvl1[x][y] += prop;
-    else if (livello == 2)
-      matriceLvl2[x][y] += prop;
+    mappa[x][y][livello] += prop;
     return true;
   }
   return false;
@@ -34,44 +27,32 @@ bool aggiungiProprieta(int x, int y, int livello, int prop) {
 //-------------------------------------------------------------------------------
 
 void mappatura(int x, int y, int livello) {
-  int prop = 0;
-  if (livello == 1)
-    prop = matriceLvl1[x][y];
-  else if (livello == 2)
-    prop = matriceLvl2[x][y];
-
-  if (prop == 0) {
-    prop += 1;
+  if (!proprieta(x, y, livello, pCellaVisitata)) {
+    aggiungiProprieta(x, y, livello, pCellaVisitata);
 
     if (distanza(0, false) < 20) {
-      prop += 2;
-      if (temperatura(0, false) > 8)
-        prop += 32;
+      aggiungiProprieta(x, y, livello, pMuroPosizione0);
+      if (temperatura(0, false) > sogliaTemperatura)
+        aggiungiProprieta(x, y, livello, pVittimaPosizione0);
     }
     if (distanza(1, false) < 20) {
-      prop += 4;
-      if (temperatura(1, false) > 8)
-        prop += 64;
+      aggiungiProprieta(x, y, livello, pMuroPosizione1);
+      if (temperatura(1, false) > sogliaTemperatura)
+        aggiungiProprieta(x, y, livello, pVittimaPosizione1);
     }
     if (distanza(2, false) < 20) {
-      prop += 8;
-      if (temperatura(2, false) > 8)
-        prop += 128;
+      aggiungiProprieta(x, y, livello, pMuroPosizione2);
+      if (temperatura(2, false) > sogliaTemperatura)
+        aggiungiProprieta(x, y, livello, pVittimaPosizione2);
     }
     if (distanza(3, false) < 20) {
-      prop += 16;
-      if (temperatura(3, false) > 8)
-        prop += 256;
+      aggiungiProprieta(x, y, livello, pMuroPosizione3);
+      if (temperatura(3, false) > sogliaTemperatura)
+        aggiungiProprieta(x, y, livello, pVittimaPosizione3);
     }
-
     if (colore(1))
-      prop += 1024;
-    if (colore(2))
-      prop += 2048;
+      aggiungiProprieta(x, y, livello, pCellaNera);
+    else if (colore(2))
+      aggiungiProprieta(x, y, livello, pCellaGrigia);
   }
-
-  if (livello == 1)
-    matriceLvl1[x][y] = prop;
-  else if (livello == 2)
-    matriceLvl2[x][y] = prop;
 }

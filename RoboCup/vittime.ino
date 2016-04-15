@@ -1,5 +1,8 @@
 void vittima(int x, int y, int livello, int posizione) {
-  led(255, 0, 0, 5000);
+  for (int i = 0; i < 5; i++) {
+    led(255, 0, 0, 500);
+    aspetta(500);
+  }
   if (kitCounter > 0)
     kitSalvataggio(posizione);
   aggiungiProprieta(x, y, livello, 9);

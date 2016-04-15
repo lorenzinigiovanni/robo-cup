@@ -89,42 +89,31 @@ float sensoreDistanza(int numeroSensore) {
 //-------------------------------------------------------------------------------
 
 float gyroscope(int scelta, bool rotazioneContinua) {
-  float misura = 0;
+  Serial1.println("g");
 
-  while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-  mpu.getFIFOBytes(fifoBuffer, packetSize);
-  fifoCount -= packetSize;
+  char tmp[15];
+  char* pch;
+  int i = 0;
 
-  mpu.dmpGetQuaternion(&q, fifoBuffer);
-  mpu.dmpGetGravity(&gravity, &q);
-  mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-
-  misura = ypr[scelta];
-  misura = misura * 180 / M_PI;
-
-  float errore = previousypr[scelta] - misura;
-
-  if (errore > 200)
-    rotationypr[scelta] += 1;
-  else if (errore < -200)
-    rotationypr[scelta] -= 1;
-
-  previousypr[scelta] = misura;
-
-  if (rotazioneContinua) {
-    misura += rotationypr[scelta] * 360;
-    return misura;
+  long int tempo = millis();
+  while (!Serial1.available()) {
+    if (millis() - tempo > gyroscopeTimeOut)
+      break;
   }
-  else {
-    if (misura < errorePosizioni && misura > -errorePosizioni)
-      return 0;
-    else if (misura < 90 + errorePosizioni && misura > 90 - errorePosizioni)
-      return 1;
-    else if (misura < -180 + errorePosizioni || misura > 180 - errorePosizioni)
-      return 2;
-    else if (misura < -90 + errorePosizioni && misura > -90 - errorePosizioni)
-      return 3;
+
+  Serial1.readStringUntil(10).toCharArray(tmp, sizeof(tmp) / sizeof(char));
+  pch = strtok(tmp, ",");
+
+  while (pch != NULL) {
+    gyroArray[i] = atof(pch);
+    pch = strtok(NULL, ",");
+    i++;
   }
+
+  if (rotazioneContinua)
+    return gyroArray[scelta];
+  else
+    return gyroArray[scelta + 3];
 }
 
 //-------------------------------------------------------------------------------
@@ -137,7 +126,7 @@ float SRF10(byte address) {
   Wire.write(byte(0x51));
   Wire.endTransmission();
 
-  delay(70);
+  aspetta(70);
 
   Wire.beginTransmission(address);
   Wire.write(byte(0x02));
@@ -167,7 +156,7 @@ float MLX90614(bool sensor, bool measure) {
     memoryAddress = 0x06;
 
   if (sensor)
-    sensorAddress += 1;
+    sensorAddress = 0x36;
 
   TWI_StartRead(pTwi, sensorAddress, memoryAddress, 1);
 

@@ -1,8 +1,7 @@
 void sensorSetup() {
   sensorEnabler();
-  initGiroscopio();
   initColor();
-  //initTermometro();
+  initTermometro();
   initDistanziometro();
 }
 
@@ -17,7 +16,6 @@ void pinSetup() {
   pinMode(M2E, OUTPUT);
 
   pinMode(LED, OUTPUT);
-  pinMode(ENGYRO, OUTPUT);
   pinMode(ENRGB, OUTPUT);
   pinMode(ENTMP, OUTPUT);
 
@@ -33,38 +31,10 @@ void pinSetup() {
 //-------------------------------------------------------------------------------
 
 void sensorEnabler() {
-  delay(500);
-  digitalWrite(ENGYRO, HIGH);
+  aspetta(500);
   digitalWrite(ENRGB, HIGH);
   digitalWrite(ENTMP, HIGH);
-  delay(500);
-}
-
-//-------------------------------------------------------------------------------
-
-void initGiroscopio() {
-#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-  Wire.begin();
-#elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-  Fastwire::setup(400, true);
-#endif
-
-  mpu.initialize();
-  digitalWrite(LED, LOW);
-  digitalWrite(LED, mpu.testConnection() ? HIGH : LOW);
-
-  if (!mpu.testConnection()) {
-    digitalWrite(ENGYRO, LOW);
-    sensorSetup();
-  }
-
-  devStatus = mpu.dmpInitialize();
-
-  if (devStatus == 0) {
-    mpu.setDMPEnabled(true);
-    dmpReady = true;
-    packetSize = mpu.dmpGetFIFOPacketSize();
-  }
+  aspetta(500);
 }
 
 //-------------------------------------------------------------------------------

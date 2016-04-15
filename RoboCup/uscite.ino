@@ -1,5 +1,9 @@
 bool servoTorreta(int gradi) {
   servoTorretta.write(gradi);
+  if (posizioneSM1 != gradi) {
+    aspetta(abs(gradi - posizioneSM1)*timeSM1);
+    posizioneSM1 = gradi;
+  }
   return true;
 }
 
@@ -44,7 +48,7 @@ void led(int R, int G, int B, int ritardo) {
     pixels.show();
   }
   if (ritardo > 0) {
-    delay (ritardo);
+    aspetta(ritardo);
     for (int i = 0; i < 3; i++) {
       pixels.setPixelColor(i, pixels.Color(0, 0, 0));
       pixels.show();
