@@ -1,9 +1,13 @@
 bool servoTorreta(int gradi) {
   servoTorretta.write(gradi);
+<<<<<<< HEAD
   if (posizioneSM1 != gradi) {
     aspetta(abs(gradi - posizioneSM1)*timeSM1);
     posizioneSM1 = gradi;
   }
+=======
+  delay(1000);
+>>>>>>> fb7d1296f6f78e3d74fb1768bbb5a8f1b37602ea
   return true;
 }
 
