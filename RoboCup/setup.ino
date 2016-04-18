@@ -22,10 +22,11 @@ void pinSetup() {
   pinMode(colorLED, OUTPUT);
 
   servoTorretta.attach(SM1);
-  pixels.begin();
+  servoDispenser.attach(SM2);
+  while (!servoTorrettaFunction(posAVSM1)) {}
+  while (!servoDispenserFunction(posAVSM2)) {}
 
   Wire.begin();
-  //lcd.begin();
 }
 
 //-------------------------------------------------------------------------------
@@ -44,6 +45,7 @@ void initColor() {
     digitalWrite(ENRGB, LOW);
     sensorSetup();
   }
+  analogWrite(colorLED, powerColorLED);
 }
 
 //-------------------------------------------------------------------------------

@@ -1,11 +1,7 @@
 bool colore(int color) {
-  analogWrite(colorLED, powerColorLED);
-
   uint16_t clear, red, green, blue;
 
   tcs.getRawData(&red, &green, &blue, &clear);
-
-  analogWrite(colorLED, 0);
 
   uint32_t sum = clear;
   float r, g, b;
@@ -28,6 +24,7 @@ bool colore(int color) {
     default:
       return false;
   }
+  return false;
 }
 
 //-------------------------------------------------------------------------------
@@ -91,11 +88,7 @@ float sensoreDistanza(int numeroSensore) {
 float gyroscope(int scelta, bool rotazioneContinua) {
   Serial1.println("g");
 
-  char tmp[15];
-  char* pch;
-  int i = 0;
-
-  long int tempo = millis();
+  long unsigned int tempo = millis();
   while (!Serial1.available()) {
     if (millis() - tempo > gyroscopeTimeOut)
       break;

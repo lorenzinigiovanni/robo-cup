@@ -19,21 +19,56 @@ void muovi(int direzione) {
   switch (direzione) {
     case -3:
       destra();
+      avanti();
       break;
     case -2:
       dietro();
       break;
     case -1:
       sinistra();
+      avanti();
       break;
     case 0:
       avanti();
       break;
     case 1:
       destra();
+      avanti();
       break;
     case 2:
       dietro();
+      break;
+    case 3:
+      sinistra();
+      avanti();
+      break;
+  }
+}
+
+//-------------------------------------------------------------------------------
+
+void ruota(int direzione) {
+  direzione -= gyroscope(0, false);
+
+  switch (direzione) {
+    case -3:
+      destra();
+      break;
+    case -2:
+      destra();
+      destra();
+      break;
+    case -1:
+      sinistra();
+      break;
+    case 0:
+      break;
+    case 1:
+      destra();
+      break;
+    case 2:
+      sinistra();
+      sinistra();
       break;
     case 3:
       sinistra();
@@ -49,7 +84,6 @@ void avanti() {
 
 void destra() {
   rotazione(90, 150);
-  avanzamento(30, 150);
 }
 
 void dietro() {
@@ -58,7 +92,6 @@ void dietro() {
 
 void sinistra() {
   rotazione(-90, 150);
-  avanzamento(30, 150);
 }
 
 //-------------------------------------------------------------------------------
@@ -115,6 +148,8 @@ void avanzamento(float distanzaVoluta, float velocita) {
           break;
       }
     }
+    if (distanza(0, true) < 7)
+      break;
   }
 
   motori (0, 0);

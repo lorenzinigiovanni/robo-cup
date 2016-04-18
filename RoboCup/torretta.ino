@@ -51,7 +51,7 @@ float temperatura(int posizione, bool relativa) {
       break;
   }
 
-  while (!servoTorreta(servo)) {}
+  while (!servoTorrettaFunction(servo)) {}
 
   float misura = sensoreTemperatura(numeroSensore);
   return misura;
@@ -107,7 +107,7 @@ float distanza(int posizione, bool relativa) {
       break;
   }
 
-  while (!servoTorreta(servo)) {}
+  while (!servoTorrettaFunction(servo)) {}
 
   float misura = sensoreDistanza(numeroSensore);
   return misura;

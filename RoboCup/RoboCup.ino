@@ -1,13 +1,21 @@
 //-------------------------------------------------------------------------------
 //PIN
 
-//Servo Motori
+//Servo Motore 1
 #define SM1 9
-int posizioneSM1 = 90;
 #define timeSM1 5
 #define posSXSM1 0
 #define posAVSM1 90
 #define posDXSM1 180
+int posizioneSM1 = 90;
+
+//Servo Motore 2
+#define SM2 9
+#define timeSM2 5
+#define posSXSM2 0
+#define posAVSM2 90
+#define posDXSM2 180
+int posizioneSM2 = 90;
 
 //Alimentazione Sensori
 #define ENRGB 25
@@ -16,10 +24,6 @@ int posizioneSM1 = 90;
 #define colorLED 12
 #define powerColorLED 255
 
-//Parametri SRF10
-int gain = 6;
-int range = 255;
-
 //Motori
 #define M1E 7
 #define M1F 6
@@ -27,10 +31,6 @@ int range = 255;
 #define M2F 3
 #define M2R 4
 #define M2E 2
-
-//Striscia LED
-#define strisciaPin 8
-#define strisciaLed 3
 
 //-------------------------------------------------------------------------------
 //PROPRIETA
@@ -53,11 +53,11 @@ int range = 255;
 
 #include <Servo.h>
 Servo servoTorretta;
+Servo servoDispenser;
 
 //-------------------------------------------------------------------------------
 //GIROSCOPIO
 
-#include <string.h>
 #define gyroscopeTimeOut 1000
 #define errorePosizioni 20
 
@@ -73,12 +73,6 @@ float gyroArray[6];
 //COLOR
 
 #include "Adafruit_TCS34725.h"
-
-//-------------------------------------------------------------------------------
-//STRISCIA LED
-
-#include <Adafruit_NeoPixel.h>
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(strisciaLed, strisciaPin, NEO_GRB + NEO_KHZ800);
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
 //-------------------------------------------------------------------------------
@@ -95,10 +89,10 @@ Twi *pTwi = WIRE1_INTERFACE;
 #define sogliaTemperatura 5
 
 //-------------------------------------------------------------------------------
-//LCD
+//SRF10
 
-//#include <LiquidCrystal_I2C.h>
-//LiquidCrystal_I2C lcd(0x27, 16, 2);
+int gain = 6;
+int range = 255;
 
 //-------------------------------------------------------------------------------
 //SCHEDULER
@@ -122,7 +116,8 @@ int previousL = 0;
 unsigned int mappa[sizeX][sizeY][sizeL];
 short passaggi[sizeX][sizeY][sizeL];
 
-int kitCounter = 15;
+int kitCounter = 8;
+bool kitPosition = false;
 
 //-------------------------------------------------------------------------------
 //SETUP

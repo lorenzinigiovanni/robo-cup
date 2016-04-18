@@ -1,8 +1,19 @@
-bool servoTorreta(int gradi) {
+bool servoTorrettaFunction(int gradi) {
   servoTorretta.write(gradi);
   if (posizioneSM1 != gradi) {
     aspetta(abs(gradi - posizioneSM1)*timeSM1);
     posizioneSM1 = gradi;
+  }
+  return true;
+}
+
+//-------------------------------------------------------------------------------
+
+bool servoDispenserFunction(int gradi) {
+  servoDispenser.write(gradi);
+  if (posizioneSM2 != gradi) {
+    aspetta(abs(gradi - posizioneSM2)*timeSM2);
+    posizioneSM2 = gradi;
   }
   return true;
 }
@@ -38,20 +49,4 @@ void motori(float powerM1, float powerM2) {
   }
   else
     digitalWrite (M2E, LOW);
-}
-
-//-------------------------------------------------------------------------------
-
-void led(int R, int G, int B, int ritardo) {
-  for (int i = 0; i < 3; i++) {
-    pixels.setPixelColor(i, pixels.Color(R, G, B));
-    pixels.show();
-  }
-  if (ritardo > 0) {
-    aspetta(ritardo);
-    for (int i = 0; i < 3; i++) {
-      pixels.setPixelColor(i, pixels.Color(0, 0, 0));
-      pixels.show();
-    }
-  }
 }
