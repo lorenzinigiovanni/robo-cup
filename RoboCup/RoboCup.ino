@@ -131,8 +131,9 @@ void setup() {
   sensorCalibration();
 
   while (true)
-    if (Serial1.readStringUntil('\n').indexOf("OK") != -1)
-      break;
+    if (Serial1.available())
+      if (Serial1.readStringUntil('\n').indexOf("OK") != -1)
+        break;
 
   Scheduler.startLoop(seriale);
 }
