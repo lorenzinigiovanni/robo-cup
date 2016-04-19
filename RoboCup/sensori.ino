@@ -139,15 +139,13 @@ float MLX90614(bool sensor, bool measure) {
   uint16_t tempUK;
   uint8_t hB, lB, pec;
   byte sensorAddress = 0x5A;
-  byte memoryAddress;
+  byte memoryAddress= 0x06;
 
   if (measure)
     memoryAddress = 0x07;
-  else
-    memoryAddress = 0x06;
 
   if (sensor)
-    sensorAddress = 0x36;
+    sensorAddress = 0x55;
 
   TWI_StartRead(pTwi, sensorAddress, memoryAddress, 1);
 

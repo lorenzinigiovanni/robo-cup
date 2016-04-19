@@ -86,7 +86,8 @@ static const uint32_t XMIT_TIMEOUT = 100000;
 #include <include/twi.h>
 Twi *pTwi = WIRE1_INTERFACE;
 
-#define sogliaTemperatura 5
+#define differenzaTemperatura 5;
+int sogliaTemperatura = 0;
 
 //-------------------------------------------------------------------------------
 //SRF10
