@@ -69,6 +69,8 @@ void setup() {
     dmpReady = true;
     packetSize = mpu.dmpGetFIFOPacketSize();
   }
+
+  Serial.println("OK");
 }
 
 //-------------------------------------------------------------------------------
@@ -212,6 +214,20 @@ void calGiroscopioCalibration(int buffersize, int acel_deadzone, int giro_deadzo
     mpu.setZGyroOffset(gz_offset);
 
     calGiroscopioMeansensors(buffersize, acel_deadzone, giro_deadzone);
+
+    Serial.println("...");
+
+    Serial.print(mean_ax);
+    Serial.print("\t");
+    Serial.print(mean_ay);
+    Serial.print("\t");
+    Serial.print(mean_az);
+    Serial.print("\t");
+    Serial.print(mean_gx);
+    Serial.print("\t");
+    Serial.print(mean_gy);
+    Serial.print("\t");
+    Serial.println(mean_gz);
 
     if (abs(mean_ax) <= acel_deadzone) ready++;
     else ax_offset = ax_offset - mean_ax / acel_deadzone;

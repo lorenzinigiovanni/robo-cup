@@ -91,7 +91,7 @@ Twi *pTwi = WIRE1_INTERFACE;
 //-------------------------------------------------------------------------------
 //SRF10
 
-int gain = 6;
+int gain = 0;
 int range = 255;
 
 //-------------------------------------------------------------------------------
@@ -128,6 +128,11 @@ void setup() {
   pinSetup();
   sensorSetup();
   sensorCalibration();
+
+  while (true)
+    if (Serial1.readStringUntil('\n').indexOf("OK") != -1)
+      break;
+
   Scheduler.startLoop(seriale);
 }
 
