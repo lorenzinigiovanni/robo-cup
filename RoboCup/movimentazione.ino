@@ -171,8 +171,6 @@ void rotazione(float gradiVoluti, float velocita) {
     Kp = -Kp;
   }
 
-  gradiVoluti = abs(gradiVoluti);
-
   while (true) {
     gradiAttuali = gyroscope(0, true);
     errore = abs(gradiVoluti) + abs(gradiIniziali) - abs(gradiAttuali);
