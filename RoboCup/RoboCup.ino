@@ -78,6 +78,9 @@ float gyroArray[6];
 
 #include "Adafruit_TCS34725.h"
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
+float Kred = 1;
+float Kgreen = 1;
+float Kblue = 1;
 
 //-------------------------------------------------------------------------------
 //TERMOMETRO INFRAROSSI

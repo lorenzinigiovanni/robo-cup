@@ -6,27 +6,19 @@ bool colore(int color) {
   uint32_t sum = clear;
   float r, g, b;
 
-  r = red; //r /= sum;
-  g = green; //g /= sum;
-  b = blue; //b /= sum;
-  //r *= 256; g *= 256; b *= 256;
+  r = red * Kred;
+  g = green * Kgreen;
+  b = blue * Kblue;
 
-  Serial.print("R: ");
-  Serial.print(r);
-  Serial.print(" G: ");
-  Serial.print(g);
-  Serial.print(" B: ");
-  Serial.println(b);
-  
   switch (color) {
     case 0:
-      if (r > 210 && g > 210 && b > 210)
+      if (r > 200 && g > 200 && b > 200)
         return true;
     case 1:
-      if (r < 10 && g < 10 && b < 10)
+      if (r < 50 && g < 50 && b < 50)
         return true;
     case 2:
-      if (r > 180 && r < 200 && g > 180 && g < 200 && b > 180 && b < 200)
+      if (r > 100 && r < 200 && g > 100 && g < 200 && b > 100 && b < 200)
         return true;
     default:
       return false;
