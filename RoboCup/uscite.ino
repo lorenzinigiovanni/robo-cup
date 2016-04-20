@@ -20,7 +20,7 @@ bool servoDispenserFunction(int gradi) {
 
 //-------------------------------------------------------------------------------
 
-void motori(float powerM1, float powerM2) {
+void motori(float powerM2, float powerM1) {
   powerM2 = constrain(powerM2, -255, 255);
   powerM1 = constrain(powerM1, -255, 255);
 

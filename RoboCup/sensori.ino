@@ -6,11 +6,18 @@ bool colore(int color) {
   uint32_t sum = clear;
   float r, g, b;
 
-  r = red; r /= sum;
-  g = green; g /= sum;
-  b = blue; b /= sum;
-  r *= 256; g *= 256; b *= 256;
+  r = red; //r /= sum;
+  g = green; //g /= sum;
+  b = blue; //b /= sum;
+  //r *= 256; g *= 256; b *= 256;
 
+  Serial.print("R: ");
+  Serial.print(r);
+  Serial.print(" G: ");
+  Serial.print(g);
+  Serial.print(" B: ");
+  Serial.println(b);
+  
   switch (color) {
     case 0:
       if (r > 210 && g > 210 && b > 210)

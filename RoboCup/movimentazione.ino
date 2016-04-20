@@ -109,9 +109,21 @@ void avanzamento(float distanzaVoluta, float velocita) {
 
   while (true) {
     errore = gradiIniziali - gyroscope(0, true);
+    Serial.print("errore: ");
+    Serial.print(errore);
+    Serial.print(" v1: ");
+    Serial.print(velocita + errore * Kp);
+    Serial.print(" v2: ");
+    Serial.print(velocita - errore * Kp);
+    Serial.print("\tGradi iniziali: ");
+    Serial.print(gradiIniziali);
+    Serial.print("\tDistanza: ");
+    Serial.println(distanza(0, true));
+
     motori(velocita + errore * Kp, velocita - errore * Kp);
     if (abs(distanzaIniziale - distanza(0, true)) >= distanzaVoluta)
       break;
+
     if (colore(1)) {
       motori(0, 0);
       aspetta(500);
@@ -147,9 +159,9 @@ void avanzamento(float distanzaVoluta, float velocita) {
         if (distanza(0, true) < 10 || gyroscope(2, true) > -8)
           break;
       }
-    }
+    }/*
     if (distanza(0, true) < 7)
-      break;
+      break; */
   }
 
   motori (0, 0);
@@ -159,14 +171,12 @@ void avanzamento(float distanzaVoluta, float velocita) {
 
 void rotazione(float gradiVoluti, float velocita) {
   float gradiIniziali = gyroscope(0, true);
-  float Kp = 0.2;
+  float Kp = 0.8;
   float errore = 0;
   float gradiAttuali = gradiIniziali;
 
-  if (gradiVoluti < 0) {
+  if (gradiVoluti < 0)
     velocita = -velocita;
-    Kp = -Kp;
-  }
 
   gradiVoluti = abs(gradiVoluti);
 

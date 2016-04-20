@@ -33,7 +33,7 @@ int posizioneSM2 = 90;
 #define M2E 2
 
 //Arduino Nano
-#define resetNano 8
+#define resetNano 28
 
 //-------------------------------------------------------------------------------
 //PROPRIETA

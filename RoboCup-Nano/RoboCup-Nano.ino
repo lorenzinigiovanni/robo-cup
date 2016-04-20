@@ -44,25 +44,26 @@ void setup() {
   pinMode(10, OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);
 
-  calGiroscopio(100, 8, 1);
+  //calGiroscopio(100, 8, 1);
 
   devStatus = mpu.dmpInitialize();
 
-  mpu.setXAccelOffset(ax_offset);
-  mpu.setYAccelOffset(ay_offset);
-  mpu.setZAccelOffset(az_offset);
-  mpu.setXGyroOffset(gx_offset);
-  mpu.setYGyroOffset(gy_offset);
-  mpu.setZGyroOffset(gz_offset);
-
   /*
-    mpu.setXAccelOffset(-2825);
-    mpu.setYAccelOffset(-1054);
-    mpu.setZAccelOffset(1106);
-    mpu.setXGyroOffset(92);
-    mpu.setYGyroOffset(-61);
-    mpu.setZGyroOffset(15);
+    mpu.setXAccelOffset(ax_offset);
+    mpu.setYAccelOffset(ay_offset);
+    mpu.setZAccelOffset(az_offset);
+    mpu.setXGyroOffset(gx_offset);
+    mpu.setYGyroOffset(gy_offset);
+    mpu.setZGyroOffset(gz_offset);
   */
+
+  mpu.setXAccelOffset(-2825);
+  mpu.setYAccelOffset(-1054);
+  mpu.setZAccelOffset(1106);
+  mpu.setXGyroOffset(92);
+  mpu.setYGyroOffset(-61);
+  mpu.setZGyroOffset(15);
+
 
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);
