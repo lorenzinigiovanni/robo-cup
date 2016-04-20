@@ -64,7 +64,6 @@ float sensoreDistanza(int numeroSensore) {
   float misura = 0;
   float massimo = 0;
   float minimo = 100000;
-  int reading = 0;
   int indirizzo = 113;
   indirizzo += numeroSensore;
 
@@ -123,14 +122,15 @@ float SRF10(byte address) {
   Wire.write(byte(0x02));
   Wire.endTransmission();
 
-  Wire.requestFrom(address, 2);
+  Wire.requestFrom(int(address), 2);
 
   if (2 <= Wire.available()) {
     reading = Wire.read();
     reading = reading << 8;
     reading |= Wire.read();
-    return reading;
   }
+
+  return reading;
 }
 
 //-------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ float MLX90614(bool sensor, bool measure) {
   uint16_t tempUK;
   uint8_t hB, lB, pec;
   byte sensorAddress = 0x5A;
-  byte memoryAddress= 0x06;
+  byte memoryAddress = 0x06;
 
   if (measure)
     memoryAddress = 0x07;

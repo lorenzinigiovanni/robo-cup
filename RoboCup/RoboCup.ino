@@ -10,7 +10,7 @@
 int posizioneSM1 = 90;
 
 //Servo Motore 2
-#define SM2 9
+#define SM2 10
 #define timeSM2 5
 #define posSXSM2 0
 #define posAVSM2 90
@@ -31,6 +31,9 @@ int posizioneSM2 = 90;
 #define M2F 3
 #define M2R 4
 #define M2E 2
+
+//Arduino Nano
+#define resetNano 8
 
 //-------------------------------------------------------------------------------
 //PROPRIETA
@@ -59,6 +62,7 @@ Servo servoDispenser;
 //GIROSCOPIO
 
 #define gyroscopeTimeOut 1000
+#define gyroscopeCalibrationTimeOut 100000
 #define errorePosizioni 20
 
 float gyroArray[6];
@@ -127,13 +131,20 @@ void setup() {
   Serial.begin(115200);
   Serial1.begin(115200);
   pinSetup();
+  resetArduinoNano();
   sensorSetup();
   sensorCalibration();
 
-  while (true)
+  long unsigned int time = millis();
+  while (true) {
+    if (millis() - time > gyroscopeCalibrationTimeOut) {
+      resetArduinoNano();
+      time = millis();
+    }
     if (Serial1.available())
       if (Serial1.readStringUntil('\n').indexOf("OK") != -1)
         break;
+  }
 
   Scheduler.startLoop(seriale);
 }

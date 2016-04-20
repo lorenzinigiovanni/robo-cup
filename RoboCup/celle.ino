@@ -26,7 +26,7 @@ bool aggiungiProprieta(int x, int y, int livello, int prop) {
 
 //-------------------------------------------------------------------------------
 
-void mappatura(int x, int y, int livello) {
+bool mappatura(int x, int y, int livello) {
   if (!proprieta(x, y, livello, pCellaVisitata)) {
     aggiungiProprieta(x, y, livello, pCellaVisitata);
 
@@ -54,5 +54,7 @@ void mappatura(int x, int y, int livello) {
       aggiungiProprieta(x, y, livello, pCellaNera);
     else if (colore(2))
       aggiungiProprieta(x, y, livello, pCellaGrigia);
+    return true;
   }
+  return false;
 }

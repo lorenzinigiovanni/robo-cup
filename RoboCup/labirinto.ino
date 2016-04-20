@@ -9,13 +9,14 @@ void percorso(int x, int y, int livello) {
     vittima(x, y, livello, 3);
 
   int direzione = scegliDirezione(x, y, livello);
-  previousX = actualX;
-  previousY = actualY;
-  previousL = actualL;
+  previousX = x;
+  previousY = y;
+  previousL = livello;
   muovi(direzione);
 }
 
 //-------------------------------------------------------------------------------
 
 int scegliDirezione(int x, int y, int livello) {
+  return x / y * livello;
 }

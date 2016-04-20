@@ -50,3 +50,11 @@ void motori(float powerM1, float powerM2) {
   else
     digitalWrite (M2E, LOW);
 }
+
+//-------------------------------------------------------------------------------
+
+void resetArduinoNano() {
+  digitalWrite(resetNano, LOW);
+  aspetta(100);
+  digitalWrite(resetNano, HIGH);
+}

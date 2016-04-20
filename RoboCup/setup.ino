@@ -21,6 +21,8 @@ void pinSetup() {
 
   pinMode(colorLED, OUTPUT);
 
+  pinMode(resetNano, OUTPUT);
+
   servoTorretta.attach(SM1);
   servoDispenser.attach(SM2);
   while (!servoTorrettaFunction(posAVSM1)) {}
