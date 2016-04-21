@@ -9,11 +9,22 @@ bool servoTorrettaFunction(int gradi) {
 
 //-------------------------------------------------------------------------------
 
-bool servoDispenserFunction(int gradi) {
-  servoDispenser.write(gradi);
+bool servoDispenserSXFunction(int gradi) {
+  servoDispenserSX.write(gradi);
   if (posizioneSM2 != gradi) {
     aspetta(abs(gradi - posizioneSM2)*timeSM2);
     posizioneSM2 = gradi;
+  }
+  return true;
+}
+
+//-------------------------------------------------------------------------------
+
+bool servoDispenserDXFunction(int gradi) {
+  servoDispenserDX.write(gradi);
+  if (posizioneSM3 != gradi) {
+    aspetta(abs(gradi - posizioneSM3)*timeSM3);
+    posizioneSM3 = gradi;
   }
   return true;
 }

@@ -24,9 +24,11 @@ void pinSetup() {
   pinMode(resetNano, OUTPUT);
 
   servoTorretta.attach(SM1);
-  servoDispenser.attach(SM2);
+  servoDispenserSX.attach(SM2);
+  servoDispenserDX.attach(SM3);
   while (!servoTorrettaFunction(posAVSM1)) {}
-  while (!servoDispenserFunction(posAVSM2)) {}
+  while (!servoDispenserSXFunction(posCloseSM2)) {}
+  while (!servoDispenserDXFunction(posCloseSM3)) {}
 
   Wire.begin();
 }

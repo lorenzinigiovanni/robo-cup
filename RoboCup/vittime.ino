@@ -26,14 +26,20 @@ void kitSalvataggio(int posizione) {
   else if (posizione == 3)
     ruota (1);
 
-  if (kitPosition)
-    while (!servoDispenserFunction(posSXSM2)) {}
-  else
-    while (!servoDispenserFunction(posDXSM2)) {}
-
-  aspetta(500);
-
-  while (!servoDispenserFunction(posAVSM2)) {}
+  if (kitPosition) {
+    while (!servoDispenserSXFunction(posDownSM2)) {}
+    aspetta(500);
+    while (!servoDispenserSXFunction(posOpenSM2)) {}
+    aspetta(500);
+    while (!servoDispenserSXFunction(posCloseSM2)) {}
+  }
+  else {
+    while (!servoDispenserDXFunction(posDownSM3)) {}
+    aspetta(500);
+    while (!servoDispenserDXFunction(posOpenSM3)) {}
+    aspetta(500);
+    while (!servoDispenserDXFunction(posCloseSM3)) {}
+  }
 
   kitPosition = !kitPosition;
   kitCounter--;
