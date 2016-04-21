@@ -1,21 +1,29 @@
 //-------------------------------------------------------------------------------
 //PIN
 
-//Servo Motore 1
+//Servo Motore 1 Torretta
 #define SM1 9
 #define timeSM1 5
 #define posSXSM1 0
 #define posAVSM1 90
 #define posDXSM1 180
-int posizioneSM1 = 90;
+int posizioneSM1 = posAVSM1;
 
-//Servo Motore 2
+//Servo Motore 2 SX
 #define SM2 10
 #define timeSM2 5
-#define posSXSM2 0
-#define posAVSM2 90
-#define posDXSM2 180
-int posizioneSM2 = 90;
+#define posDownSM2 0
+#define posCloseSM2 20
+#define posOpenSM2 90
+int posizioneSM2 = posCloseSM2;
+
+//Servo Motore 3 DX
+#define SM3 11
+#define timeSM3 5
+#define posDownSM3 180
+#define posCloseSM3 160
+#define posOpenSM3 90
+int posizioneSM3 = posCloseSM3;
 
 //Alimentazione Sensori
 #define ENRGB 25
@@ -56,7 +64,8 @@ int posizioneSM2 = 90;
 
 #include <Servo.h>
 Servo servoTorretta;
-Servo servoDispenser;
+Servo servoDispenserSX;
+Servo servoDispenserDX;
 
 //-------------------------------------------------------------------------------
 //GIROSCOPIO
@@ -124,7 +133,7 @@ int previousL = 0;
 unsigned int mappa[sizeX][sizeY][sizeL];
 short passaggi[sizeX][sizeY][sizeL];
 
-int kitCounter = 8;
+int kitCounter = 12;
 bool kitPosition = false;
 
 //-------------------------------------------------------------------------------
