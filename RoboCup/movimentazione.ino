@@ -162,7 +162,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
 
 void rotazione(float gradiVoluti, float velocita) {
   float gradiIniziali = gyroscope(0, true);
-  float Kp = 0.8;
+  float Kp = 0.3;
   float errore = 0;
   float gradiAttuali = gradiIniziali;
 
@@ -175,7 +175,7 @@ void rotazione(float gradiVoluti, float velocita) {
     gradiAttuali = gyroscope(0, true);
     errore = abs(gradiVoluti) + abs(gradiIniziali) - abs(gradiAttuali);
     motori(velocita + errore * Kp, -velocita - errore * Kp);
-    if (abs(gradiIniziali - gradiAttuali) >= gradiVoluti)
+    if (abs(gradiIniziali - gradiAttuali) >= abs(gradiVoluti))
       break;
   }
 
