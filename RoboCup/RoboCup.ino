@@ -4,25 +4,25 @@
 //Servo Motore 1 Torretta
 #define SM1 9
 #define timeSM1 5
-#define posSXSM1 0
-#define posAVSM1 90
-#define posDXSM1 180
+#define posSXSM1 180
+#define posAVSM1 88
+#define posDXSM1 5
 int posizioneSM1 = posAVSM1;
 
 //Servo Motore 2 SX
 #define SM2 10
 #define timeSM2 5
-#define posDownSM2 0
-#define posCloseSM2 20
-#define posOpenSM2 90
+#define posDownSM2 180
+#define posCloseSM2 150
+#define posOpenSM2 130
 int posizioneSM2 = posCloseSM2;
 
 //Servo Motore 3 DX
 #define SM3 11
 #define timeSM3 5
-#define posDownSM3 180
-#define posCloseSM3 160
-#define posOpenSM3 90
+#define posDownSM3 0
+#define posCloseSM3 30
+#define posOpenSM3 50
 int posizioneSM3 = posCloseSM3;
 
 //Alimentazione Sensori
@@ -142,10 +142,15 @@ bool kitPosition = false;
 void setup() {
   Serial.begin(115200);
   Serial1.begin(115200);
+
   pinSetup();
+  Serial.println("pinSetup OK");
   resetArduinoNano();
+  Serial.println("resetArduinoNano OK");
   sensorSetup();
+  Serial.println("sensorSetup OK");
   sensorCalibration();
+  Serial.println("sensorCalibration OK");
 
   long unsigned int time = millis();
   while (true) {
@@ -157,6 +162,8 @@ void setup() {
       if (Serial1.readStringUntil('\n').indexOf("OK") != -1)
         break;
   }
+  
+Serial.println("Gyroscope OK");
 
   Scheduler.startLoop(seriale);
 }

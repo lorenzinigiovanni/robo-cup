@@ -5,10 +5,10 @@
 void setup() {
   Wire.begin();
   Serial.begin(9600);
-  delay(1000);
+  //delay(1000);
   //changeAddress(113, 226); //aggiungere 1-2-3... a 112 e moltiplicare per due
-  setGain(113, 3);
-  setRange(113, 255);
+  //setGain(113, 0);
+  //setRange(113, 255);
 }
 
 void loop() {
@@ -42,7 +42,7 @@ void lettura(byte address) {
   Wire.endTransmission();      // stop transmitting
 
   // step 2: wait for readings to happen
-  delay(70);                   // datasheet suggests at least 65 milliseconds
+  delay(65);                   // datasheet suggests at least 65 milliseconds
 
   // step 3: instruct sensor to return a particular echo reading
   Wire.beginTransmission(address); // transmit to device #112
@@ -60,7 +60,7 @@ void lettura(byte address) {
     Serial.println(reading);   // print the reading
   }
 
-  delay(250);                  // wait a bit since people have to read the output :)
+  //delay(250);                  // wait a bit since people have to read the output :)
 }
 
 void changeAddress(byte oldAddress, byte newAddress) {
