@@ -44,6 +44,8 @@ void setup() {
   pinMode(10, OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);
 
+  mpu.testConnection() ? digitalWrite(LED_BUILTIN, HIGH) : digitalWrite(LED_BUILTIN, LOW);
+
   //calGiroscopio(100, 8, 1);
 
   devStatus = mpu.dmpInitialize();
@@ -57,12 +59,14 @@ void setup() {
     mpu.setZGyroOffset(gz_offset);
   */
 
-  mpu.setXAccelOffset(-2825);
-  mpu.setYAccelOffset(-1054);
-  mpu.setZAccelOffset(1106);
-  mpu.setXGyroOffset(92);
-  mpu.setYGyroOffset(-61);
-  mpu.setZGyroOffset(15);
+  //-2859  -987  1079  111 -52 -8 //22-04-16
+
+  mpu.setXAccelOffset(-2859);
+  mpu.setYAccelOffset(-987);
+  mpu.setZAccelOffset(1079);
+  mpu.setXGyroOffset(111);
+  mpu.setYGyroOffset(-52);
+  mpu.setZGyroOffset(-8);
 
 
   if (devStatus == 0) {
@@ -143,6 +147,8 @@ float gyroscope(int scelta, bool rotazioneContinua) {
       return 2;
     else if (misura[scelta] < -90 + errorePosizioni && misura[scelta] > -90 - errorePosizioni)
       return 3;
+    else
+      return 0;
   }
 }
 

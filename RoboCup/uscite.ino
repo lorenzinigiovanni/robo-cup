@@ -66,6 +66,6 @@ void motori(float powerM2, float powerM1) {
 
 void resetArduinoNano() {
   digitalWrite(resetNano, LOW);
-  aspetta(100);
+  aspetta(500);
   digitalWrite(resetNano, HIGH);
 }

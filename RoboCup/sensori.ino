@@ -4,25 +4,30 @@ bool colore(int color) {
   tcs.getRawData(&red, &green, &blue, &clear);
 
   uint32_t sum = clear;
-  float r, g, b;
+  int r, g, b;
 
   r = red * Kred;
   g = green * Kgreen;
   b = blue * Kblue;
 
   switch (color) {
-    case 0:
+    case 0: //bianco
       if (r > 200 && g > 200 && b > 200)
         return true;
-    case 1:
+      else
+        return false;
+    case 1: //nero
       if (r < 50 && g < 50 && b < 50)
         return true;
-    case 2:
+      else
+        return false;
+    case 2: //altro
       if (r > 100 && r < 200 && g > 100 && g < 200 && b > 100 && b < 200)
         return true;
-    default:
-      return false;
+      else
+        return false;
   }
+
   return false;
 }
 
@@ -59,26 +64,32 @@ float sensoreTemperatura(int numeroSensore) {
 //-------------------------------------------------------------------------------
 
 float sensoreDistanza(int numeroSensore) {
-  float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
+  float misure[3] = {0.0, 0.0, 0.0};
   float misura = 0;
   float massimo = 0;
   float minimo = 100000;
-  int indirizzo = 113;
-  indirizzo += numeroSensore;
+  int indirizzo = 112;
 
-  for (int i = 0; i < 5; i++) {
+  if (numeroSensore == 0)
+    indirizzo = 114;
+  else if (numeroSensore == 1)
+    indirizzo = 113;
+
+  /*for (int i = 0; i < 5; i++) {
     misure[i] = SRF10(indirizzo);
     massimo = max(massimo, misure[i]);
     minimo = min(minimo, misure[i]);
-  }
+    }
 
-  for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
     misura += misure[i];
 
-  misura -= massimo;
-  misura -= minimo;
-  misura /= 3;
-  return misura;
+    misura -= massimo;
+    misura -= minimo;
+    misura /= 3;*/
+  //return misura;
+
+  return SRF10(indirizzo);
 }
 
 //-------------------------------------------------------------------------------
@@ -86,18 +97,32 @@ float sensoreDistanza(int numeroSensore) {
 float gyroscope(int scelta, bool rotazioneContinua) {
   Serial1.println("g");
 
+  char tmp[15];
+  char* pch;
+  int i = 0;
+
+
   long unsigned int tempo = millis();
   while (!Serial1.available()) {
     if (millis() - tempo > gyroscopeTimeOut)
       break;
   }
 
-  String str = Serial1.readStringUntil(10);
+  Serial1.readStringUntil(10).toCharArray(tmp, sizeof(tmp) / sizeof(char));
+  pch = strtok(tmp, ",");
 
-  for (int i = 0; i < 6; i++) {
+  while (pch != NULL) {
+    gyroArray[i] = atof(pch);
+    pch = strtok(NULL, ",");
+    i++;
+  }
+
+  /*String str = Serial1.readStringUntil(10);
+
+    for (int i = 0; i < 6; i++) {
     gyroArray[i] = str.substring(0, str.indexOf(',')).toFloat();
     str.remove(0, str.indexOf(',') + 1);
-  }
+    }*/
 
   if (!rotazioneContinua)
     return gyroArray[scelta];
@@ -115,7 +140,7 @@ float SRF10(byte address) {
   Wire.write(byte(0x51));
   Wire.endTransmission();
 
-  aspetta(70);
+  aspetta(65);
 
   Wire.beginTransmission(address);
   Wire.write(byte(0x02));
@@ -137,14 +162,14 @@ float SRF10(byte address) {
 float MLX90614(bool sensor, bool measure) {
   uint16_t tempUK;
   uint8_t hB, lB, pec;
-  byte sensorAddress = 0x5A;
+  byte sensorAddress = 0x55;
   byte memoryAddress = 0x06;
 
   if (measure)
     memoryAddress = 0x07;
 
   if (sensor)
-    sensorAddress = 0x55;
+    sensorAddress = 0x5A;
 
   TWI_StartRead(pTwi, sensorAddress, memoryAddress, 1);
 
@@ -159,10 +184,9 @@ float MLX90614(bool sensor, bool measure) {
   TWI_WaitTransferComplete(pTwi, RECV_TIMEOUT);
 
   tempUK = (hB << 8) | lB;
-  if (tempUK & (1 << 16)) {
+
+  if (tempUK & (1 << 16))
     return 0;
-  }
-  else {
+  else
     return ((float)tempUK * 2) / 100 ;
-  }
 }
