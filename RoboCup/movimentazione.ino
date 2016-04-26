@@ -116,13 +116,8 @@ void avanzamento(float distanzaVoluta, float velocita) {
 
   while (true) {
     distance = distanza(0, true);
-    //Serial.println(distanzaIniziale - distance);
-
     erroreGyro = gradiIniziali - gyroscope(0, true);
-
     erroreDist = abs(distanzaVoluta - distanzaIniziale + distance);
-
-    Serial.println(velocita + erroreGyro * Kg + erroreDist * Kd);
 
     motori((velocita + erroreGyro * Kg + erroreDist * Kd) / 1.2, (velocita - erroreGyro * Kg + erroreDist * Kd) / 1.2);
 

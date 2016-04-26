@@ -12,17 +12,17 @@ int posizioneSM1 = posAVSM1;
 //Servo Motore 2 SX
 #define SM2 10
 #define timeSM2 5
-#define posDownSM2 180
-#define posCloseSM2 150
-#define posOpenSM2 130
+#define posDownSM2 70
+#define posCloseSM2 35
+#define posOpenSM2 20
 int posizioneSM2 = posCloseSM2;
 
 //Servo Motore 3 DX
 #define SM3 11
 #define timeSM3 5
-#define posDownSM3 0
-#define posCloseSM3 30
-#define posOpenSM3 50
+#define posDownSM3 100
+#define posCloseSM3 130
+#define posOpenSM3 155
 int posizioneSM3 = posCloseSM3;
 
 //Alimentazione Sensori
@@ -108,8 +108,8 @@ int sogliaTemperatura = 0;
 //-------------------------------------------------------------------------------
 //SRF10
 
-int gain = 0;
-int range = 255;
+int gain = 6;
+byte range = 0x5D;
 
 //-------------------------------------------------------------------------------
 //SCHEDULER
@@ -152,7 +152,7 @@ void setup() {
   sensorCalibration();
   Serial.println("sensorCalibration OK");
 
-  long unsigned int time = millis();
+  /*long unsigned int time = millis();
   while (true) {
     if (millis() - time > gyroscopeCalibrationTimeOut) {
       resetArduinoNano();
@@ -162,8 +162,8 @@ void setup() {
       if (Serial1.readStringUntil('\n').indexOf("OK") != -1)
         break;
   }
-  
-Serial.println("Gyroscope OK");
+
+  Serial.println("Gyroscope OK");*/
 
   Scheduler.startLoop(seriale);
 }

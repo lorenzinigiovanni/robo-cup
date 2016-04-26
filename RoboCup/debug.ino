@@ -10,8 +10,8 @@ void seriale() {
     avanzamento(-30, 175);
     aspetta(2000);*/
 
-  //Serial.println(sensoreDistanza(0));
-  Serial.println(gyroscope(2, true));
+  Serial.println(sensoreDistanza(0));
+  //Serial.println(gyroscope(2, true));
   
   yield();
 }

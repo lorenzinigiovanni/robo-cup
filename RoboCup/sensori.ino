@@ -97,7 +97,7 @@ float sensoreDistanza(int numeroSensore) {
 float gyroscope(int scelta, bool rotazioneContinua) {
   Serial1.println("g");
 
-  char tmp[15];
+  char tmp[150];
   char* pch;
   int i = 0;
 
@@ -134,13 +134,16 @@ float gyroscope(int scelta, bool rotazioneContinua) {
 
 float SRF10(byte address) {
   int reading = 0;
+  float distance = 0.0;
+
+  setRange(address, range);
 
   Wire.beginTransmission(address);
   Wire.write(byte(0x00));
-  Wire.write(byte(0x51));
+  Wire.write(byte(0x52));
   Wire.endTransmission();
 
-  aspetta(65);
+  aspetta(20);
 
   Wire.beginTransmission(address);
   Wire.write(byte(0x02));
@@ -154,7 +157,34 @@ float SRF10(byte address) {
     reading |= Wire.read();
   }
 
-  return reading;
+  distance = 0.01715 * reading; //distance = reading / 58.31; //20 °C
+
+  return distance;
+
+  /*int reading = 0;
+
+    setRange(address, range);
+
+    Wire.beginTransmission(address);
+    Wire.write(byte(0x00));
+    Wire.write(byte(0x51));
+    Wire.endTransmission();
+
+    aspetta(25);
+
+    Wire.beginTransmission(address);
+    Wire.write(byte(0x02));
+    Wire.endTransmission();
+
+    Wire.requestFrom(int(address), 2);
+
+    if (2 <= Wire.available()) {
+    reading = Wire.read();
+    reading = reading << 8;
+    reading |= Wire.read();
+    }
+
+    return reading;*/
 }
 
 //-------------------------------------------------------------------------------

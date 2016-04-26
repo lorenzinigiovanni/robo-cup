@@ -18,5 +18,36 @@ void percorso(int x, int y, int livello) {
 //-------------------------------------------------------------------------------
 
 int scegliDirezione(int x, int y, int livello) {
-  return x / y * livello;
+  if (!proprieta(x, y, livello, pMuroPosizione0)) {
+    if (!proprieta(x + 1, y, livello, pCellaVisitata))
+      return 0;
+  }
+  else if (!proprieta(x, y, livello, pMuroPosizione1)) {
+    if (!proprieta(x, y + 1, livello, pCellaVisitata))
+      return 1;
+  }
+  else if (!proprieta(x, y, livello, pMuroPosizione3)) {
+    if (!proprieta(x, y - 1, livello, pCellaVisitata))
+      return 3;
+  }
+  else if (!proprieta(x, y, livello, pMuroPosizione2)) {
+    if (!proprieta(x - 1, y, livello, pCellaVisitata))
+      return 2;
+  }
+  else if (!proprieta(x, y, livello, pMuroPosizione0)) {
+    if (!proprieta(x + 1, y, livello, pCellaVisitata))
+      return 0;
+  }
+  else if (!proprieta(x, y, livello, pMuroPosizione1)) {
+    if (!proprieta(x, y + 1, livello, pCellaVisitata))
+      return 1;
+  }
+  else if (!proprieta(x, y, livello, pMuroPosizione3)) {
+    if (!proprieta(x, y - 1, livello, pCellaVisitata))
+      return 3;
+  }
+  else if (!proprieta(x, y, livello, pMuroPosizione2)) {
+    if (!proprieta(x - 1, y, livello, pCellaVisitata))
+      return 2;
+  }
 }
