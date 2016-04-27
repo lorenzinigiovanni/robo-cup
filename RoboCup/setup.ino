@@ -28,7 +28,7 @@ void pinSetup() {
   servoTorretta.attach(SM1);
   servoDispenserSX.attach(SM2);
   servoDispenserDX.attach(SM3);
-  beep.attach(8);
+  beep.attach(9);
   while (!servoTorrettaFunction(posAVSM1)) {}
   while (!servoDispenserSXFunction(posCloseSM2)) {}
   while (!servoDispenserDXFunction(posCloseSM3)) {}

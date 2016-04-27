@@ -4,7 +4,7 @@
 #define button 53
 
 //Servo Motore 1 Torretta
-#define SM1 9
+#define SM1 8
 #define timeSM1 5
 #define posSXSM1 180
 #define posAVSM1 88
@@ -12,19 +12,19 @@
 int posizioneSM1 = posAVSM1;
 
 //Servo Motore 2 SX
-#define SM2 10
+#define SM2 11
 #define timeSM2 5
-#define posDownSM2 70
+#define posDownSM2 5
 #define posCloseSM2 35
-#define posOpenSM2 20
+#define posOpenSM2 60
 int posizioneSM2 = posCloseSM2;
 
 //Servo Motore 3 DX
-#define SM3 11
+#define SM3 10
 #define timeSM3 5
-#define posDownSM3 100
-#define posCloseSM3 130
-#define posOpenSM3 155
+#define posDownSM3 175
+#define posCloseSM3 140
+#define posOpenSM3 115
 int posizioneSM3 = posCloseSM3;
 
 //Alimentazione Sensori
@@ -43,7 +43,7 @@ int posizioneSM3 = posCloseSM3;
 #define M2E 2
 
 //Arduino Nano
-#define resetNano 22
+#define resetNano 52
 
 //-------------------------------------------------------------------------------
 //PROPRIETA
@@ -139,10 +139,21 @@ short passaggi[sizeX][sizeY][sizeL];
 int kitCounter = 12;
 bool kitPosition = false;
 
+#define tempoRampa 10000
+
 //-------------------------------------------------------------------------------
 //SETUP
 
 void setup() {
+  for (int i = 0; i < sizeX; i++) {
+    for (int j = 0; j < sizeY; j++) {
+      mappa[i][j][0] = 0;
+      mappa[i][j][1] = 0;
+      passaggi[i][j][0] = 0;
+      passaggi[i][j][1] = 0;
+    }
+  }
+
   Serial.begin(115200);
   Serial1.begin(115200);
 
@@ -168,10 +179,10 @@ void setup() {
 
   Serial.println("Gyroscope OK");
 
-  light(100, 1);
+  light(100, 3);
   go_on();
 
-  Scheduler.startLoop(seriale);
+  //Scheduler.startLoop(seriale);
 }
 
 //-------------------------------------------------------------------------------
@@ -180,20 +191,4 @@ void setup() {
 void loop() {
   program();
   yield();
-}
-
-void go_on() {
-  while (digitalRead(button)) {}
-  delay(300);
-  Serial.println("go_on() Completed!");
-}
-
-void light(int abdul, int count) {
-  for (int i = 0; i < count; i++) {
-    digitalWrite(colorLED, HIGH);
-    delay(abdul);
-    digitalWrite(colorLED, LOW);
-    delay(abdul);
-  }
-  analogWrite(colorLED, powerColorLED);
 }

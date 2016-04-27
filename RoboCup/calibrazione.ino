@@ -1,8 +1,8 @@
 void sensorCalibration() {
-  light(100, 1);
+  light(100, 3);
   go_on();
   calibrazioneTermometro();
-  light(100, 1);
+  light(100, 3);
   go_on();
   calibrazioneColor();
 }
@@ -29,6 +29,7 @@ void calibrazioneColor() {
 //-------------------------------------------------------------------------------
 
 void calibrazioneTermometro() {
+  Serial.print("calibrazione termometro...");
   int t = 0;
   int n = 10;
 
@@ -39,4 +40,5 @@ void calibrazioneTermometro() {
 
   t /= (n * 2);
   sogliaTemperatura = t + differenzaTemperatura;
+  Serial.println("OK");
 }

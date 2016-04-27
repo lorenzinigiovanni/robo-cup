@@ -31,7 +31,7 @@ bool servoDispenserDXFunction(int gradi) {
 
 //-------------------------------------------------------------------------------
 
-void motori(float powerM2, float powerM1) {
+void motori(float powerM1, float powerM2) {
   powerM2 = constrain(powerM2, -255, 255);
   powerM1 = constrain(powerM1, -255, 255);
 
@@ -68,4 +68,16 @@ void resetArduinoNano() {
   digitalWrite(resetNano, LOW);
   aspetta(500);
   digitalWrite(resetNano, HIGH);
+}
+
+//-------------------------------------------------------------------------------
+
+void light(int time, int count) {
+  for (int i = 0; i < count; i++) {
+    digitalWrite(colorLED, HIGH);
+    delay(time);
+    digitalWrite(colorLED, LOW);
+    delay(time);
+  }
+  analogWrite(colorLED, powerColorLED);
 }

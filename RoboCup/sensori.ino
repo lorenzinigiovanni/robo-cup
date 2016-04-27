@@ -64,12 +64,13 @@ float sensoreTemperatura(int numeroSensore) {
 //-------------------------------------------------------------------------------
 
 float sensoreDistanza(int numeroSensore) {
-  float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
+  int sizeArray = 5;
+  float misure[sizeArray];
   float misura = 0;
   float massimo = 0;
   float minimo = 100000;
+
   int indirizzo = 112;
-  int sizeArray = sizeof(misure) / sizeof(float);
 
   if (numeroSensore == 0)
     indirizzo = 114;
@@ -87,10 +88,8 @@ float sensoreDistanza(int numeroSensore) {
 
   misura -= massimo;
   misura -= minimo;
-  misura /= sizeArray;
+  misura /= (sizeArray - 2);
   return misura;
-
-  //return SRF10(indirizzo);
 }
 
 //-------------------------------------------------------------------------------
