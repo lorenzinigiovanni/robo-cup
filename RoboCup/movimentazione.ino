@@ -112,8 +112,6 @@ void avanzamento(float distanzaVoluta, float velocita) {
     Kd = -Kd;
   }
 
-  //distanzaVoluta = abs(distanzaVoluta);
-
   while (true) {
     distance = distanza(0, true);
     erroreGyro = gradiIniziali - gyroscope(0, true);
@@ -131,7 +129,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
         aggiungiProprieta(actualX, actualY, actualL, pCellaNera);
         velocita = -velocita;
         distanzaVoluta = distanzaIniziale - distanza(0, true);
-        distanzaIniziale = distance; //distanza(0, true);\
+        distanzaIniziale = distanza(0, true);
         gradiIniziali = gyroscope(0, true);
         while (true) {
           erroreGyro = gradiIniziali - gyroscope(0, true);
@@ -145,19 +143,19 @@ void avanzamento(float distanzaVoluta, float velocita) {
       }
     }
 
-    if (gyroscope(2, true) > 10) {
+    if (gyroscope(1, true) > 10) {
       while (true) {
         erroreGyro = gradiIniziali - gyroscope(0, true);
         motori(150 + erroreGyro * Kg, 150 - erroreGyro * Kg);
-        if (distanza(0, true) < 10 || gyroscope(2, true) < 8)
+        if (distanza(0, true) < 10 || gyroscope(1, true) < 8)
           break;
       }
     }
-    else if (gyroscope(2, true) < -10) {
+    else if (gyroscope(1, true) < -10) {
       while (true) {
         erroreGyro = gradiIniziali - gyroscope(0, true);
         motori(100 + erroreGyro * Kg, 100 - erroreGyro * Kg);
-        if (distanza(0, true) < 10 || gyroscope(2, true) > -8)
+        if (distanza(0, true) < 10 || gyroscope(1, true) > -8)
           break;
       }
     }

@@ -39,10 +39,13 @@ void setup() {
 
   Serial.begin(115200);
 
-  mpu.initialize();
-
   pinMode(10, OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);
+
+  digitalWrite(10, HIGH);
+  delay(500);
+
+  mpu.initialize();
 
   mpu.testConnection() ? digitalWrite(LED_BUILTIN, HIGH) : digitalWrite(LED_BUILTIN, LOW);
 
@@ -73,6 +76,11 @@ void setup() {
     mpu.setDMPEnabled(true);
     dmpReady = true;
     packetSize = mpu.dmpGetFIFOPacketSize();
+  }
+  else {
+    digitalWrite(10, LOW);
+    delay(500);
+    setup();
   }
 
   Serial.println("OK");

@@ -1,5 +1,9 @@
 void sensorCalibration() {
+  light(100, 1);
+  go_on();
   calibrazioneTermometro();
+  light(100, 1);
+  go_on();
   calibrazioneColor();
 }
 

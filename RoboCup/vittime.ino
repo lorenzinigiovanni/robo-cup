@@ -1,7 +1,9 @@
 void vittima(int x, int y, int livello, int posizione) {
   for (int i = 0; i < 5; i++) {
+    beep.write(180);
     digitalWrite(colorLED, HIGH);
     aspetta(500);
+    beep.write(0);
     digitalWrite(colorLED, LOW);
     aspetta(500);
   }

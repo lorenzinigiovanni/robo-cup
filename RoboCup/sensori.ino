@@ -64,32 +64,33 @@ float sensoreTemperatura(int numeroSensore) {
 //-------------------------------------------------------------------------------
 
 float sensoreDistanza(int numeroSensore) {
-  float misure[3] = {0.0, 0.0, 0.0};
+  float misure[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
   float misura = 0;
   float massimo = 0;
   float minimo = 100000;
   int indirizzo = 112;
+  int sizeArray = sizeof(misure) / sizeof(float);
 
   if (numeroSensore == 0)
     indirizzo = 114;
   else if (numeroSensore == 1)
     indirizzo = 113;
 
-  /*for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < sizeArray; i++) {
     misure[i] = SRF10(indirizzo);
     massimo = max(massimo, misure[i]);
     minimo = min(minimo, misure[i]);
-    }
+  }
 
-    for (int i = 0; i < 5; i++)
+  for (int i = 0; i < sizeArray; i++)
     misura += misure[i];
 
-    misura -= massimo;
-    misura -= minimo;
-    misura /= 3;*/
-  //return misura;
+  misura -= massimo;
+  misura -= minimo;
+  misura /= sizeArray;
+  return misura;
 
-  return SRF10(indirizzo);
+  //return SRF10(indirizzo);
 }
 
 //-------------------------------------------------------------------------------

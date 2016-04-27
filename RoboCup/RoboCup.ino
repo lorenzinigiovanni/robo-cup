@@ -1,6 +1,8 @@
 //-------------------------------------------------------------------------------
 //PIN
 
+#define button 53
+
 //Servo Motore 1 Torretta
 #define SM1 9
 #define timeSM1 5
@@ -41,7 +43,7 @@ int posizioneSM3 = posCloseSM3;
 #define M2E 2
 
 //Arduino Nano
-#define resetNano 28
+#define resetNano 22
 
 //-------------------------------------------------------------------------------
 //PROPRIETA
@@ -66,6 +68,7 @@ int posizioneSM3 = posCloseSM3;
 Servo servoTorretta;
 Servo servoDispenserSX;
 Servo servoDispenserDX;
+Servo beep;
 
 //-------------------------------------------------------------------------------
 //GIROSCOPIO
@@ -152,7 +155,7 @@ void setup() {
   sensorCalibration();
   Serial.println("sensorCalibration OK");
 
-  /*long unsigned int time = millis();
+  long unsigned int time = millis();
   while (true) {
     if (millis() - time > gyroscopeCalibrationTimeOut) {
       resetArduinoNano();
@@ -163,7 +166,10 @@ void setup() {
         break;
   }
 
-  Serial.println("Gyroscope OK");*/
+  Serial.println("Gyroscope OK");
+
+  light(100, 1);
+  go_on();
 
   Scheduler.startLoop(seriale);
 }
@@ -174,4 +180,20 @@ void setup() {
 void loop() {
   program();
   yield();
+}
+
+void go_on() {
+  while (digitalRead(button)) {}
+  delay(300);
+  Serial.println("go_on() Completed!");
+}
+
+void light(int abdul, int count) {
+  for (int i = 0; i < count; i++) {
+    digitalWrite(colorLED, HIGH);
+    delay(abdul);
+    digitalWrite(colorLED, LOW);
+    delay(abdul);
+  }
+  analogWrite(colorLED, powerColorLED);
 }
