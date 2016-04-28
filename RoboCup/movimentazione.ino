@@ -81,19 +81,19 @@ void ruota(int direzione) {
 //-------------------------------------------------------------------------------
 
 void avanti() {
-  avanzamento(30, 150);
+  avanzamento(24.5, 150);
 }
 
 void destra() {
-  rotazione(90, 150);
+  rotazione(87, 150);
 }
 
 void dietro() {
-  avanzamento(-30, 150);
+  avanzamento(-24.5, 150);
 }
 
 void sinistra() {
-  rotazione(-90, 150);
+  rotazione(-87, 150);
 }
 
 //-------------------------------------------------------------------------------
@@ -118,6 +118,23 @@ void avanzamento(float distanzaVoluta, float velocita) {
     erroreDist = abs(distanzaVoluta - distanzaIniziale + distance);
 
     motori((velocita + erroreGyro * Kg + erroreDist * Kd) / 1.2, (velocita - erroreGyro * Kg + erroreDist * Kd) / 1.2);
+
+    if (distance <= 7) {
+      unsigned int tempoIniziale = millis();
+      bool flag = false;
+      while (true) {
+        if (millis() - tempoIniziale >= 1000) {
+          break;
+          flag = true;
+        }
+        if (gyroscope(1, true) > 10) {
+          break;
+          flag = false;
+        }
+      }
+      if (flag)
+        break;
+    }
 
     if (abs(distanzaIniziale - distance) >= abs(distanzaVoluta))
       break;
@@ -173,9 +190,6 @@ void avanzamento(float distanzaVoluta, float velocita) {
         }
       }
     }
-
-    if (distance < 7)
-      break;
   }
 
   motori (0, 0);
@@ -185,7 +199,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
 
 void rotazione(float gradiVoluti, float velocita) {
   float gradiIniziali = gyroscope(0, true);
-  float Kp = 0.3;
+  float Kp = 1.0;//0.3;
   float errore = 0;
   float gradiAttuali = gradiIniziali;
 

@@ -1,11 +1,11 @@
 void percorso(int x, int y, int livello) {
-  if (proprieta(x, y, livello, pVittimaPosizione0))
+  if (proprieta(x, y, livello, pVittimaPosizione0) && !proprieta(x, y, livello, pVittimeSalvate))
     vittima(x, y, livello, 0);
-  if (proprieta(x, y, livello, pVittimaPosizione1))
+  if (proprieta(x, y, livello, pVittimaPosizione1) && !proprieta(x, y, livello, pVittimeSalvate))
     vittima(x, y, livello, 1);
-  if (proprieta(x, y, livello, pVittimaPosizione2))
+  if (proprieta(x, y, livello, pVittimaPosizione2) && !proprieta(x, y, livello, pVittimeSalvate))
     vittima(x, y, livello, 2);
-  if (proprieta(x, y, livello, pVittimaPosizione3))
+  if (proprieta(x, y, livello, pVittimaPosizione3) && !proprieta(x, y, livello, pVittimeSalvate))
     vittima(x, y, livello, 3);
 
   int direzione = scegliDirezione(x, y, livello);

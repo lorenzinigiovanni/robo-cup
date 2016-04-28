@@ -106,14 +106,14 @@ static const uint32_t XMIT_TIMEOUT = 100000;
 #include <include/twi.h>
 Twi *pTwi = WIRE1_INTERFACE;
 
-#define differenzaTemperatura 5;
+#define differenzaTemperatura 1;
 int sogliaTemperatura = 0;
 
 //-------------------------------------------------------------------------------
 //SRF10
 
 int gain = 6;
-byte range = 0x5D;
+byte range = 0x45;
 
 //-------------------------------------------------------------------------------
 //SCHEDULER
@@ -183,13 +183,13 @@ void setup() {
   light(100, 6);
   go_on();
 
-  //Scheduler.startLoop(seriale);
+  Scheduler.startLoop(seriale);
 }
 
 //-------------------------------------------------------------------------------
 //LOOP
 
 void loop() {
-  program();
+  //program();
   yield();
 }

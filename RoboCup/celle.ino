@@ -27,34 +27,35 @@ bool aggiungiProprieta(int x, int y, int livello, int prop) {
 //-------------------------------------------------------------------------------
 
 bool mappatura(int x, int y, int livello) {
-  if (!proprieta(x, y, livello, pCellaVisitata)) {
-    aggiungiProprieta(x, y, livello, pCellaVisitata);
+  //if (!proprieta(x, y, livello, pCellaVisitata)) {
+  mappa[x][y][livello] = 0;
+  aggiungiProprieta(x, y, livello, pCellaVisitata);
 
-    if (distanza(0, false) < 20) {
-      aggiungiProprieta(x, y, livello, pMuroPosizione0);
-      if (temperatura(0, false) > sogliaTemperatura)
-        aggiungiProprieta(x, y, livello, pVittimaPosizione0);
-    }
-    if (distanza(1, false) < 20) {
-      aggiungiProprieta(x, y, livello, pMuroPosizione1);
-      if (temperatura(1, false) > sogliaTemperatura)
-        aggiungiProprieta(x, y, livello, pVittimaPosizione1);
-    }
-    if (distanza(2, false) < 20) {
-      aggiungiProprieta(x, y, livello, pMuroPosizione2);
-      if (temperatura(2, false) > sogliaTemperatura)
-        aggiungiProprieta(x, y, livello, pVittimaPosizione2);
-    }
-    if (distanza(3, false) < 20) {
-      aggiungiProprieta(x, y, livello, pMuroPosizione3);
-      if (temperatura(3, false) > sogliaTemperatura)
-        aggiungiProprieta(x, y, livello, pVittimaPosizione3);
-    }
-    if (colore(1))
-      aggiungiProprieta(x, y, livello, pCellaNera);
-    else if (colore(2))
-      aggiungiProprieta(x, y, livello, pCellaGrigia);
-    return true;
+  if (distanza(0, false) < 15) {
+    aggiungiProprieta(x, y, livello, pMuroPosizione0);
+    if (temperatura(0, false) > sogliaTemperatura)
+      aggiungiProprieta(x, y, livello, pVittimaPosizione0);
   }
-  return false;
+  if (distanza(1, false) < 17) {
+    aggiungiProprieta(x, y, livello, pMuroPosizione1);
+    if (temperatura(1, false) > sogliaTemperatura)
+      aggiungiProprieta(x, y, livello, pVittimaPosizione1);
+  }
+  if (distanza(2, false) < 20) {
+    aggiungiProprieta(x, y, livello, pMuroPosizione2);
+    if (temperatura(2, false) > sogliaTemperatura)
+      aggiungiProprieta(x, y, livello, pVittimaPosizione2);
+  }
+  if (distanza(3, false) < 17) {
+    aggiungiProprieta(x, y, livello, pMuroPosizione3);
+    if (temperatura(3, false) > sogliaTemperatura)
+      aggiungiProprieta(x, y, livello, pVittimaPosizione3);
+  }
+  if (colore(1))
+    aggiungiProprieta(x, y, livello, pCellaNera);
+  else if (colore(2))
+    aggiungiProprieta(x, y, livello, pCellaGrigia);
+  return true;
+  //}
+  //return false;
 }

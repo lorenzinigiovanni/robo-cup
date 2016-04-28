@@ -77,19 +77,22 @@ float sensoreDistanza(int numeroSensore) {
   else if (numeroSensore == 1)
     indirizzo = 113;
 
-  for (int i = 0; i < sizeArray; i++) {
+  /*for (int i = 0; i < sizeArray; i++) {
     misure[i] = SRF10(indirizzo);
     massimo = max(massimo, misure[i]);
     minimo = min(minimo, misure[i]);
-  }
+    }
 
-  for (int i = 0; i < sizeArray; i++)
+    for (int i = 0; i < sizeArray; i++)
     misura += misure[i];
 
-  misura -= massimo;
-  misura -= minimo;
-  misura /= (sizeArray - 2);
-  return misura;
+    misura -= massimo;
+    misura -= minimo;
+    misura /= (sizeArray - 2);
+
+    return misura;*/
+
+  return SRF10(indirizzo);
 }
 
 //-------------------------------------------------------------------------------
@@ -143,7 +146,7 @@ float SRF10(byte address) {
   Wire.write(byte(0x52));
   Wire.endTransmission();
 
-  aspetta(20);
+  aspetta(15);
 
   Wire.beginTransmission(address);
   Wire.write(byte(0x02));
