@@ -22,6 +22,7 @@ void pinSetup() {
   pinMode(colorLED, OUTPUT);
 
   pinMode(resetNano, OUTPUT);
+  digitalWrite(resetNano, HIGH);
 
   pinMode(button, INPUT_PULLUP);
 

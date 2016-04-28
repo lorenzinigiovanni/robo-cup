@@ -16,7 +16,7 @@ int posizioneSM1 = posAVSM1;
 #define timeSM2 5
 #define posDownSM2 5
 #define posCloseSM2 35
-#define posOpenSM2 60
+#define posOpenSM2 55
 int posizioneSM2 = posCloseSM2;
 
 //Servo Motore 3 DX
@@ -24,7 +24,8 @@ int posizioneSM2 = posCloseSM2;
 #define timeSM3 5
 #define posDownSM3 175
 #define posCloseSM3 140
-#define posOpenSM3 115
+#define posOpenSM3 110
+
 int posizioneSM3 = posCloseSM3;
 
 //Alimentazione Sensori
@@ -43,7 +44,7 @@ int posizioneSM3 = posCloseSM3;
 #define M2E 2
 
 //Arduino Nano
-#define resetNano 52
+#define resetNano 22
 
 //-------------------------------------------------------------------------------
 //PROPRIETA
@@ -139,7 +140,7 @@ short passaggi[sizeX][sizeY][sizeL];
 int kitCounter = 12;
 bool kitPosition = false;
 
-#define tempoRampa 10000
+#define tempoRampa 4000
 
 //-------------------------------------------------------------------------------
 //SETUP
@@ -179,7 +180,7 @@ void setup() {
 
   Serial.println("Gyroscope OK");
 
-  light(100, 3);
+  light(100, 6);
   go_on();
 
   //Scheduler.startLoop(seriale);

@@ -147,7 +147,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
       unsigned int tempoIniziale = millis();
       while (true) {
         erroreGyro = gradiIniziali - gyroscope(0, true);
-        motori(150 + erroreGyro * Kg, 150 - erroreGyro * Kg);
+        motori(200 + erroreGyro * Kg, 200 - erroreGyro * Kg);
         if (distanza(0, true) < 10 || gyroscope(1, true) < 8) {
           if (millis() - tempoIniziale >= tempoRampa)
             if (actualL == 0) {
@@ -162,7 +162,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
       unsigned int tempoIniziale = millis();
       while (true) {
         erroreGyro = gradiIniziali - gyroscope(0, true);
-        motori(100 + erroreGyro * Kg, 100 - erroreGyro * Kg);
+        motori(125 + erroreGyro * Kg, 125 - erroreGyro * Kg);
         if (distanza(0, true) < 10 || gyroscope(1, true) > -8) {
           if (millis() - tempoIniziale >= tempoRampa)
             if (actualL == 1) {
