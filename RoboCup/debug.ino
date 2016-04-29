@@ -1,23 +1,11 @@
 void seriale() {
-  Serial.println("dx");
-  destra();
-  aspetta(2000);
-  Serial.println("sx");
-  sinistra();
-  aspetta(3000);
-  /*avanzamento(30, 175);
-    aspetta(2000);
-    avanzamento(-30, 175);
-    aspetta(2000);*/
-
-  //Serial.println(sensoreDistanza(0));
-  //Serial.println(gyroscope(2, true));
-  //Serial.print(temperatura(-1, true));
-  //Serial.print("   ");
-  //Serial.println(temperatura(1, true));
-  //kitSalvataggio(0);
-  //delay(1000);
-
+  /*avanti();
+  delay(1000);
+  dietro();
+  delay(1000);*/
+  //Serial.println(gyroscope(1, true));
+  //Serial.println(distanza(0, true));
+  //colore(0);
   yield();
 }
 

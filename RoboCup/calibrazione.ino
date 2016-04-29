@@ -10,6 +10,7 @@ void sensorCalibration() {
 //-------------------------------------------------------------------------------
 
 void calibrazioneColor() {
+  Serial.print("calibrazione colorimetro...");
   uint16_t clear, red, green, blue;
 
   tcs.getRawData(&red, &green, &blue, &clear);
@@ -24,6 +25,7 @@ void calibrazioneColor() {
   Kred = 255 / r;
   Kgreen = 255 / g;
   Kblue = 255 / b;
+  Serial.println("OK");
 }
 
 //-------------------------------------------------------------------------------

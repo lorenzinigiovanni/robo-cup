@@ -77,10 +77,10 @@ void initDistanziometro() {
 
 //-------------------------------------------------------------------------------
 
-void setGain(byte address, byte range) {
+void setGain(byte address, byte gain) {
   Wire.beginTransmission(address);
   Wire.write(byte(0x01));
-  Wire.write(byte(range));
+  Wire.write(byte(gain));
   Wire.endTransmission();
 }
 

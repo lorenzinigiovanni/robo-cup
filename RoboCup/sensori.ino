@@ -10,9 +10,16 @@ bool colore(int color) {
   g = green * Kgreen;
   b = blue * Kblue;
 
+  /*Serial.print("R: ");
+    Serial.print(r);
+    Serial.print(" G: ");
+    Serial.print(g);
+    Serial.print(" B: ");
+    Serial.println(b);*/
+
   switch (color) {
     case 0: //bianco
-      if (r > 200 && g > 200 && b > 200)
+      if (r > 210 && g > 210 && b > 210)
         return true;
       else
         return false;
@@ -21,8 +28,8 @@ bool colore(int color) {
         return true;
       else
         return false;
-    case 2: //altro
-      if (r > 100 && r < 200 && g > 100 && g < 200 && b > 100 && b < 200)
+    case 2: //riflettente
+      if (r > 200 && g > 180 && g < 220 && b > 180 && b < 220)
         return true;
       else
         return false;

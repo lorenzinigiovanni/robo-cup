@@ -25,7 +25,6 @@ int posizioneSM2 = posCloseSM2;
 #define posDownSM3 175
 #define posCloseSM3 140
 #define posOpenSM3 110
-
 int posizioneSM3 = posCloseSM3;
 
 //Alimentazione Sensori
@@ -61,6 +60,10 @@ int posizioneSM3 = posCloseSM3;
 #define pVittimeSalvate 9
 #define pCellaNera 10
 #define pCellaGrigia 11
+#define pRampaPosizione0 12
+#define pRampaPosizione1 13
+#define pRampaPosizione2 14
+#define pRampaPosizione3 15
 
 //-------------------------------------------------------------------------------
 //SERVO
@@ -140,6 +143,9 @@ short passaggi[sizeX][sizeY][sizeL];
 int kitCounter = 12;
 bool kitPosition = false;
 
+bool rampa = true;
+int cellCounter = 0;
+
 #define tempoRampa 4000
 
 //-------------------------------------------------------------------------------
@@ -177,19 +183,19 @@ void setup() {
       if (Serial1.readStringUntil('\n').indexOf("OK") != -1)
         break;
   }
-
   Serial.println("Gyroscope OK");
 
   light(100, 6);
   go_on();
 
-  Scheduler.startLoop(seriale);
+  //Scheduler.startLoop(seriale);
+  azzeraCulo();
 }
 
 //-------------------------------------------------------------------------------
 //LOOP
 
 void loop() {
-  //program();
+  program();
   yield();
 }

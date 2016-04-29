@@ -101,11 +101,12 @@ void sinistra() {
 void avanzamento(float distanzaVoluta, float velocita) {
   float gradiIniziali = gyroscope(0, true);
   float distanzaIniziale = distanza(0, true);
-  float Kg = 3;
+  float Kg = 10;
   float Kd = 1.5;
   float erroreGyro = 0.0;
   float erroreDist = 0.0;
   float distance = 0.0;
+  float offset = 10;
 
   if (distanzaVoluta < 0) {
     velocita = -velocita;
@@ -117,24 +118,11 @@ void avanzamento(float distanzaVoluta, float velocita) {
     erroreGyro = gradiIniziali - gyroscope(0, true);
     erroreDist = abs(distanzaVoluta - distanzaIniziale + distance);
 
-    motori((velocita + erroreGyro * Kg + erroreDist * Kd) / 1.2, (velocita - erroreGyro * Kg + erroreDist * Kd) / 1.2);
+    motori((velocita + erroreGyro * Kg + erroreDist * Kd) / 1.2, (velocita - erroreGyro * Kg + erroreDist * Kd) / 1.2 - offset);
 
-    if (distance <= 7) {
-      unsigned int tempoIniziale = millis();
-      bool flag = false;
-      while (true) {
-        if (millis() - tempoIniziale >= 1000) {
-          break;
-          flag = true;
-        }
-        if (gyroscope(1, true) > 10) {
-          break;
-          flag = false;
-        }
-      }
-      if (flag)
+    if (distance <= 7)
+      if (distanza(0, true) <= 7)
         break;
-    }
 
     if (abs(distanzaIniziale - distance) >= abs(distanzaVoluta))
       break;
@@ -217,4 +205,14 @@ void rotazione(float gradiVoluti, float velocita) {
   }
 
   motori (0, 0);
+}
+
+//-------------------------------------------------------------------------------
+
+void azzeraCulo() {
+  motori(-255, -255);
+  delay(1000);
+  motori(0, 0);
+  delay(500);
+  avanzamento(5, 100);
 }
