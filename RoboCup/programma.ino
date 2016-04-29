@@ -1,5 +1,5 @@
 void program() {
-  if (cellCounter > 4) {
+  /*if (cellCounter > 4) {
     if (proprieta(actualX, actualY, actualL, pMuroPosizione0)) {
       ruota(2);
       azzeraCulo();
@@ -20,7 +20,7 @@ void program() {
       azzeraCulo();
       cellCounter = 0;
     }
-  }
+  }*/
   mappatura(actualX, actualY, actualL);
   percorso(actualX, actualY, actualL);
 }

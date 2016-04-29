@@ -81,7 +81,7 @@ void ruota(int direzione) {
 //-------------------------------------------------------------------------------
 
 void avanti() {
-  avanzamento(24.5, 150);
+  avanzamento(22, 150);
 }
 
 void destra() {
@@ -89,7 +89,7 @@ void destra() {
 }
 
 void dietro() {
-  avanzamento(-24.5, 150);
+  avanzamento(-22, 150);
 }
 
 void sinistra() {
@@ -100,7 +100,10 @@ void sinistra() {
 
 void avanzamento(float distanzaVoluta, float velocita) {
   float gradiIniziali = gyroscope(0, true);
-  float distanzaIniziale = distanza(0, true);
+  int sensor = 0;
+  if (distanza(0, true) > distanza(2, true))
+    sensor = 2;
+  float distanzaIniziale = distanza(sensor, true);
   float Kg = 10;
   float Kd = 1.5;
   float erroreGyro = 0.0;
@@ -114,18 +117,26 @@ void avanzamento(float distanzaVoluta, float velocita) {
   }
 
   while (true) {
-    distance = distanza(0, true);
+    distance = distanza(sensor, true);
     erroreGyro = gradiIniziali - gyroscope(0, true);
     erroreDist = abs(distanzaVoluta - distanzaIniziale + distance);
 
     motori((velocita + erroreGyro * Kg + erroreDist * Kd) / 1.2, (velocita - erroreGyro * Kg + erroreDist * Kd) / 1.2 - offset);
 
-    if (distance <= 7)
-      if (distanza(0, true) <= 7)
+    if (distance < 1) {
+    }
+    else {
+      if (distance <= 7 && sensor == 0) {
+        if (distanza(sensor, true) <= 7)
+          break;
+      }
+      else if (distance <= 13  && sensor == 2) {
+        if (distanza(sensor, true) <= 13)
+          break;
+      }
+      if (abs(distanzaIniziale - distance) >= abs(distanzaVoluta))
         break;
-
-    if (abs(distanzaIniziale - distance) >= abs(distanzaVoluta))
-      break;
+    }
 
     if (colore(1)) {
       motori(0, 0);
@@ -133,13 +144,13 @@ void avanzamento(float distanzaVoluta, float velocita) {
       if (colore(1)) {
         aggiungiProprieta(actualX, actualY, actualL, pCellaNera);
         velocita = -velocita;
-        distanzaVoluta = distanzaIniziale - distanza(0, true);
-        distanzaIniziale = distanza(0, true);
+        distanzaVoluta = abs(distanzaIniziale - distanza(sensor, true));
+        distanzaIniziale = distanza(sensor, true);
         gradiIniziali = gyroscope(0, true);
         while (true) {
           erroreGyro = gradiIniziali - gyroscope(0, true);
           motori(velocita + erroreGyro * Kg, velocita - erroreGyro * Kg);
-          if (abs(distanzaIniziale - distanza(0, true)) >= distanzaVoluta)
+          if (abs(distanzaIniziale - distanza(sensor, true)) >= distanzaVoluta)
             break;
         }
         actualX = previousX;
@@ -153,12 +164,13 @@ void avanzamento(float distanzaVoluta, float velocita) {
       while (true) {
         erroreGyro = gradiIniziali - gyroscope(0, true);
         motori(200 + erroreGyro * Kg, 200 - erroreGyro * Kg);
-        if (distanza(0, true) < 10 || gyroscope(1, true) < 8) {
-          if (millis() - tempoIniziale >= tempoRampa)
-            if (actualL == 0) {
-              previousL = actualL;
-              actualL = 1;
-            }
+        if (gyroscope(1, true) < 8)
+          break;
+        if (millis() - tempoIniziale >= tempoRampa) {
+          if (actualL == 0) {
+            previousL = actualL;
+            actualL = 1;
+          }
           break;
         }
       }
@@ -168,12 +180,13 @@ void avanzamento(float distanzaVoluta, float velocita) {
       while (true) {
         erroreGyro = gradiIniziali - gyroscope(0, true);
         motori(125 + erroreGyro * Kg, 125 - erroreGyro * Kg);
-        if (distanza(0, true) < 10 || gyroscope(1, true) > -8) {
-          if (millis() - tempoIniziale >= tempoRampa)
-            if (actualL == 1) {
-              previousL = actualL;
-              actualL = 0;
-            }
+        if (gyroscope(1, true) > -8)
+          break;
+        if (millis() - tempoIniziale >= tempoRampa) {
+          if (actualL == 1) {
+            previousL = actualL;
+            actualL = 0;
+          }
           break;
         }
       }
@@ -187,7 +200,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
 
 void rotazione(float gradiVoluti, float velocita) {
   float gradiIniziali = gyroscope(0, true);
-  float Kp = 1.0;//0.3;
+  float Kp = 1.0;
   float errore = 0;
   float gradiAttuali = gradiIniziali;
 
@@ -214,5 +227,5 @@ void azzeraCulo() {
   delay(1000);
   motori(0, 0);
   delay(500);
-  avanzamento(5, 100);
+  avanzamento(3, 100);
 }

@@ -5,10 +5,10 @@
 
 //Servo Motore 1 Torretta
 #define SM1 8
-#define timeSM1 5
+#define timeSM1 10
 #define posSXSM1 180
-#define posAVSM1 88
-#define posDXSM1 5
+#define posAVSM1 100
+#define posDXSM1 7
 int posizioneSM1 = posAVSM1;
 
 //Servo Motore 2 SX
@@ -116,7 +116,7 @@ int sogliaTemperatura = 0;
 //SRF10
 
 int gain = 6;
-byte range = 0x45;
+byte range = 0x5D;
 
 //-------------------------------------------------------------------------------
 //SCHEDULER
@@ -189,7 +189,7 @@ void setup() {
   go_on();
 
   //Scheduler.startLoop(seriale);
-  azzeraCulo();
+  //azzeraCulo();
 }
 
 //-------------------------------------------------------------------------------

@@ -1,31 +1,28 @@
 void percorso(int x, int y, int livello) {
-  if (proprieta(x, y, livello, pVittimaPosizione0) && !proprieta(x, y, livello, pVittimeSalvate))
-    vittima(x, y, livello, 0);
-  else if (proprieta(x, y, livello, pVittimaPosizione1) && !proprieta(x, y, livello, pVittimeSalvate))
-    vittima(x, y, livello, 1);
-  else if (proprieta(x, y, livello, pVittimaPosizione2) && !proprieta(x, y, livello, pVittimeSalvate))
-    vittima(x, y, livello, 2);
-  else if (proprieta(x, y, livello, pVittimaPosizione3) && !proprieta(x, y, livello, pVittimeSalvate))
-    vittima(x, y, livello, 3);
+  if (!proprieta(x, y, livello, pVittimeSalvate)) {
+    if (proprieta(x, y, livello, pVittimaPosizione0))
+      vittima(x, y, livello, 0);
+    else if (proprieta(x, y, livello, pVittimaPosizione1))
+      vittima(x, y, livello, 1);
+    else if (proprieta(x, y, livello, pVittimaPosizione2))
+      vittima(x, y, livello, 2);
+    else if (proprieta(x, y, livello, pVittimaPosizione3))
+      vittima(x, y, livello, 3);
+  }
 
   previousX = x;
   previousY = y;
   previousL = livello;
 
-  if (proprieta(x, y, livello, pRampaPosizione0) && rampa) {
-    muovi(0);
-    rampa = false;
-  }
-  else if (proprieta(x, y, livello, pRampaPosizione1) && rampa) {
-    muovi(1);
-    rampa = false;
-  }
-  else if (proprieta(x, y, livello, pRampaPosizione2) && rampa) {
-    muovi(2);
-    rampa = false;
-  }
-  else if (proprieta(x, y, livello, pRampaPosizione3) && rampa) {
-    muovi(3);
+  if (rampa) {
+    if (proprieta(x, y, livello, pRampaPosizione0))
+      muovi(0);
+    else if (proprieta(x, y, livello, pRampaPosizione1))
+      muovi(1);
+    else if (proprieta(x, y, livello, pRampaPosizione2))
+      muovi(2);
+    else if (proprieta(x, y, livello, pRampaPosizione3))
+      muovi(3);
     rampa = false;
   }
   else {

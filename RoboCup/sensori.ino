@@ -153,7 +153,7 @@ float SRF10(byte address) {
   Wire.write(byte(0x52));
   Wire.endTransmission();
 
-  aspetta(15);
+  aspetta(20);
 
   Wire.beginTransmission(address);
   Wire.write(byte(0x02));
