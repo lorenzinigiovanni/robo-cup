@@ -146,12 +146,14 @@ bool kitPosition = false;
 bool rampa = true;
 int cellCounter = 0;
 
-#define tempoRampa 4000
+#define tempoRampa 5000
 
 //-------------------------------------------------------------------------------
 //SETUP
 
 void setup() {
+  overclock();
+
   for (int i = 0; i < sizeX; i++) {
     for (int j = 0; j < sizeY; j++) {
       mappa[i][j][0] = 0;
@@ -198,4 +200,36 @@ void setup() {
 void loop() {
   program();
   yield();
+}
+
+void overclock() {  //Use this (change from 18UL for 114MHz to 15UL for 96MHz, 84MHz is 13UL or 0x0dUL (as in system_sam3xa.c):
+#define SYS_BOARD_PLLAR (CKGR_PLLAR_ONE | CKGR_PLLAR_MULA(13UL) | CKGR_PLLAR_PLLACOUNT(0x3fUL) | CKGR_PLLAR_DIVA(1UL))
+#define SYS_BOARD_MCKR ( PMC_MCKR_PRES_CLK_2 | PMC_MCKR_CSS_PLLA_CLK)
+
+  //Set FWS according to SYS_BOARD_MCKR configuration
+  EFC0->EEFC_FMR = EEFC_FMR_FWS(4); //4 waitstate flash access
+  EFC1->EEFC_FMR = EEFC_FMR_FWS(4);
+
+  // Initialize PLLA to 114MHz
+  PMC->CKGR_PLLAR = SYS_BOARD_PLLAR;
+  while (!(PMC->PMC_SR & PMC_SR_LOCKA)) {}
+
+  PMC->PMC_MCKR = SYS_BOARD_MCKR;
+  while (!(PMC->PMC_SR & PMC_SR_MCKRDY)) {}
+
+  SystemCoreClockUpdate();
+
+  /*#define SYS_BOARD_PLLAR (CKGR_PLLAR_ONE | CKGR_PLLAR_MULA(15UL) | CKGR_PLLAR_PLLACOUNT(0x3fUL) | CKGR_PLLAR_DIVA(1UL))
+    #define SYS_BOARD_MCKR ( PMC_MCKR_PRES_CLK_2 | PMC_MCKR_CSS_PLLA_CLK)
+
+    // Set FWS according to SYS_BOARD_MCKR configuration
+    EFC0->EEFC_FMR = EEFC_FMR_FWS(4); //4 waitstate flash access
+    EFC1->EEFC_FMR = EEFC_FMR_FWS(4);
+
+    // Initialize PLLA to (15+1)*6=96MHz
+    PMC->CKGR_PLLAR = SYS_BOARD_PLLAR;
+    while (!(PMC->PMC_SR & PMC_SR_LOCKA)) {}
+
+    PMC->PMC_MCKR = SYS_BOARD_MCKR;
+    while (!(PMC->PMC_SR & PMC_SR_MCKRDY)) {}*/
 }

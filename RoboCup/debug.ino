@@ -14,14 +14,15 @@ void seriale() {
     Serial.println(distanza(3, true));*/
   /*Serial.print("t3: ");
     Serial.println(temperatura(3, true));*/
-  //colore(0);
+  /*if (colore(1))
+    Serial.println("NERO");*/
   /*servoTorrettaFunction(posSXSM1);
     servoTorrettaFunction(posAVSM1);
     servoTorrettaFunction(posDXSM1);*/
-  avanti();
-  delay(1000);
-  dietro();
-  delay(1000);
+  /*avanti();
+    delay(1000);
+    dietro();
+    delay(1000);*/
   yield();
 }
 

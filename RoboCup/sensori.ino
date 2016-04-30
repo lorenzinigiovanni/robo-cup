@@ -1,10 +1,9 @@
-bool colore(int color) {
+volatile bool colore(int color) {
   uint16_t clear, red, green, blue;
 
   tcs.getRawData(&red, &green, &blue, &clear);
 
-  uint32_t sum = clear;
-  int r, g, b;
+  volatile  int r, g, b;
 
   r = red * Kred;
   g = green * Kgreen;
@@ -28,11 +27,11 @@ bool colore(int color) {
         return true;
       else
         return false;
-    case 2: //riflettente
-      if (r > 200 && g > 180 && g < 220 && b > 180 && b < 220)
-        return true;
-      else
-        return false;
+      /*case 2: //riflettente
+        if (r > 200 && g > 180 && g < 220 && b > 180 && b < 220)
+          return true;
+        else
+        return false;*/
   }
 
   return false;
@@ -70,7 +69,7 @@ float sensoreTemperatura(int numeroSensore) {
 
 //-------------------------------------------------------------------------------
 
-float sensoreDistanza(int numeroSensore) {
+volatile float sensoreDistanza(int numeroSensore) {
   int sizeArray = 5;
   float misure[sizeArray];
   float misura = 0;
@@ -142,9 +141,8 @@ float gyroscope(int scelta, bool rotazioneContinua) {
 
 //-------------------------------------------------------------------------------
 
-float SRF10(byte address) {
-  int reading = 0;
-  float distance = 0.0;
+volatile float SRF10(byte address) {
+  volatile int reading = 0;
 
   setRange(address, range);
 
@@ -167,9 +165,7 @@ float SRF10(byte address) {
     reading |= Wire.read();
   }
 
-  distance = 0.01715 * reading; //distance = reading / 58.31; //20 °C
-
-  return distance;
+  return 0.01715 * reading; //distance = reading / 58.31; //20 °C
 
   /*int reading = 0;
 
