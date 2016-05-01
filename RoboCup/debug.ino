@@ -3,7 +3,7 @@ void seriale() {
     delay(1000);
     dietro();
     delay(1000);*/
-  //Serial.println(gyroscope(1, true));
+  Serial.println(gyroscope(1, true));
   /*Serial.print("d0: ");
     Serial.println(distanza(0, false));*/
   /*Serial.print(" d1: ");
@@ -14,6 +14,7 @@ void seriale() {
     Serial.println(distanza(3, true));*/
   /*Serial.print("t3: ");
     Serial.println(temperatura(3, true));*/
+    colore(0);
   /*if (colore(1))
     Serial.println("NERO");*/
   /*servoTorrettaFunction(posSXSM1);

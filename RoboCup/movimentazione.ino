@@ -115,6 +115,7 @@ void avanzamento(float distanzaVoluta, float velocita) {
 
   while (true) {
     distance = distanza(sensor, true);
+    //Serial.println(distance);
     erroreGyro = gradiIniziali - gyroscope(0, true);
 
     motori(velocita + erroreGyro * Kg, velocita - erroreGyro * Kg - offset);
@@ -164,12 +165,12 @@ void avanzamento(float distanzaVoluta, float velocita) {
         }
         }*/
     }
-    else if (gyroscope(1, true) >= 10) {
+    else if (gyroscope(1, true) >= 15.0) {
       unsigned int tempoIniziale = millis();
       while (true) {
         erroreGyro = gradiIniziali - gyroscope(0, true);
         motori(200 + erroreGyro * Kg, 200 - erroreGyro * Kg);
-        if (gyroscope(1, true) <= 5.0) //soglia originale: 6.0
+        if (gyroscope(1, true) <= 6.0)
           break;
         if (millis() - tempoIniziale >= tempoRampa) {
           if (actualL == 0) {
@@ -180,12 +181,12 @@ void avanzamento(float distanzaVoluta, float velocita) {
         }
       }
     }
-    else if (gyroscope(1, true) <= -10) {
+    else if (gyroscope(1, true) <= -15.0) {
       unsigned int tempoIniziale = millis();
       while (true) {
         erroreGyro = gradiIniziali - gyroscope(0, true);
         motori(125 + erroreGyro * Kg, 125 - erroreGyro * Kg);
-        if (gyroscope(1, true) > -6)
+        if (gyroscope(1, true) > -6.0)
           break;
         if (millis() - tempoIniziale >= tempoRampa) {
           if (actualL == 1) {
