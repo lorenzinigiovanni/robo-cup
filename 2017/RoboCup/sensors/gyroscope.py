@@ -1,0 +1,39 @@
+"""
+BNO055 driver
+"""
+
+from Adafruit_BNO055 import BNO055
+import time
+
+
+class Gyroscope:
+    Heading = 0
+    Roll = 0
+    Pitch = 0
+    ErrorPosition = 20
+
+    def __init__(self, port='/dev/ttyS0', pin=18):
+        self.sensor = BNO055.BNO055(serial_port=port, rst=pin)
+        time.sleep(0.1)
+        self.sensor.begin()
+
+    def getEuler(self):
+        self.Heading, self.Roll, self.Pitch = self.sensor.read_euler()
+
+    def getOrientation(self):
+        self.getEuler()
+        if self.Heading < self.ErrorPosition or self.Heading > 360 - self.ErrorPosition:
+            return 0
+        elif 90 + self.ErrorPosition > self.Heading > 90 - self.ErrorPosition:
+            return 1
+        elif 180 + self.ErrorPosition > self.Heading > 180 - self.ErrorPosition:
+            return 2
+        elif 270 + self.ErrorPosition > self.Heading > 270 - self.ErrorPosition:
+            return 3
+        else:
+            return -1
+
+    def isCalibrated(self):
+        return self.sensor.get_calibration_status()
+
+Sensor = Gyroscope()
