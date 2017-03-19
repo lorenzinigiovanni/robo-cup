@@ -22,7 +22,6 @@ class Color:
     ENABLE_AEN = 0x02         # RGBC Enable - Writing 1 actives the ADC, 0 disables it
     ENABLE_PON = 0x01         # Power on - Writing 1 activates the internal oscillator, 0 disables it
 
-    clear_color = 0
     red_color = 0
     green_color = 0
     blue_color = 0
@@ -58,10 +57,14 @@ class Color:
         self.i2c.write_byte(0x70, 1 << self.number)
         colorList = self.i2c.read_i2c_block_data(self.SensorAddress, self.ColorAddress, 8)
 
-        self.clear_color = (colorList[1] << 8) + (colorList[0])
-        self.red_color = (colorList[3] << 8) + (colorList[2])
-        self.green_color = (colorList[5] << 8) + (colorList[4])
-        self.blue_color = (colorList[7] << 8) + (colorList[6])
+        c = (colorList[1] << 8) + (colorList[0])
+        r = (colorList[3] << 8) + (colorList[2])
+        g = (colorList[5] << 8) + (colorList[4])
+        b = (colorList[7] << 8) + (colorList[6])
+
+        self.red_color = r * 256 / c
+        self.green_color = g * 256 / c
+        self.blue_color = b * 256 / c
 
     def setIntegrationTimeAndGain(self, IT, Gain):
         self.i2c.write_byte(0x70, 1 << self.number)
@@ -102,13 +105,19 @@ class Color:
         self.i2c.write_byte_data(self.SensorAddress, 0x07, (low >> 8) & 0xFF)
 
     def isWhite(self):
-        return True
+        self.getColors()
+        if self.red_color > 150 and self.green_color > 150 and self.blue_color > 150:
+            return True
+        return False
 
     def isSilver(self):
-        return True
+        self.getColors()
+        if self.red_color > 150 and self.green_color > 150 and self.blue_color > 150:
+            return True
+        return False
 
     def isBlack(self):
-        return True
-
-
-Sensor = Color(7)
+        self.getColors()
+        if self.red_color < 50 and self.green_color < 50 and self.blue_color < 50:
+            return True
+        return False

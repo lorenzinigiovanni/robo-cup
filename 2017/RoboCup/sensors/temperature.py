@@ -40,5 +40,3 @@ class Temperature:
         data = self.i2c.read_word_data(self.address, self.MLX90614_TOBJ1)
         temp = (data * 0.02) - 273.15
         return temp
-
-Sensors = [Temperature(i) for i in range(85, 89)]

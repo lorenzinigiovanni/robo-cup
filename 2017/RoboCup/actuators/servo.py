@@ -7,6 +7,7 @@ import RPi.GPIO as GPIO
 
 class Servo:
     def __init__(self, servoPin):
+        GPIO.setup(servoPin, GPIO.OUT)
         self.pwm = GPIO.PWM(servoPin, 100)
         self.pwm.start(5)
 

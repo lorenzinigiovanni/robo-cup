@@ -10,18 +10,37 @@ class Gyroscope:
     Heading = 0
     Roll = 0
     Pitch = 0
-    ErrorPosition = 20
+    ErrorPosition = 45
+    Rotation = 0
+    PreviousHeading = 0
 
     def __init__(self, port='/dev/ttyS0', pin=18):
         self.sensor = BNO055.BNO055(serial_port=port, rst=pin)
         time.sleep(0.1)
         self.sensor.begin()
 
-    def getEuler(self):
+    def updateEuler(self):
+        self.PreviousHeading = self.Heading
         self.Heading, self.Roll, self.Pitch = self.sensor.read_euler()
 
+    def getHeading(self):
+        self.updateEuler()
+        if self.PreviousHeading - self.Heading > 200:
+            self.Rotation += 1
+        elif self.PreviousHeading - self.Heading < -200:
+            self.Rotation -= 1
+        return self.Heading + self.Rotation * 360
+
+    def getRoll(self):
+        self.updateEuler()
+        return self.Roll
+
+    def getPitch(self):
+        self.updateEuler()
+        return self.Pitch
+
     def getOrientation(self):
-        self.getEuler()
+        self.updateEuler()
         if self.Heading < self.ErrorPosition or self.Heading > 360 - self.ErrorPosition:
             return 0
         elif 90 + self.ErrorPosition > self.Heading > 90 - self.ErrorPosition:
@@ -35,5 +54,3 @@ class Gyroscope:
 
     def isCalibrated(self):
         return self.sensor.get_calibration_status()
-
-Sensor = Gyroscope()

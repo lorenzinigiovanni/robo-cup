@@ -1,4 +1,5 @@
 from enum import Enum
+import time
 
 
 class Victim:
@@ -8,8 +9,23 @@ class Victim:
     Present = False
     Saved = False
 
-    def __init__(self):
-        pass
+    def __init__(self, led, servo):
+        self.Led = led
+        self.Servo = servo
 
     def save(self):
-        self.Saved = True
+        if self.Present:
+            self.Led.on()
+            time.sleep(1)
+            self.Led.off()
+            time.sleep(1)
+            self.Led.on()
+            time.sleep(1)
+            self.Led.off()
+            time.sleep(1)
+            self.Led.on()
+            time.sleep(1)
+            self.Led.off()
+            self.Saved = True
+            return True
+        return False

@@ -22,6 +22,3 @@ class Distance:
         if 0 < distance < 1000:
             return distance
         return -1
-
-
-Sensors = [Distance(i) for i in range(4)]
