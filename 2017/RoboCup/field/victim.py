@@ -1,3 +1,7 @@
+"""
+Victim Class
+"""
+
 from enum import Enum
 import time
 

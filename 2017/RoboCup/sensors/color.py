@@ -25,6 +25,7 @@ class Color:
     red_color = 0
     green_color = 0
     blue_color = 0
+    clear_color = 0
 
     IntegrationTime = 0xF6
     Gain = 0x00
@@ -62,9 +63,10 @@ class Color:
         g = (colorList[5] << 8) + (colorList[4])
         b = (colorList[7] << 8) + (colorList[6])
 
-        self.red_color = r * 256 / c
-        self.green_color = g * 256 / c
-        self.blue_color = b * 256 / c
+        self.red_color = r
+        self.green_color = g
+        self.blue_color = b
+        self.clear_color = c
 
     def setIntegrationTimeAndGain(self, IT, Gain):
         self.i2c.write_byte(0x70, 1 << self.number)
@@ -106,18 +108,22 @@ class Color:
 
     def isWhite(self):
         self.getColors()
-        if self.red_color > 150 and self.green_color > 150 and self.blue_color > 150:
+        # TODO: tuning the value for each color to find white
+        if 180 < self.red_color < 200 and 240 < self.green_color < 280\
+                and 240 < self.blue_color < 270 and 500 < self.clear_color < 750:
             return True
         return False
 
     def isSilver(self):
         self.getColors()
-        if self.red_color > 150 and self.green_color > 150 and self.blue_color > 150:
+        # TODO: tuning the value for each color to find silver
+        if self.red_color > 150 and self.green_color > 190 and self.blue_color > 190 and self.clear_color > 500:
             return True
         return False
 
     def isBlack(self):
         self.getColors()
-        if self.red_color < 50 and self.green_color < 50 and self.blue_color < 50:
+        # TODO: tuning the value for each color to find black
+        if self.red_color < 100 and self.green_color < 100 and self.blue_color < 100 and self.clear_color < 200:
             return True
         return False

@@ -10,7 +10,7 @@ class Gyroscope:
     Heading = 0
     Roll = 0
     Pitch = 0
-    ErrorPosition = 45
+    ErrorPosition = 45  # TODO: tuning maximum error in degree for robot position
     Rotation = 0
     PreviousHeading = 0
 
@@ -20,11 +20,12 @@ class Gyroscope:
         self.sensor.begin()
 
     def updateEuler(self):
-        self.PreviousHeading = self.Heading
         self.Heading, self.Roll, self.Pitch = self.sensor.read_euler()
 
     def getHeading(self):
+        self.PreviousHeading = self.Heading
         self.updateEuler()
+        # TODO: check the functionality of this code
         if self.PreviousHeading - self.Heading > 200:
             self.Rotation += 1
         elif self.PreviousHeading - self.Heading < -200:

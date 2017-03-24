@@ -12,5 +12,5 @@ class Servo:
         self.pwm.start(5)
 
     def angle(self, angle):
-        duty = float(angle) / 10.0 + 2.5
+        duty = float(angle) / 10.0 + 2.5        # TODO: tuning of the formula to generate the duty cycle
         self.pwm.ChangeDutyCycle(duty)

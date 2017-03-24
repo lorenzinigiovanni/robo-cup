@@ -10,7 +10,7 @@ class Motor:
         GPIO.setup(enable, GPIO.OUT)
         GPIO.setup(a, GPIO.OUT)
         GPIO.setup(b, GPIO.OUT)
-        self.pwm = GPIO.PWM(enable, 100)
+        self.pwm = GPIO.PWM(enable, 100)        # TODO: tune the frequency of the pwm signal
         self.a = a
         self.b = b
 
