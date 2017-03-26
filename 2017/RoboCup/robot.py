@@ -2,6 +2,7 @@
 Robot Class
 """
 
+import time
 import RPi.GPIO as GPIO
 from sensors.button import Button
 from sensors.color import Color
@@ -13,7 +14,6 @@ from actuators.motor import Motor
 from actuators.servo import Servo
 from field.maze import Maze
 from field.area import Area
-import time
 
 
 class Robot:
@@ -21,6 +21,8 @@ class Robot:
     actualY = 25
     actualZ = 0
     startTime = 0
+    startHeading = 0
+    exit = False
 
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
@@ -30,47 +32,34 @@ class Robot:
         self.Temperature = [Temperature(i) for i in range(85, 89)]
         self.Led1 = Led(20)
         self.Led2 = Led(21)
-        self.Button1 = Button(9)
-        self.Button2 = Button(10)
+        self.Button1 = Button(9, self.start)
+        self.Button2 = Button(10, self.stop)
         self.Motor = [Motor(19, 11, 26), Motor(13, 6, 5)]
         self.Servo = Servo(12)
         self.Sensors = [self.Color, self.Distance, self.Gyroscope, self.Temperature]
         self.Actuators = [self.Led1, self.Servo]
         self.Maze = Maze(self.Sensors, self.Actuators)
+        self.startHeading = self.Gyroscope.getHeading()
 
-    def start(self):
-        while True:
-            if self.Gyroscope.isCalibrated()[0] == 3:
-                self.Led2.on()
-            else:
-                self.Led2.off()
-            print(self.Gyroscope.isCalibrated())
-
-            # TODO: add temperature sensors calibration? t victim - t initial wall
-
-            if self.Button1.pressed():
-                break
-
+    def start(self, channel):
         self.startTime = time.time()
+        self.exit = False
         
-        while True:
+        while not self.exit:
             self.move(self.Maze.findPath(self.actualX, self.actualY, self.actualZ))
             print("moved")
 
-            if self.Button2.pressed():
-                self.actualX = self.Maze.LastCheckPoint[0]
-                self.actualY = self.Maze.LastCheckPoint[1]
-                self.actualZ = self.Maze.LastCheckPoint[2]
-
-                print("return checkpoint: " + str(self.actualX) + " " + str(self.actualY) + " " + str(self.actualZ))
-
-                while True:
-                    if self.Button1.pressed():
-                        break
-
             # if self.startTime - time.time() > 500:
-                # TODO: return to start cell after an amount of time
-                # pass
+            # TODO: return to start cell after an amount of time
+            # pass
+
+    def stop(self, channel):
+        self.exit = True
+        self.actualX = self.Maze.LastCheckPoint[0]
+        self.actualY = self.Maze.LastCheckPoint[1]
+        self.actualZ = self.Maze.LastCheckPoint[2]
+
+        print("return checkpoint: " + str(self.actualX) + " " + str(self.actualY) + " " + str(self.actualZ))
 
     def move(self, direction):
         """
@@ -158,16 +147,16 @@ class Robot:
     # TODO: tuning movimentation method (speed and distance)
 
     def moveForward(self):
-        return self._move(requiredDistance=280, speed=75, direction=True)
+        return self._move(requiredDistance=290, speed=75, direction=True)
 
     def turnRight(self):
-        return self._turn(requiredHeading=88, speed=75)
+        return self._turn(requiredHeading=90, speed=75)
 
     def moveBackward(self):
-        return self._move(requiredDistance=280, speed=75, direction=False)
+        return self._move(requiredDistance=290, speed=75, direction=False)
 
     def turnLeft(self):
-        return self._turn(requiredHeading=-88, speed=75)
+        return self._turn(requiredHeading=-90, speed=75)
 
     def _move(self, requiredDistance, speed, direction, control=True):
         """
@@ -180,9 +169,12 @@ class Robot:
         """
         Kh = 5                  # Constant by heading error
         Kp = 2                  # Constant by pitch for ramp
+        Kd = 0.1                  # Constant by distance error
         wallDistance = 60       # Minimum distance by robot and wall in mm
         ramp = False            # Initially not a ramp
         tmp = 0                 # ramp return
+        timeout = 10
+        initialTime = time.time()
 
         initialHeading = self.Gyroscope.getHeading()
 
@@ -209,17 +201,31 @@ class Robot:
             self.Motor[0].reverse()
             self.Motor[1].reverse()
             Kh = -Kh
+            Kp = -Kp
+            Kd = -Kd
 
         while True:
             actualDistance = dSensor.distance()
-            distanceWall = dWall.distance()
+            if dSensor is not dWall:
+                distanceWall = dWall.distance()
+            else:
+                distanceWall = actualDistance
+
+            if ramp:
+                d1 = self.Distance[1].distance()
+                d3 = self.Distance[3].distance()
+                errorDistance = d1 - d3
+            else:
+                errorDistance = 0
+
             errorHeading = initialHeading - self.Gyroscope.getHeading()
             pitch = self.Gyroscope.getPitch()
 
-            self.Motor[0].speed(speed + errorHeading * Kh + pitch * Kp)
-            self.Motor[1].speed(speed - errorHeading * Kh + pitch * Kp)
+            self.Motor[0].speed(speed + errorHeading * Kh + pitch * Kp + errorDistance * Kd)
+            self.Motor[1].speed(speed - errorHeading * Kh + pitch * Kp - errorDistance * Kd)
 
-            # TODO: check the heading correction and the pitch correction
+            if time.time() - initialTime > timeout and not ramp:
+                return 9
 
             # TODO: tuning the pitch to recognise a ramp
 
@@ -230,13 +236,12 @@ class Robot:
                 ramp = True
                 tmp = 5
 
-            if actualDistance != -1 and not ramp:
-                if abs(initialDistance - actualDistance) >= abs(requiredDistance):
-                    self._stop()
-                    return 1
-                elif 0 < distanceWall < wallDistance:
-                    self._stop()
-                    return 2
+            if actualDistance != -1 and abs(initialDistance - actualDistance) >= abs(requiredDistance) and not ramp:
+                self._stop()
+                return 1
+            if 0 < distanceWall < wallDistance:
+                self._stop()
+                return 2
 
             if control and not ramp:
                 if -5 <= pitch <= 5 and self.Color.isBlack():
@@ -251,7 +256,7 @@ class Robot:
                 self._stop()
                 return tmp
 
-    def _turn(self, requiredHeading, speed):
+    def _turn(self, requiredHeading, speed, control=True):
         """
         Turn the robot on it pivot
         requiredHeading is the angle of the turn and can be positive or negative
@@ -259,6 +264,8 @@ class Robot:
         Return 1 for turn OK
         """
         Kh = 1                  # Constant by heading
+        timeout = 2.5
+        initialTime = time.time()
 
         initialHeading = self.Gyroscope.getHeading()
 
@@ -276,8 +283,14 @@ class Robot:
             self.Motor[0].speed(speed + errorHeading * Kh)
             self.Motor[1].speed(speed + errorHeading * Kh)
 
+            if time.time() - initialTime > timeout:
+                return 9
+
             if abs(initialHeading - actualHeading) >= abs(requiredHeading):
                 self._stop()
+                if control:
+                    time.sleep(0.5)
+                    self._turn(requiredHeading + initialHeading - self.Gyroscope.getHeading(), 60, False)
                 return 1
 
     def _stop(self):

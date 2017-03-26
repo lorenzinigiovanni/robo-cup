@@ -6,9 +6,6 @@ import RPi.GPIO as GPIO
 
 
 class Button:
-    def __init__(self, buttonPin):
-        self.buttonPin = buttonPin
-        GPIO.setup(self.buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-    def pressed(self):
-        return not GPIO.input(self.buttonPin)
+    def __init__(self, buttonPin, callbackFunction):
+        GPIO.setup(buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.add_event_detect(buttonPin, GPIO.FALLING, callback=callbackFunction, bouncetime=300)
