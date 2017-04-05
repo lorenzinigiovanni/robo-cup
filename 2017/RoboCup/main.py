@@ -1,9 +1,16 @@
-import time
+import atexit
 from robot import Robot
+
+WhyNot = Robot()
 
 
 def main():
-    WhyNot = Robot()
+    WhyNot.start()
+
+
+@atexit.register
+def clean():
+    WhyNot.stop()
 
 
 if __name__ == "__main__":

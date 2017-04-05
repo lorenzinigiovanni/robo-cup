@@ -1,5 +1,5 @@
 """
-TCS7472 driver
+TCS34725 driver
 """
 
 import time

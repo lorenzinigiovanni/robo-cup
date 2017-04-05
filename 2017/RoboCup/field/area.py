@@ -10,7 +10,6 @@ from field.victim import Victim
 class Area:
     AreaType = Enum('AreaType', 'Standard CheckPoint NoGo')
 
-    Visited = False
     Scanned = False
     Type = AreaType.Standard
     Walls = [False, False, False, False]
@@ -23,7 +22,7 @@ class Area:
 
     Passages = 0
 
-    WallDistance = 300          # TODO: tuning the distance to recognise a wall
+    WallDistance = 150          # TODO: tuning the distance to recognise a wall
     TemperatureDifference = 3   # TODO: tuning the difference between victim temperature and ambient temperature
 
     def __init__(self, sensors, actuators, x, y, z):
@@ -48,7 +47,10 @@ class Area:
         elif n == -1:
             n = 3
 
-        distance = self.Distance[n].distance()
+        distance = 0
+        for i in range(0, 5):
+            distance += self.Distance[n].distance()
+        distance /= 5
 
         print(distance)
 
@@ -81,13 +83,13 @@ class Area:
     def scan(self):
         if self.Color.isBlack():
             self.Type = Area.AreaType.NoGo
-            print("NoGo area")
+            print("NoGo Area")
         elif self.Color.isWhite():
             self.Type = Area.AreaType.Standard
-            print("Standard area")
+            print("Standard Area")
         elif self.Color.isSilver():
             self.Type = Area.AreaType.CheckPoint
-            print("CheckPoint area")
+            print("CheckPoint Area")
 
         for i in range(4):
             self.Walls[i] = self._isWall(i)

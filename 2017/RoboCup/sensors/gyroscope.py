@@ -17,7 +17,10 @@ class Gyroscope:
     def __init__(self, port='/dev/ttyS0', pin=18):
         self.sensor = BNO055.BNO055(serial_port=port, rst=pin)
         time.sleep(0.1)
-        self.sensor.begin()
+        try:
+            self.sensor.begin()
+        except:
+            print("self.sensor.begin() error")
 
     def updateEuler(self):
         self.Heading, self.Roll, self.Pitch = self.sensor.read_euler()
@@ -54,4 +57,9 @@ class Gyroscope:
             return -1
 
     def isCalibrated(self):
-        return self.sensor.get_calibration_status()
+        calibrationStatus = self.sensor.get_calibration_status()
+        print(calibrationStatus)
+        if calibrationStatus[0] == 3:
+            return True
+        else:
+            return False

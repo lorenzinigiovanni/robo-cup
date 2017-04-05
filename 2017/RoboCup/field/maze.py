@@ -13,16 +13,13 @@ class Maze:
         self.Areas = [[[Area(sensors, actuators, i, j, k) for k in range(2)] for j in range(50)] for i in range(50)]
 
     def findPath(self, x, y, z):
-        print("visit x=" + str(x) + " y=" + str(y) + " z=" + str(z))
-
         self.Areas[x][y][z].Passages += 1
 
         if not self.Areas[x][y][z].Scanned:
+            print("Scan X = " + str(x) + " Y = " + str(y) + " Z = " + str(z))
             self.Areas[x][y][z].scan()
-            print("scanned")
 
         if self.Areas[x][y][z].Type == Area.AreaType.CheckPoint:
-            print("pippo")
             self.LastCheckPoint = [x, y, z]
 
         passages = [99, 99, 99, 99]
@@ -36,6 +33,8 @@ class Maze:
         if not self.Areas[x][y][z].Walls[3] and not self.Areas[x][y - 1][z].Type == Area.AreaType.NoGo:
             passages[3] = self.Areas[x][y - 1][z].Passages
 
+        print(passages)
+        print(passages.index(min(passages)))
         return passages.index(min(passages))
 
     def findReturnPath(self, x, y, z):

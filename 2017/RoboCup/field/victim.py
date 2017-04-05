@@ -19,6 +19,7 @@ class Victim:
 
     def save(self):
         if self.Present:
+            print("Save Victim")
             self.Led.on()
             time.sleep(1)
             self.Led.off()
@@ -31,5 +32,6 @@ class Victim:
             time.sleep(1)
             self.Led.off()
             self.Saved = True
+            print("Victim Saved")
             return True
         return False
