@@ -12,8 +12,8 @@ class Area:
 
     Scanned = False
     Type = AreaType.Standard
-    Walls = [False, False, False, False]
-    Ramps = [False, False, False, False]
+    Walls = []
+    Ramps = []
     Victims = []
 
     X = -1
@@ -36,6 +36,8 @@ class Area:
         self.Y = y
         self.Z = z
         self.Victims = [Victim(self.Led, self.Servo)for i in range(4)]
+        self.Walls = [False, False, False, False]
+        self.Ramps = [False, False, False, False]
 
     def _isWall(self, n):
         n -= self.Gyroscope.getOrientation()
@@ -71,7 +73,9 @@ class Area:
 
         objTemp = self.Temperature[n].getObjTemp()
         print(objTemp)
+
         time.sleep(0.1)
+
         ambTemp = self.Temperature[n].getAmbTemp()
         print(ambTemp)
 

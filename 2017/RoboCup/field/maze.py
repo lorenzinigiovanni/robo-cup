@@ -23,6 +23,8 @@ class Maze:
             self.LastCheckPoint = [x, y, z]
 
         passages = [99, 99, 99, 99]
+        print(self.Areas[x][y][z])
+        print(self.Areas[x][y][z].Walls)
 
         if not self.Areas[x][y][z].Walls[0] and not self.Areas[x + 1][y][z].Type == Area.AreaType.NoGo:
             passages[0] = self.Areas[x + 1][y][z].Passages
@@ -32,6 +34,8 @@ class Maze:
             passages[2] = self.Areas[x - 1][y][z].Passages
         if not self.Areas[x][y][z].Walls[3] and not self.Areas[x][y - 1][z].Type == Area.AreaType.NoGo:
             passages[3] = self.Areas[x][y - 1][z].Passages
+
+        print(self.Areas[x][y][z].Walls)
 
         print(passages)
         print(passages.index(min(passages)))
