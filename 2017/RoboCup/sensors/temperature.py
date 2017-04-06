@@ -30,6 +30,10 @@ class Temperature:
     def __init__(self, address=0x5a):
         self.address = address
         self.i2c = smbus.SMBus(1)
+        self.calibrationTemp = 0
+
+    def calibrate(self):
+        self.calibrationTemp = self.getObjTemp()
 
     def getAmbTemp(self):
         data = self.i2c.read_word_data(self.address, self.MLX90614_TA)
@@ -40,3 +44,6 @@ class Temperature:
         data = self.i2c.read_word_data(self.address, self.MLX90614_TOBJ1)
         temp = (data * 0.02) - 273.15
         return temp
+
+    def getDifference(self):
+        return self.getObjTemp() - self.calibrationTemp

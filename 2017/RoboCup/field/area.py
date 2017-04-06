@@ -71,15 +71,10 @@ class Area:
         elif n == -1:
             n = 3
 
-        objTemp = self.Temperature[n].getObjTemp()
-        print(objTemp)
+        tempDifference = self.Temperature[n].getDifference()
+        print(tempDifference)
 
-        time.sleep(0.1)
-
-        ambTemp = self.Temperature[n].getAmbTemp()
-        print(ambTemp)
-
-        if objTemp - ambTemp > self.TemperatureDifference:
+        if tempDifference > self.TemperatureDifference:
             return True
         else:
             return False

@@ -56,6 +56,8 @@ class Robot:
             # TODO: add temperature sensors calibration? t victim - t initial wall
 
             if self.ButtonStart.pressed():
+                for t in self.Temperature:
+                    t.calibrate()
                 break
 
         self.startTime = time.time()
