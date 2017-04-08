@@ -134,11 +134,11 @@ class Robot:
         elif tmp == 4:
             self.Maze.Areas[self.actualX][self.actualY][self.actualZ].Ramps[xy] = True
             self.actualZ = 1
-            self.Maze.RampPassage += 1
+            self.Maze.RampPassages += 1
         elif tmp == 5:
             self.Maze.Areas[self.actualX][self.actualY][self.actualZ].Ramps[xy] = True
             self.actualZ = 0
-            self.Maze.RampPassage += 1
+            self.Maze.RampPassages += 1
         elif xy == 0:
             if tmp == 3:
                 self.Maze.Areas[self.actualX + 1][self.actualY][self.actualZ].Type = Area.AreaType.NoGo
