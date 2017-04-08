@@ -6,11 +6,13 @@ from field.area import Area
 
 
 class Maze:
-    Areas = []
-    LastCheckPoint = [25, 25, 0]
-    RampPassages = 0
+    startX = 25
+    startY = 25
+    startZ = 0
 
     def __init__(self, sensors, actuators):
+        self.RampPassages = 0
+        self.LastCheckPoint = [self.startX, self.startY, self.startZ]
         self.Areas = [[[Area(sensors, actuators, i, j, k) for k in range(2)] for j in range(50)] for i in range(50)]
 
     def findPath(self, x, y, z):

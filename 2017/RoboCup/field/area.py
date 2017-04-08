@@ -10,18 +10,6 @@ from field.victim import Victim
 class Area:
     AreaType = Enum('AreaType', 'Standard CheckPoint NoGo')
 
-    Scanned = False
-    Type = AreaType.Standard
-    Walls = []
-    Ramps = []
-    Victims = []
-
-    X = -1
-    Y = -1
-    Z = -1
-
-    Passages = 0
-
     WallDistance = 150          # TODO: tuning the distance to recognise a wall
     TemperatureDifference = 1   # TODO: tuning the difference between victim temperature and ambient temperature
 
@@ -32,12 +20,18 @@ class Area:
         self.Temperature = sensors[3]
         self.Led = actuators[0]
         self.Servo = actuators[1]
+
         self.X = x
         self.Y = y
         self.Z = z
-        self.Victims = [Victim(self.Led, self.Servo)for i in range(4)]
+
         self.Walls = [False, False, False, False]
         self.Ramps = [False, False, False, False]
+        self.Victims = [Victim(self.Led, self.Servo) for i in range(4)]
+
+        self.Passages = 0
+        self.Scanned = False
+        self.Type = self.AreaType.Standard
 
     def _isWall(self, n):
         n -= self.Gyroscope.getOrientation()

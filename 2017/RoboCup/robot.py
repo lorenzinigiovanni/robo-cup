@@ -22,28 +22,34 @@ class Robot:
     robotDimensionY = 150
     areaDimension = 300
 
-    actualX = 25
-    actualY = 25
-    actualZ = 0
-
-    startTime = 0
-    startHeading = 0
-
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
+
         self.Color = Color(7)
         self.Distance = [Distance(2), Distance(3), Distance(0), Distance(1)]
         self.Gyroscope = Gyroscope('/dev/ttyAMA0')
         self.Temperature = [Temperature(i) for i in range(85, 89)]
+
         self.Led1 = Led(20)
         self.Led2 = Led(21)
+
         self.ButtonStart = Button(9)
         self.ButtonStop = Button(10)
+
         self.Motor = [Motor(19, 11, 26), Motor(13, 6, 5)]
         self.Servo = Servo(12)
+
         self.Sensors = [self.Color, self.Distance, self.Gyroscope, self.Temperature]
         self.Actuators = [self.Led1, self.Servo]
+
         self.Maze = Maze(self.Sensors, self.Actuators)
+        self.actualX = self.Maze.startX
+        self.actualY = self.Maze.startY
+        self.actualZ = self.Maze.startZ
+
+        self.startTime = 0
+        self.startHeading = 0
+
         self._stop()
 
     def start(self):

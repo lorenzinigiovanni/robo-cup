@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list id="4316da7e-83dd-4177-809c-5e0bb77266c5" name="Default" comment="" />
-    <list id="502c42a2-796d-4b5a-a097-7163ac1a3bbe" name="RC-2 Rotazione Relativa allo start" comment="Relative to Start Rotation&#10;Auto Centering&#10;Minor Changes" />
-    <list id="e5c723db-8244-4b47-b8c1-65d600f7629b" name="RC-6 Problema navigazione celle" comment="RC-6 Problema navigazione celle" />
-    <list id="5ecff558-4a4a-45da-8b66-7343ee933543" name="RC-10 Colore checkpoint " comment="" />
-    <list default="true" id="8bfcf6fc-972e-4aa7-b2cf-609422fce3f5" name="RC-7 Salvataggio temperatura allo start" comment="">
+    <list id="4316da7e-83dd-4177-809c-5e0bb77266c5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/field/area.py" afterPath="$PROJECT_DIR$/field/area.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/field/maze.py" afterPath="$PROJECT_DIR$/field/maze.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/field/victim.py" afterPath="$PROJECT_DIR$/field/victim.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/robot.py" afterPath="$PROJECT_DIR$/robot.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sensors/color.py" afterPath="$PROJECT_DIR$/sensors/color.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sensors/temperature.py" afterPath="$PROJECT_DIR$/sensors/temperature.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sensors/gyroscope.py" afterPath="$PROJECT_DIR$/sensors/gyroscope.py" />
     </list>
+    <list id="5ecff558-4a4a-45da-8b66-7343ee933543" name="RC-10 Colore checkpoint " comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sensors/color.py" afterPath="$PROJECT_DIR$/sensors/color.py" />
+    </list>
+    <list default="true" id="b4122c06-acf7-4c63-a3b7-c133210cb9aa" name="RC-5 Algoritmo Ritorno a Home" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,15 +45,13 @@
     <favorites_list name="RoboCup" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main.py">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="robot.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/robot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="51">
+              <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -119,15 +118,15 @@
         <option value="$PROJECT_DIR$/sensors/distance.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
-        <option value="$PROJECT_DIR$/sensors/gyroscope.py" />
         <option value="$PROJECT_DIR$/sensors/button.py" />
-        <option value="$PROJECT_DIR$/field/victim.py" />
-        <option value="$PROJECT_DIR$/field/maze.py" />
-        <option value="$PROJECT_DIR$/sensors/color.py" />
-        <option value="$PROJECT_DIR$/robot.py" />
         <option value="$PROJECT_DIR$/sensors/temperature.py" />
-        <option value="$PROJECT_DIR$/field/area.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/robot.py" />
+        <option value="$PROJECT_DIR$/field/maze.py" />
+        <option value="$PROJECT_DIR$/field/area.py" />
+        <option value="$PROJECT_DIR$/field/victim.py" />
+        <option value="$PROJECT_DIR$/sensors/color.py" />
+        <option value="$PROJECT_DIR$/sensors/gyroscope.py" />
       </list>
     </option>
   </component>
@@ -267,6 +266,7 @@
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$2/Languages" value="Python" />
     <property name="tasks.open.task.update.state.enabled" value="true" />
     <property name="full.screen.before.presentation.mode" value="false" />
+    <property name="tasks.close.task.update.state.enabled" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -552,8 +552,8 @@
     </list>
     <recent_temporary>
       <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Python.scratch" />
-        <item index="1" class="java.lang.String" itemvalue="Python.scratch_1" />
+        <item index="0" class="java.lang.String" itemvalue="Python.scratch_1" />
+        <item index="1" class="java.lang.String" itemvalue="Python.scratch" />
         <item index="2" class="java.lang.String" itemvalue="Python.compare" />
         <item index="3" class="java.lang.String" itemvalue="Python.main" />
       </list>
@@ -588,16 +588,16 @@
   <component name="TaskManager">
     <task id="Default" summary="Default task">
       <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" original="true" />
+      <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" original="true" />
       <changelist id="4316da7e-83dd-4177-809c-5e0bb77266c5" name="Default" comment="" />
       <created>1487753119431</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1490524145995</updated>
+      <updated>1491644425486</updated>
     </task>
     <task id="RC-2" summary="Rotazione Relativa allo Start">
       <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" />
       <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" original="true" />
-      <changelist id="502c42a2-796d-4b5a-a097-7163ac1a3bbe" name="RC-2 Rotazione Relativa allo start" comment="" />
       <created>1490551687349</created>
       <option name="issue" value="true" />
       <option name="number" value="2" />
@@ -605,29 +605,22 @@
       <option name="project" value="RC" />
       <updated>1491382582589</updated>
     </task>
-    <task id="LOCAL-00002" summary="Relative to Start Rotation Auto Centering Minor Changes">
-      <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" />
-      <changelist id="502c42a2-796d-4b5a-a097-7163ac1a3bbe" name="RC-2 Rotazione Relativa allo start" comment="Relative to Start Rotation&#10;Auto Centering&#10;Minor Changes" />
-      <created>1491382414665</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1491382414665</updated>
-    </task>
     <task id="RC-6" summary="Problema navigazione celle">
       <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" />
       <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" original="true" />
-      <changelist id="e5c723db-8244-4b47-b8c1-65d600f7629b" name="RC-6 Problema navigazione celle" comment="" />
+      <option name="closed" value="true" />
       <created>1491407312439</created>
       <option name="issue" value="true" />
       <option name="number" value="6" />
       <option name="presentableId" value="RC-6" />
       <option name="project" value="RC" />
       <option name="type" value="BUG" />
-      <updated>1491464459035</updated>
+      <updated>1491467503118</updated>
     </task>
     <task id="RC-10" summary="Colore checkpoint ">
       <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" />
+      <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" original="true" />
+      <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" original="true" />
       <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" original="true" />
       <changelist id="5ecff558-4a4a-45da-8b66-7343ee933543" name="RC-10 Colore checkpoint " comment="" />
       <created>1491460781751</created>
@@ -636,28 +629,66 @@
       <option name="presentableId" value="RC-10" />
       <option name="project" value="RC" />
       <option name="type" value="BUG" />
-      <updated>1491465884174</updated>
+      <updated>1491645588019</updated>
     </task>
-    <task active="true" id="RC-7" summary="Salvataggio temperatura allo start">
+    <task id="RC-7" summary="Salvataggio temperatura allo start">
       <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" />
-      <changelist id="8bfcf6fc-972e-4aa7-b2cf-609422fce3f5" name="RC-7 Salvataggio temperatura allo start" comment="" />
+      <option name="closed" value="true" />
       <created>1491421832622</created>
       <option name="issue" value="true" />
       <option name="number" value="7" />
       <option name="presentableId" value="RC-7" />
       <option name="project" value="RC" />
-      <updated>1491487724703</updated>
+      <updated>1491467557906</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="RC-11" summary="Rampa">
+      <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" />
+      <created>1491485737702</created>
+      <option name="issue" value="true" />
+      <option name="number" value="11" />
+      <option name="presentableId" value="RC-11" />
+      <option name="project" value="RC" />
+      <updated>1491588338156</updated>
+    </task>
+    <task id="RC-13" summary="Migliorare algoritmo di navigazione">
+      <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" />
+      <created>1491631247997</created>
+      <option name="issue" value="true" />
+      <option name="number" value="13" />
+      <option name="presentableId" value="RC-13" />
+      <option name="project" value="RC" />
+      <updated>1491644460794</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Average of three value during the area scan">
+      <created>1491644816353</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1491644816353</updated>
+    </task>
+    <task active="true" id="RC-5" summary="Algoritmo Ritorno a Home">
+      <branch name="master" repository="C:\Users\Giovanni Lorenzini\Documents\Projects\robo-cup" />
+      <changelist id="b4122c06-acf7-4c63-a3b7-c133210cb9aa" name="RC-5 Algoritmo Ritorno a Home" comment="" />
+      <created>1491407281907</created>
+      <option name="issue" value="true" />
+      <option name="number" value="5" />
+      <option name="presentableId" value="RC-5" />
+      <option name="project" value="RC" />
+      <updated>1491716412801</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <option name="createBranch" value="false" />
     <option name="useBranch" value="true" />
+    <option name="mergeBranch" value="false" />
     <servers>
       <YouTrack shared="false" url="http://lorenzinigiovanni.myjetbrains.com/youtrack">
         <commitMessageFormat>{id} {summary}</commitMessageFormat>
         <option name="defaultSearch" value="Assignee: me sort by: updated #Unresolved" />
         <password>dfeddfcbdfc6dfc3dfc4dfcbdfeadf93df92</password>
         <option name="loginAnonymously" value="false" />
-        <option name="preferredCloseTaskState" />
+        <option name="preferredCloseTaskState">
+          <CustomTaskState id="Fixed" predefined="false" name="Fixed" />
+        </option>
         <option name="preferredOpenTaskState">
           <CustomTaskState id="In Progress" predefined="false" name="In Progress" />
         </option>
@@ -680,17 +711,17 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22617246" sideWeight="0.49436393" order="0" side_tool="false" content_ui="combo" x="551" y="58" width="264" height="621" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25189108" sideWeight="0.49436393" order="0" side_tool="false" content_ui="combo" x="551" y="58" width="264" height="621" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850242" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850242" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.215781" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29951692" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37520128" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.215781" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24810892" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3268921" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19969743" sideWeight="0.5056361" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3993559" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19969743" sideWeight="0.5056361" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -751,7 +782,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Relative to Start Rotation&#10;Auto Centering&#10;Minor Changes" />
     <MESSAGE value="RC-6 Problema navigazione celle" />
-    <option name="LAST_COMMIT_MESSAGE" value="RC-6 Problema navigazione celle" />
+    <MESSAGE value="RC-7 Salvataggio temperatura allo start" />
+    <MESSAGE value="Average of three value during the area scan" />
+    <option name="LAST_COMMIT_MESSAGE" value="Average of three value during the area scan" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -762,7 +795,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="7" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -974,13 +1007,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sensors/VL53L0X.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="31" column="23" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1004,30 +1030,8 @@
     </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sensors/button.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sensors/distance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sensors/gyroscope.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+        <state relative-caret-position="255">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1055,62 +1059,93 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/field/victim.py">
+    <entry file="file://$PROJECT_DIR$/field/area.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="37" column="0" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/field/maze.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-204">
+        <state relative-caret-position="51">
           <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/field/victim.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sensors/button.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sensors/color.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="115" column="0" lean-forward="true" selection-start-line="115" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sensors/distance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="376">
+          <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sensors/temperature.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="536">
+        <state relative-caret-position="833">
           <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/robot.py">
+    <entry file="file://$PROJECT_DIR$/sensors/gyroscope.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="60" column="21" lean-forward="true" selection-start-line="60" selection-start-column="21" selection-end-line="60" selection-end-column="21" />
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/field/area.py">
+    <entry file="file://$PROJECT_DIR$/sensors/VL53L0X.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="75" column="0" lean-forward="true" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-          <folding>
-            <element signature="e#20#31#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="236">
+          <caret line="31" column="23" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="23" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        <state relative-caret-position="289">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/robot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

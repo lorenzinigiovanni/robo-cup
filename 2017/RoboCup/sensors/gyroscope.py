@@ -7,14 +7,15 @@ import time
 
 
 class Gyroscope:
-    Heading = 0
-    Roll = 0
-    Pitch = 0
     ErrorPosition = 45  # TODO: tuning maximum error in degree for robot position
-    Rotation = 0
-    PreviousHeading = 0
 
     def __init__(self, port='/dev/ttyS0', pin=18):
+        self.Heading = 0
+        self.Roll = 0
+        self.Pitch = 0
+        self.Rotation = 0
+        self.PreviousHeading = 0
+
         self.sensor = BNO055.BNO055(serial_port=port, rst=pin)
         time.sleep(0.1)
         try:

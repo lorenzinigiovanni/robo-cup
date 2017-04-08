@@ -8,14 +8,15 @@ import time
 
 class Victim:
     VictimType = Enum('VictimType', 'Heated Harmed Stable Unharmed')
-    Type = VictimType.Heated
-
-    Present = False
-    Saved = False
 
     def __init__(self, led, servo):
         self.Led = led
         self.Servo = servo
+
+        self.Type = self.VictimType.Heated
+
+        self.Present = False
+        self.Saved = False
 
     def save(self):
         if self.Present:
