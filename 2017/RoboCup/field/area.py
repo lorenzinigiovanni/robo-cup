@@ -23,7 +23,7 @@ class Area:
     Passages = 0
 
     WallDistance = 150          # TODO: tuning the distance to recognise a wall
-    TemperatureDifference = 3   # TODO: tuning the difference between victim temperature and ambient temperature
+    TemperatureDifference = 1   # TODO: tuning the difference between victim temperature and ambient temperature
 
     def __init__(self, sensors, actuators, x, y, z):
         self.Color = sensors[0]
@@ -50,9 +50,9 @@ class Area:
             n = 3
 
         distance = 0
-        for i in range(0, 5):
+        for i in range(0, 3):
             distance += self.Distance[n].distance()
-        distance /= 5
+        distance /= 3
 
         print(distance)
 
@@ -71,7 +71,11 @@ class Area:
         elif n == -1:
             n = 3
 
-        tempDifference = self.Temperature[n].getDifference()
+        tempDifference = 0
+        for i in range(0, 3):
+            tempDifference += self.Temperature[n].getDifference()
+        tempDifference /= 3
+
         print(tempDifference)
 
         if tempDifference > self.TemperatureDifference:
