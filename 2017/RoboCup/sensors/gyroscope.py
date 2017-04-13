@@ -7,7 +7,7 @@ import time
 
 
 class Gyroscope:
-    ErrorPosition = 45  # TODO: tuning maximum error in degree for robot position
+    ErrorPosition = 45
 
     def __init__(self, port='/dev/ttyS0', pin=18):
         self.Heading = 0
@@ -29,11 +29,12 @@ class Gyroscope:
     def getHeading(self):
         self.PreviousHeading = self.Heading
         self.updateEuler()
-        # TODO: check the functionality of this code
+
         if self.PreviousHeading - self.Heading > 200:
             self.Rotation += 1
         elif self.PreviousHeading - self.Heading < -200:
             self.Rotation -= 1
+
         return self.Heading + self.Rotation * 360
 
     def getRoll(self):

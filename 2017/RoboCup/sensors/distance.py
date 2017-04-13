@@ -14,12 +14,11 @@ class Distance:
         self.i2c = smbus.SMBus(1)
         self.i2c.write_byte(0x70, 1 << self.number)
         self.sensor = VL53L0X.VL53L0X(self.SensorAddress)
-        self.sensor.start_ranging(VL53L0X.VL53L0X_BETTER_ACCURACY_MODE)  # TODO: set the appropriate ranging mode
+        self.sensor.start_ranging(VL53L0X.VL53L0X_BETTER_ACCURACY_MODE)
 
     def distance(self):
         self.i2c.write_byte(0x70, 1 << self.number)
         distance = self.sensor.get_distance()
-        # TODO: adjust minimum and maximum distance limit
         if 0 < distance < 1200:
             return distance
         return -1
