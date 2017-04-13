@@ -71,6 +71,16 @@ class Robot:
         print("Start Heading = " + str(self.startHeading))
 
         while True:
+            area = self.Maze.Areas[self.actualX][self.actualY][self.actualZ]
+
+            if not area.Scanned:
+                area.scan()
+
+            for i in range(4):
+                self.turn(i)
+                area.findVisualVictim(i)
+                area.Victims[i].save()
+
             tmp = self.move(self.Maze.findPath(self.actualX, self.actualY, self.actualZ))
 
             if self.ButtonStop.pressed() or tmp == 8:

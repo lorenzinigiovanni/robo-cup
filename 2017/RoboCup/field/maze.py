@@ -19,7 +19,6 @@ class Maze:
         self.Areas[x][y][z].Passages += 1
 
         if not self.Areas[x][y][z].Scanned:
-            print("Scan X = " + str(x) + " Y = " + str(y) + " Z = " + str(z))
             self.Areas[x][y][z].scan()
 
         if self.Areas[x][y][z].Type == Area.AreaType.CheckPoint:
@@ -46,10 +45,6 @@ class Maze:
             passages[3] = self.RampPassages
         elif not self.Areas[x][y][z].Walls[3] and not self.Areas[x][y - 1][z].Type == Area.AreaType.NoGo:
             passages[3] = self.Areas[x][y - 1][z].Passages
-
-        print(self.Areas[x][y][z].Walls)
-        print(passages)
-        print(passages.index(min(passages)))
 
         return passages.index(min(passages))
 

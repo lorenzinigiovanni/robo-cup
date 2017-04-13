@@ -48,7 +48,7 @@ class Area:
             distance += self.Distance[n].distance()
         distance /= 3
 
-        print(distance)
+        print("Distance at " + str(n) + " is = " + str(distance))
 
         if 0 < distance < self.WallDistance:
             return True
@@ -70,14 +70,25 @@ class Area:
             tempDifference += self.Temperature[n].getDifference()
         tempDifference /= 3
 
-        print(tempDifference)
+        print("Temperature difference at " + str(n) + " is = " + str(tempDifference))
 
         if tempDifference > self.TemperatureDifference:
             return True
         else:
             return False
 
+    def findVisualVictim(self, n):
+        if self.Victims[n].Present or not self.Walls[n]:
+            return
+
+        # TODO: Aggiungere codice ricerca vittime visuali
+
+        """self.Victims[n].Present = True
+        self.Victims[n].Type = Victim.VictimType.Stable"""
+
     def scan(self):
+        print("Scan X = " + str(self.X) + " Y = " + str(self.Y) + " Z = " + str(self.Z))
+
         if self.Color.isBlack():
             self.Type = Area.AreaType.NoGo
             print("NoGo Area")
@@ -94,14 +105,5 @@ class Area:
                 if self._isHeated(i):
                     self.Victims[i].Type = Victim.VictimType.Heated
                     self.Victims[i].Present = True
-                else:
-                    # TODO: add visual victim scan algorithm
-                    pass
-
-        self.saveVictims()
 
         self.Scanned = True
-
-    def saveVictims(self):
-        for victim in self.Victims:
-            victim.save()
