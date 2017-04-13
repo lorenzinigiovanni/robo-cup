@@ -54,5 +54,101 @@ class Maze:
         return passages.index(min(passages))
 
     def findReturnPath(self, x, y, z):
-        # TODO: write an algorithm to find return path
-        pass
+        movementList = []
+
+        targetX = x
+        targetY = y
+        targetZ = z
+        rampDirection = 0
+
+        if z != self.startZ:
+            for i in range(0, 50):
+                for j in range(0, 50):
+                    area = self.Areas[i][j][z]
+                    for l in range(0, 4):
+                        if area.Ramps[l]:
+                            targetX = i
+                            targetY = j
+                            rampDirection = l
+                            break
+
+            movementList += self._findShorterPath(x, y, z, targetX, targetY, targetZ)
+
+            movementList.append(rampDirection)
+
+            targetZ = self.startZ
+
+        movementList += self._findShorterPath(targetX, targetY, targetZ, self.startX, self.startY, self.startZ)
+
+        return movementList
+
+    def _findShorterPath(self, x, y, z, targetX, targetY, targetZ):
+        movementLists = []
+        forbiddenAreas = []
+
+        while True:
+            r = self._findPath(x, y, z, targetX, targetY, targetZ, [], forbiddenAreas)
+
+            state = r[0]
+            movementList = r[1]
+            forbiddenAreas2 = r[2]
+
+            if state == "end":
+                forbiddenArea = forbiddenAreas2[-1:]
+                if forbiddenArea[0] in forbiddenAreas:
+                    break
+                forbiddenAreas += forbiddenArea
+                movementLists.append(movementList)
+            else:
+                break
+
+        length = 999
+        returnList = []
+
+        for movementList in movementLists:
+            if len(movementList) < length:
+                length = len(movementList)
+                returnList = movementList
+
+        return returnList
+
+    def _findPath(self, x, y, z, targetX, targetY, targetZ, mvList, forbidden):
+        movementList = mvList
+        returnList = [0, 0, 0, 0]
+        forbiddenAreas = forbidden[:]
+        forbiddenAreas.append((x, y))
+
+        if x == targetX and y == targetY and z == targetZ:
+            forbiddenAreas.pop()
+            return "end", movementList, forbiddenAreas
+
+        for i in range(0, 4):
+            if i == 0:
+                x1 = x + 1
+                y1 = y
+            elif i == 1:
+                x1 = x
+                y1 = y + 1
+            elif i == 2:
+                x1 = x - 1
+                y1 = y
+            else:
+                x1 = x
+                y1 = y - 1
+
+            if (x1, y1) in forbiddenAreas or self.Areas[x][y][z].Walls[i]\
+                    or self.Areas[x1][y1][z].Type == Area.AreaType.NoGo or not self.Areas[x1][y1][z].Scanned:
+                returnList[i] = -1
+            else:
+                movementList.append(i)
+                r = self._findPath(x1, y1, z, targetX, targetY, targetZ, movementList, forbiddenAreas)
+
+                if r[0] == -1 and r[1] == -1 and r[2] == -1 and r[3] == -1:
+                    returnList[i] = -1
+                    movementList.pop()
+                else:
+                    e, f, g = r
+                    if e == "end":
+                        return r
+
+        return returnList

@@ -59,8 +59,6 @@ class Robot:
             else:
                 self.Led2.off()
 
-            # TODO: add temperature sensors calibration? t victim - t initial wall
-
             if self.ButtonStart.pressed():
                 for t in self.Temperature:
                     t.calibrate()
@@ -85,9 +83,18 @@ class Robot:
             else:
                 print("Moved to X = " + str(self.actualX) + " Y = " + str(self.actualY) + " Z = " + str(self.actualZ))
 
-            # if self.startTime - time.time() > 500:
-            # TODO: return to start cell after an amount of time
-            # pass
+            if self.startTime - time.time() > 420:
+                break
+
+        print("Searching for a returning home path")
+        movementList = self.Maze.findReturnPath(self.actualX, self.actualY, self.actualZ)
+        if len(movementList) > 0:
+            print("Returning home")
+            for movement in movementList:
+                self.move(movement)
+        else:
+            print("Path not found")
+        self.stop()
 
     def stop(self):
         self._stop()
@@ -252,8 +259,6 @@ class Robot:
 
         initialDistance = dSensor.distance()
 
-        # TODO: check if the right distance sensor is chosen
-
         if direction:
             self.Motor[0].forward()
             self.Motor[1].forward()
@@ -323,8 +328,6 @@ class Robot:
                     self._stop()
                     self._move(abs(initialDistance - dSensor.distance()), speed, not direction, control=False)
                     return 3
-
-            # TODO: check that happen with a black area
 
             if ramp and abs(pitch) < 5:
                 self._move(150, speed, True, control=False, center=False)
