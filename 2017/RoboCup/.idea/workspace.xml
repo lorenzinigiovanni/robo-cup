@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="26be409f-9ba8-4ed9-985c-760f903b65c5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sensors/distance.py" afterPath="$PROJECT_DIR$/sensors/distance.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sensors/gyroscope.py" afterPath="$PROJECT_DIR$/sensors/gyroscope.py" />
-    </list>
+    <list default="true" id="26be409f-9ba8-4ed9-985c-760f903b65c5" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -701,7 +697,14 @@
       <option name="project" value="LOCAL" />
       <updated>1492084084268</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Minor Changes">
+      <created>1492084142836</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1492084142836</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <option name="createBranch" value="false" />
     <option name="useBranch" value="true" />
     <option name="mergeBranch" value="false" />
@@ -811,7 +814,8 @@
     <MESSAGE value="RC-7 Salvataggio temperatura allo start" />
     <MESSAGE value="Average of three value during the area scan" />
     <MESSAGE value="Fixed variable initialization" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed variable initialization" />
+    <MESSAGE value="Minor Changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor Changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
