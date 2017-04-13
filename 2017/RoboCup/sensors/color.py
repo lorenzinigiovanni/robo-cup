@@ -22,15 +22,15 @@ class Color:
     ENABLE_AEN = 0x02         # RGBC Enable - Writing 1 actives the ADC, 0 disables it
     ENABLE_PON = 0x01         # Power on - Writing 1 activates the internal oscillator, 0 disables it
 
-    red_color = 0
-    green_color = 0
-    blue_color = 0
-    clear_color = 0
-
     IntegrationTime = 0xF6
     Gain = 0x00
 
     def __init__(self, number):
+        self.red_color = 0
+        self.green_color = 0
+        self.blue_color = 0
+        self.clear_color = 0
+
         self.number = number
         self.i2c = smbus.SMBus(1)
         self.i2c.write_byte(0x70, 1 << self.number)
@@ -109,15 +109,14 @@ class Color:
     def isWhite(self):
         self.getColors()
         # TODO: tuning the value for each color to find white
-        if 180 < self.red_color < 200 and 240 < self.green_color < 280\
-                and 240 < self.blue_color < 270 and 500 < self.clear_color < 750:
+        if 350 < self.clear_color < 450:
             return True
         return False
 
     def isSilver(self):
         self.getColors()
         # TODO: tuning the value for each color to find silver
-        if self.red_color > 150 and self.green_color > 190 and self.blue_color > 190 and self.clear_color > 500:
+        if 250 < self.clear_color < 350:
             return True
         return False
 
