@@ -77,9 +77,10 @@ class Robot:
                 area.scan()
 
             for i in range(4):
-                self.turn(i)
-                area.findVisualVictim(i)
-                area.Victims[i].save()
+                if area.Walls[i]:
+                    self.turn(i)
+                    area.findVisualVictim(i)
+                    area.Victims[i].save()
 
             tmp = self.move(self.Maze.findPath(self.actualX, self.actualY, self.actualZ))
 

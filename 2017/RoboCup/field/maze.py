@@ -67,17 +67,16 @@ class Maze:
                             rampDirection = l
                             break
 
-            movementList += self._findShorterPath(x, y, z, targetX, targetY, targetZ)
-
+            movementList += self._findShortestPath(x, y, z, targetX, targetY, targetZ)
             movementList.append(rampDirection)
 
             targetZ = self.startZ
 
-        movementList += self._findShorterPath(targetX, targetY, targetZ, self.startX, self.startY, self.startZ)
+        movementList += self._findShortestPath(targetX, targetY, targetZ, self.startX, self.startY, self.startZ)
 
         return movementList
 
-    def _findShorterPath(self, x, y, z, targetX, targetY, targetZ):
+    def _findShortestPath(self, x, y, z, targetX, targetY, targetZ):
         movementLists = []
         forbiddenAreas = []
 
@@ -90,7 +89,10 @@ class Maze:
 
             if state == "end":
                 forbiddenArea = forbiddenAreas2[-1:]
-                if forbiddenArea[0] in forbiddenAreas:
+                try:
+                    if forbiddenArea[0] in forbiddenAreas:
+                        break
+                except IndexError:
                     break
                 forbiddenAreas += forbiddenArea
                 movementLists.append(movementList)
@@ -108,7 +110,7 @@ class Maze:
         return returnList
 
     def _findPath(self, x, y, z, targetX, targetY, targetZ, mvList, forbidden):
-        movementList = mvList
+        movementList = mvList[:]
         returnList = [0, 0, 0, 0]
         forbiddenAreas = forbidden[:]
         forbiddenAreas.append((x, y))
@@ -131,7 +133,7 @@ class Maze:
                 x1 = x
                 y1 = y - 1
 
-            if (x1, y1) in forbiddenAreas or self.Areas[x][y][z].Walls[i]\
+            if (x1, y1) in forbiddenAreas or self.Areas[x][y][z].Walls[i] or self.Areas[x][y][z].Ramps[i] \
                     or self.Areas[x1][y1][z].Type == Area.AreaType.NoGo or not self.Areas[x1][y1][z].Scanned:
                 returnList[i] = -1
             else:
