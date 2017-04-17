@@ -15,12 +15,13 @@ from actuators.motor import Motor
 from actuators.servo import Servo
 from field.maze import Maze
 from field.area import Area
+from camera.camera import Camera
 
 
 class Robot:
-    robotDimensionX = 160
-    robotDimensionY = 150
-    areaDimension = 300
+    RobotDimensionX = 160
+    RobotDimensionY = 150
+    AreaDimension = 300
 
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
@@ -30,8 +31,10 @@ class Robot:
         self.Gyroscope = Gyroscope('/dev/ttyAMA0')
         self.Temperature = [Temperature(i) for i in range(85, 89)]
 
-        self.Led1 = Led(20)
-        self.Led2 = Led(21)
+        self.Camera = Camera()
+
+        self.LedRed = Led(20)
+        self.LedYellow = Led(21)
 
         self.ButtonStart = Button(9)
         self.ButtonStop = Button(10)
@@ -40,49 +43,50 @@ class Robot:
         self.Servo = Servo(12)
 
         self.Sensors = [self.Color, self.Distance, self.Gyroscope, self.Temperature]
-        self.Actuators = [self.Led1, self.Servo]
+        self.Actuators = [self.LedRed, self.Servo]
 
-        self.Maze = Maze(self.Sensors, self.Actuators)
-        self.actualX = self.Maze.startX
-        self.actualY = self.Maze.startY
-        self.actualZ = self.Maze.startZ
+        self.Maze = Maze(self.Sensors, self.Actuators, self.Camera)
+        self.ActualX = self.Maze.StartX
+        self.ActualY = self.Maze.StartY
+        self.ActualZ = self.Maze.StartZ
 
-        self.startTime = 0
-        self.startHeading = 0
+        self.StartTime = 0
+        self.StartHeading = 0
 
         self._stop()
 
     def start(self):
         while True:
             if self.Gyroscope.isCalibrated():
-                self.Led2.on()
+                self.LedYellow.on()
             else:
-                self.Led2.off()
+                self.LedYellow.off()
 
             if self.ButtonStart.pressed():
-                for t in self.Temperature:
-                    t.calibrate()
                 break
 
-        self.startTime = time.time()
-        print("Start Time = " + str(self.startTime))
+        self.StartTime = time.time()
+        print("Start Time = " + str(self.StartTime))
 
-        self.startHeading = self.Gyroscope.getHeading()
-        print("Start Heading = " + str(self.startHeading))
+        self.StartHeading = self.Gyroscope.getHeading()
+        print("Start Heading = " + str(self.StartHeading))
+
+        print("Calibrating temperature sensors")
+        for t in self.Temperature:
+            t.calibrate()
 
         while True:
-            area = self.Maze.Areas[self.actualX][self.actualY][self.actualZ]
+            area = self.Maze.Areas[self.ActualX][self.ActualY][self.ActualZ]
 
             if not area.Scanned:
                 area.scan()
+                for i in range(4):
+                    if area.Walls[i]:
+                        self.turn(i)
+                        area.findVisualVictim(i)
+                        area.Victims[i].save()
 
-            for i in range(4):
-                if area.Walls[i]:
-                    self.turn(i)
-                    area.findVisualVictim(i)
-                    area.Victims[i].save()
-
-            tmp = self.move(self.Maze.findPath(self.actualX, self.actualY, self.actualZ))
+            tmp = self.move(self.Maze.findPath(self.ActualX, self.ActualY, self.ActualZ))
 
             if self.ButtonStop.pressed() or tmp == 8:
                 print("Stop Pressed")
@@ -92,13 +96,13 @@ class Robot:
                     if self.ButtonStart.pressed():
                         break
             else:
-                print("Moved to X = " + str(self.actualX) + " Y = " + str(self.actualY) + " Z = " + str(self.actualZ))
+                print("Moved to X = " + str(self.ActualX) + " Y = " + str(self.ActualY) + " Z = " + str(self.ActualZ))
 
-            if self.startTime - time.time() > 420:
+            if self.StartTime - time.time() > 420:
                 break
 
         print("Searching for a returning home path")
-        movementList = self.Maze.findReturnPath(self.actualX, self.actualY, self.actualZ)
+        movementList = self.Maze.findReturnPath(self.ActualX, self.ActualY, self.ActualZ)
         if len(movementList) > 0:
             print("Returning home")
             for movement in movementList:
@@ -110,11 +114,11 @@ class Robot:
     def stop(self):
         self._stop()
 
-        self.actualX = self.Maze.LastCheckPoint[0]
-        self.actualY = self.Maze.LastCheckPoint[1]
-        self.actualZ = self.Maze.LastCheckPoint[2]
+        self.ActualX = self.Maze.LastCheckPoint[0]
+        self.ActualY = self.Maze.LastCheckPoint[1]
+        self.ActualZ = self.Maze.LastCheckPoint[2]
 
-        print("Return to X = " + str(self.actualX) + " Y = " + str(self.actualY) + " Z = " + str(self.actualZ))
+        print("Return to X = " + str(self.ActualX) + " Y = " + str(self.ActualY) + " Z = " + str(self.ActualZ))
 
     def move(self, direction):
         """
@@ -126,7 +130,12 @@ class Robot:
         """
         tmp = 0
         xy = direction
-        direction -= self.Gyroscope.getOrientation()
+
+        orientation = self.Gyroscope.getOrientation()
+        if orientation == -1:
+            return -1
+        else:
+            direction -= orientation
 
         if direction == -3:
             if self.turnRight() == 8:
@@ -156,33 +165,33 @@ class Robot:
         elif tmp == 9:
             print("Movement Timeout")
         elif tmp == 4:
-            self.Maze.Areas[self.actualX][self.actualY][self.actualZ].Ramps[xy] = True
-            self.actualZ = 1
+            self.Maze.Areas[self.ActualX][self.ActualY][self.ActualZ].Ramps[xy] = True
+            self.ActualZ = 1
             self.Maze.RampPassages += 1
         elif tmp == 5:
-            self.Maze.Areas[self.actualX][self.actualY][self.actualZ].Ramps[xy] = True
-            self.actualZ = 0
+            self.Maze.Areas[self.ActualX][self.ActualY][self.ActualZ].Ramps[xy] = True
+            self.ActualZ = 0
             self.Maze.RampPassages += 1
         elif xy == 0:
             if tmp == 3:
-                self.Maze.Areas[self.actualX + 1][self.actualY][self.actualZ].Type = Area.AreaType.NoGo
+                self.Maze.Areas[self.ActualX + 1][self.ActualY][self.ActualZ].Type = Area.AreaType.NoGo
             else:
-                self.actualX += 1
+                self.ActualX += 1
         elif xy == 1:
             if tmp == 3:
-                self.Maze.Areas[self.actualX][self.actualY + 1][self.actualZ].Type = Area.AreaType.NoGo
+                self.Maze.Areas[self.ActualX][self.ActualY + 1][self.ActualZ].Type = Area.AreaType.NoGo
             else:
-                self.actualY += 1
+                self.ActualY += 1
         elif xy == 2:
             if tmp == 3:
-                self.Maze.Areas[self.actualX - 1][self.actualY][self.actualZ].Type = Area.AreaType.NoGo
+                self.Maze.Areas[self.ActualX - 1][self.ActualY][self.ActualZ].Type = Area.AreaType.NoGo
             else:
-                self.actualX -= 1
+                self.ActualX -= 1
         elif xy == 3:
             if tmp == 3:
-                self.Maze.Areas[self.actualX][self.actualY - 1][self.actualZ].Type = Area.AreaType.NoGo
+                self.Maze.Areas[self.ActualX][self.ActualY - 1][self.ActualZ].Type = Area.AreaType.NoGo
             else:
-                self.actualY -= 1
+                self.ActualY -= 1
 
     def turn(self, direction):
         """
@@ -224,16 +233,14 @@ class Robot:
             if self.turnLeft() == 8:
                 return 8
 
-    # TODO: tuning movimentation method (speed and distance)
-
     def moveForward(self):
-        return self._move(requiredDistance=290, speed=75, direction=True)
+        return self._move(requiredDistance=self.AreaDimension, speed=75, direction=True)
 
     def turnRight(self):
         return self._turn(requiredHeading=90, speed=75)
 
     def moveBackward(self):
-        return self._move(requiredDistance=290, speed=75, direction=False)
+        return self._move(requiredDistance=self.AreaDimension, speed=75, direction=False)
 
     def turnLeft(self):
         return self._turn(requiredHeading=-90, speed=75)
@@ -250,7 +257,7 @@ class Robot:
         Kh = 5                  # Constant by heading error
         Kp = 2                  # Constant by pitch for ramp
         Kd = 0.2                # Constant by distance error
-        wallDistance = (self.areaDimension - self.robotDimensionX) // 2
+        wallDistance = (self.AreaDimension - self.RobotDimensionX) // 2
         ramp = False            # Initially not a ramp
         tmp = 0                 # ramp return
         timeout = 10
@@ -287,15 +294,15 @@ class Robot:
             else:
                 distanceWall = actualDistance
 
-            d1 = math.fmod(self.Distance[1].distance(), self.areaDimension)
-            d3 = math.fmod(self.Distance[3].distance(), self.areaDimension)
+            d1 = math.fmod(self.Distance[1].distance(), self.AreaDimension)
+            d3 = math.fmod(self.Distance[3].distance(), self.AreaDimension)
             if d1 != -1 and d3 != -1:
                 errorDistance = d1 - d3
             else:
                 errorDistance = 0
 
             actualHeading = self.Gyroscope.getHeading()
-            errorHeading = math.fmod(self.startHeading - actualHeading, 90)
+            errorHeading = math.fmod(self.StartHeading - actualHeading, 90)
 
             if errorHeading > 45:
                 errorHeading -= 90
@@ -346,8 +353,8 @@ class Robot:
                 return tmp
 
     def _center(self):
-        d0 = math.fmod(self.Distance[0].distance(), self.areaDimension)
-        d2 = math.fmod(self.Distance[2].distance(), self.areaDimension)
+        d0 = math.fmod(self.Distance[0].distance(), self.AreaDimension)
+        d2 = math.fmod(self.Distance[2].distance(), self.AreaDimension)
         if d0 != -1 and d0 < 200 and d2 != -1 and d2 < 200:
             errorDistance = d0 - d2
         else:
@@ -381,7 +388,7 @@ class Robot:
         print("Initial Heading = " + str(initialHeading))
 
         if control:
-            start = math.fmod(initialHeading - self.startHeading, requiredHeading)
+            start = math.fmod(initialHeading - self.StartHeading, requiredHeading)
             start = start if requiredHeading > 0 else -start
 
             if start > (abs(requiredHeading) / 2):

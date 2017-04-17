@@ -2,7 +2,6 @@
 Area Class
 """
 
-import time
 from enum import Enum
 from field.victim import Victim
 
@@ -13,13 +12,15 @@ class Area:
     WallDistance = 150          # TODO: tuning the distance to recognise a wall
     TemperatureDifference = 1   # TODO: tuning the difference between victim temperature and ambient temperature
 
-    def __init__(self, sensors, actuators, x, y, z):
+    def __init__(self, sensors, actuators, camera, x, y, z):
         self.Color = sensors[0]
         self.Distance = sensors[1]
         self.Gyroscope = sensors[2]
         self.Temperature = sensors[3]
         self.Led = actuators[0]
         self.Servo = actuators[1]
+
+        self.Camera = camera
 
         self.X = x
         self.Y = y
@@ -81,10 +82,19 @@ class Area:
         if self.Victims[n].Present or not self.Walls[n]:
             return
 
-        # TODO: Aggiungere codice ricerca vittime visuali
+        r = self.Camera.matchTemplate()
+        if r[0] == 0 and r[1] == 0 and r[2] == 0:
+            return
+        r = r.index(max(r))
 
-        """self.Victims[n].Present = True
-        self.Victims[n].Type = Victim.VictimType.Stable"""
+        self.Victims[n].Present = True
+
+        if r == 0:
+            self.Victims[n].Type = Victim.VictimType.Harmed
+        elif r == 1:
+            self.Victims[n].Type = Victim.VictimType.Stable
+        elif r == 2:
+            self.Victims[n].Type = Victim.VictimType.Unharmed
 
     def scan(self):
         print("Scan X = " + str(self.X) + " Y = " + str(self.Y) + " Z = " + str(self.Z))

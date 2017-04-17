@@ -6,14 +6,14 @@ from field.area import Area
 
 
 class Maze:
-    startX = 25
-    startY = 25
-    startZ = 0
+    StartX = 25
+    StartY = 25
+    StartZ = 0
 
-    def __init__(self, sensors, actuators):
+    def __init__(self, sensors, actuators, camera):
         self.RampPassages = 0
-        self.LastCheckPoint = [self.startX, self.startY, self.startZ]
-        self.Areas = [[[Area(sensors, actuators, i, j, k) for k in range(2)] for j in range(50)] for i in range(50)]
+        self.LastCheckPoint = [self.StartX, self.StartY, self.StartZ]
+        self.Areas = [[[Area(sensors, actuators, camera, i, j, k) for k in range(2)] for j in range(50)] for i in range(50)]
 
     def findPath(self, x, y, z):
         self.Areas[x][y][z].Passages += 1
@@ -56,7 +56,7 @@ class Maze:
         targetZ = z
         rampDirection = 0
 
-        if z != self.startZ:
+        if z != self.StartZ:
             for i in range(0, 50):
                 for j in range(0, 50):
                     area = self.Areas[i][j][z]
@@ -70,9 +70,9 @@ class Maze:
             movementList += self._findShortestPath(x, y, z, targetX, targetY, targetZ)
             movementList.append(rampDirection)
 
-            targetZ = self.startZ
+            targetZ = self.StartZ
 
-        movementList += self._findShortestPath(targetX, targetY, targetZ, self.startX, self.startY, self.startZ)
+        movementList += self._findShortestPath(targetX, targetY, targetZ, self.StartX, self.StartY, self.StartZ)
 
         return movementList
 
