@@ -434,3 +434,9 @@ class Robot:
         """Stop the robot"""
         self.Motor[0].stop()
         self.Motor[1].stop()
+
+    def cleanUp(self):
+        self._stop()
+        self.Servo.stop()
+        self.LedRed.off()
+        self.LedRed.off()

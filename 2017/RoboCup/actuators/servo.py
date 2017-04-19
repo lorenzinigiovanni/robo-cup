@@ -14,3 +14,6 @@ class Servo:
     def angle(self, angle):
         duty = float(angle) / 18.0 + 2.0
         self.pwm.ChangeDutyCycle(duty)
+
+    def stop(self):
+        self.pwm.stop()

@@ -10,7 +10,7 @@ def main():
 
 @atexit.register
 def clean():
-    WhyNot.stop()
+    WhyNot.cleanUp()
 
 
 if __name__ == "__main__":

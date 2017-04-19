@@ -49,10 +49,14 @@ class Victim:
             for i in range(n):
                 if Victim.RemainingKit > 0:
                     if Victim.RemainingKit % 2 == 0:
+                        self.Servo.angle(90)
+                        time.sleep(0.5)
                         self.Servo.angle(180)
                         time.sleep(0.5)
                         self.Servo.angle(90)
                     else:
+                        self.Servo.angle(90)
+                        time.sleep(0.5)
                         self.Servo.angle(0)
                         time.sleep(0.5)
                         self.Servo.angle(90)

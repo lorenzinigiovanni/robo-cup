@@ -15,7 +15,7 @@ class Maze:
         self.LastCheckPoint = [self.StartX, self.StartY, self.StartZ]
         self.Areas = [[[Area(sensors, actuators, camera, i, j, k) for k in range(2)] for j in range(50)] for i in range(50)]
 
-    def findPath(self, x, y, z):
+    def findPath(self, x, y, z, control=True):
         self.Areas[x][y][z].Passages += 1
 
         if not self.Areas[x][y][z].Scanned:
@@ -30,21 +30,33 @@ class Maze:
             passages[0] = self.RampPassages
         elif not self.Areas[x][y][z].Walls[0] and not self.Areas[x + 1][y][z].Type == Area.AreaType.NoGo:
             passages[0] = self.Areas[x + 1][y][z].Passages
+        else:
+            passages[0] = 999
 
         if self.Areas[x][y][z].Ramps[1]:
             passages[1] = self.RampPassages
         elif not self.Areas[x][y][z].Walls[1] and not self.Areas[x][y + 1][z].Type == Area.AreaType.NoGo:
             passages[1] = self.Areas[x][y + 1][z].Passages
+        else:
+            passages[1] = 999
 
         if self.Areas[x][y][z].Ramps[2]:
             passages[2] = self.RampPassages
         elif not self.Areas[x][y][z].Walls[2] and not self.Areas[x - 1][y][z].Type == Area.AreaType.NoGo:
             passages[2] = self.Areas[x - 1][y][z].Passages
+        else:
+            passages[2] = 999
 
         if self.Areas[x][y][z].Ramps[3]:
             passages[3] = self.RampPassages
         elif not self.Areas[x][y][z].Walls[3] and not self.Areas[x][y - 1][z].Type == Area.AreaType.NoGo:
             passages[3] = self.Areas[x][y - 1][z].Passages
+        else:
+            passages[3] = 999
+
+        if control and passages[0] == 999 and passages[1] == 999 and passages[2] == 999 and passages[3] == 999:
+            self.Areas[x][y][z].scan()
+            return self.findPath(x, y, z, control=False)
 
         return passages.index(min(passages))
 

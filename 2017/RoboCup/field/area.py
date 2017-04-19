@@ -83,9 +83,9 @@ class Area:
             return
 
         r = self.Camera.matchTemplate()
-        if r[0] == 0 and r[1] == 0 and r[2] == 0:
+
+        if r == -1:
             return
-        r = r.index(max(r))
 
         self.Victims[n].Present = True
 
