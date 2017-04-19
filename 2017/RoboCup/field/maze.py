@@ -8,12 +8,12 @@ from field.area import Area
 class Maze:
     StartX = 25
     StartY = 25
-    StartZ = 0
+    StartZ = 1
 
     def __init__(self, sensors, actuators, camera):
         self.RampPassages = 0
         self.LastCheckPoint = [self.StartX, self.StartY, self.StartZ]
-        self.Areas = [[[Area(sensors, actuators, camera, i, j, k) for k in range(2)] for j in range(50)] for i in range(50)]
+        self.Areas = [[[Area(sensors, actuators, camera, i, j, k) for k in range(3)] for j in range(50)] for i in range(50)]
 
     def findPath(self, x, y, z, control=True):
         self.Areas[x][y][z].Passages += 1

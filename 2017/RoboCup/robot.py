@@ -166,11 +166,11 @@ class Robot:
             print("Movement Timeout")
         elif tmp == 4:
             self.Maze.Areas[self.ActualX][self.ActualY][self.ActualZ].Ramps[xy] = True
-            self.ActualZ = 1
+            self.ActualZ = 1 if self.ActualZ == 0 else 2
             self.Maze.RampPassages += 1
         elif tmp == 5:
             self.Maze.Areas[self.ActualX][self.ActualY][self.ActualZ].Ramps[xy] = True
-            self.ActualZ = 0
+            self.ActualZ = 0 if self.ActualZ == 1 else 1
             self.Maze.RampPassages += 1
         elif xy == 0:
             if tmp == 3:
