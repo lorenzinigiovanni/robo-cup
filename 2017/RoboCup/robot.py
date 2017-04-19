@@ -36,6 +36,9 @@ class Robot:
         self.LedRed = Led(20)
         self.LedYellow = Led(21)
 
+        self.LedRed.off()
+        self.LedYellow.off()
+
         self.ButtonStart = Button(9)
         self.ButtonStop = Button(10)
 
@@ -73,6 +76,7 @@ class Robot:
 
         print("Calibrating temperature sensors")
         for t in self.Temperature:
+            time.sleep(0.1)
             t.calibrate()
 
         while True:
@@ -83,6 +87,7 @@ class Robot:
                 for i in range(4):
                     if area.Walls[i]:
                         self.turn(i)
+                        # self._center()
                         area.findVisualVictim(i)
                         area.Victims[i].save()
 
@@ -285,7 +290,6 @@ class Robot:
             self.Motor[1].reverse()
             Kh = -Kh
             Kp = -Kp
-            Kd = -Kd
 
         while True:
             actualDistance = dSensor.distance()
@@ -322,12 +326,12 @@ class Robot:
 
             # TODO: tuning the pitch to recognise a ramp
 
-            if pitch > 15:
+            if pitch > 12:
                 ramp = True
-                tmp = 4
-            elif pitch < -15:
+                tmp = 4 if direction else 5
+            elif pitch < -12:
                 ramp = True
-                tmp = 5
+                tmp = 5 if direction else 4
 
             if actualDistance != -1 and abs(initialDistance - actualDistance) >= abs(requiredDistance) and not ramp:
                 self._stop()
@@ -348,7 +352,7 @@ class Robot:
                     return 3
 
             if ramp and abs(pitch) < 5:
-                self._move(150, speed, True, control=False, center=False)
+                self._move(150, speed, direction, control=False, center=False)
                 self._stop()
                 return tmp
 
@@ -439,4 +443,4 @@ class Robot:
         self._stop()
         self.Servo.stop()
         self.LedRed.off()
-        self.LedRed.off()
+        self.LedYellow.off()

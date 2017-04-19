@@ -12,10 +12,10 @@ import copy
 
 class Camera:
     Margin = 1.3
-    Threshold = 0.7
+    Threshold = 0.65
     MinDimension = 0.2
-    MaxDimension = 2.0
-    Number = 10
+    MaxDimension = 1.0
+    Number = 5
 
     def __init__(self):
         self.Camera = PiCamera()
@@ -43,9 +43,14 @@ class Camera:
     def matchTemplate(self):
         print("Camera capture")
 
+        self.RawCapture.truncate(0)
+
         self.Camera.capture(self.RawCapture, format='bgr', resize=(640, 480))
         frame = self.RawCapture.array
         frame = imutils.resize(frame, height=300)
+
+        cv2.imshow("Raw frame", frame)
+        cv2.waitKey(0)
 
         warped = frame.copy()
 
@@ -71,28 +76,42 @@ class Camera:
 
         print("Searching for visual victim")
 
-        gray = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-        thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 55, 15)
-        blur = cv2.medianBlur(thresh, 7)
+        img = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+        img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 55, 15)
+        img = cv2.medianBlur(img, 7)
 
-        for template in self.Template:
-            for scale in np.linspace(self.MinDimension, self.MaxDimension, self.Number)[::-1]:
-                resized = imutils.resize(blur, width=int(blur.shape[1] * scale))
+        """morphKernel = np.ones((12, 12), np.uint8)
+        dilateKernel = np.ones((2, 2), np.uint8)
+        erodeKernel = np.ones((3, 7), np.uint8)
+
+        img = cv2.dilate(img, dilateKernel, iterations=1)
+        img = cv2.erode(img, erodeKernel, iterations=1)
+        img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, morphKernel)"""
+
+        for scale in np.linspace(self.MinDimension, self.MaxDimension, self.Number)[::-1]:
+            resized = imutils.resize(img, width=int(img.shape[1] * scale))
+
+            cv2.imshow("Resized frame", resized)
+            cv2.waitKey(0)
+
+            for template in self.Template:
+                if resized.shape[0] < self.TH or resized.shape[1] < self.TW:
+                    break
 
                 result = cv2.matchTemplate(resized, template, cv2.TM_CCOEFF_NORMED)
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
                 matches.append(max_val)
 
-        if max(matches) > self.Threshold:
-            index = matches.index(max(matches))
-            if index < self.Number:
-                index = 0
-            elif index < self.Number * 2:
-                index = 1
-            elif index < self.Number * 3:
-                index = 2
-        else:
+        print(matches)
+
+        try:
+            if max(matches) > self.Threshold:
+                index = matches.index(max(matches))
+                index = index % 3
+            else:
+                index = -1
+        except ValueError:
             index = -1
 
         print("Finish to search visual victim")

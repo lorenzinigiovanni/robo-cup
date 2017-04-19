@@ -60,8 +60,8 @@ class Gyroscope:
 
     def isCalibrated(self):
         calibrationStatus = self.sensor.get_calibration_status()
-        print(calibrationStatus)
-        if calibrationStatus[0] == 3:
+        calibrated = [3, 3, 3, 3]
+        if calibrationStatus == calibrated:
             return True
         else:
             return False

@@ -2,6 +2,7 @@
 Area Class
 """
 
+import time
 from enum import Enum
 from field.victim import Victim
 
@@ -45,7 +46,7 @@ class Area:
             n = 3
 
         distance = 0
-        for i in range(0, 3):
+        for i in range(3):
             distance += self.Distance[n].distance()
         distance /= 3
 
@@ -67,7 +68,8 @@ class Area:
             n = 3
 
         tempDifference = 0
-        for i in range(0, 3):
+        for i in range(3):
+            time.sleep(0.1)
             tempDifference += self.Temperature[n].getDifference()
         tempDifference /= 3
 
