@@ -24,7 +24,10 @@ class Gyroscope:
             print("self.sensor.begin() error")
 
     def updateEuler(self):
-        self.Heading, self.Roll, self.Pitch = self.sensor.read_euler()
+        try:
+            self.Heading, self.Roll, self.Pitch = self.sensor.read_euler()
+        except RuntimeError:
+            print("Gyroscope timeout")
 
     def getHeading(self):
         self.PreviousHeading = self.Heading

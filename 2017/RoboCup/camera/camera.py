@@ -15,7 +15,15 @@ class Camera:
     Threshold = 0.65
     MinDimension = 0.2
     MaxDimension = 1.0
-    Number = 5
+    Number = 10
+
+    K = np.array([[3593.18463,  0.,         322.],
+                  [0.,          3664.87320, 201.],
+                  [0.,          0.,         1.]])
+
+    D = np.array([-4.07510655, 23.5098640, -0.0529764969, 0.0906216614, -96.3755091])
+
+    Knew = K.copy()
 
     def __init__(self):
         self.Camera = PiCamera()
@@ -26,15 +34,15 @@ class Camera:
 
         tmp1 = cv2.imread("/home/pi/Desktop/RoboCup/camera/H.png")
         tmp1 = cv2.cvtColor(tmp1, cv2.COLOR_BGR2GRAY)
-        tmp1 = cv2.resize(tmp1, (128, 128))
+        tmp1 = cv2.resize(tmp1, (64, 64))
 
         tmp2 = cv2.imread("/home/pi/Desktop/RoboCup/camera/S.png")
         tmp2 = cv2.cvtColor(tmp2, cv2.COLOR_BGR2GRAY)
-        tmp2 = cv2.resize(tmp2, (128, 128))
+        tmp2 = cv2.resize(tmp2, (64, 64))
 
         tmp3 = cv2.imread("/home/pi/Desktop/RoboCup/camera/U.png")
         tmp3 = cv2.cvtColor(tmp3, cv2.COLOR_BGR2GRAY)
-        tmp3 = cv2.resize(tmp3, (128, 128))
+        tmp3 = cv2.resize(tmp3, (64, 64))
 
         self.Template = [tmp1, tmp2, tmp3]
 
@@ -47,10 +55,16 @@ class Camera:
 
         self.Camera.capture(self.RawCapture, format='bgr', resize=(640, 480))
         frame = self.RawCapture.array
-        frame = imutils.resize(frame, height=300)
 
-        cv2.imshow("Raw frame", frame)
-        cv2.waitKey(0)
+        h, w = frame.shape[:2]
+        newcameramtx, roi = cv2.getOptimalNewCameraMatrix(self.K, self.D, (w, h), 1, (w, h))
+
+        frame = cv2.undistort(frame, self.K, self.D, None, newcameramtx)
+
+        # frame = imutils.resize(frame, height=300)
+
+        """cv2.imshow("Raw frame", frame)
+        cv2.waitKey(0)"""
 
         warped = frame.copy()
 
@@ -65,34 +79,50 @@ class Camera:
 
         matches = []
 
-        for contour in contours:
-            peri = cv2.arcLength(contour, True)
-            approx = cv2.approxPolyDP(contour, 0.001 * peri, True)
+        ok = False
 
-            if len(approx) >= 1:
+        for contour in contours:
+            perimeter = cv2.arcLength(contour, True)
+            approx = cv2.approxPolyDP(contour, 0.001 * perimeter, True)
+
+            print("Ho trovato = " + str(len(approx)) + " contorni")
+
+            if 25 <= len(approx) <= 110:
                 screenCnt = approx
                 warped = self._fourPointTransform(frame, np.reshape(screenCnt, (len(approx), 2)))
+                ok = True
                 break
+
+        if not ok:
+            print("Non ho trovato un cazzo")
+            return -1
+
+        img = imutils.resize(warped, width=300)
 
         print("Searching for visual victim")
 
-        img = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 55, 15)
         img = cv2.medianBlur(img, 7)
 
-        """morphKernel = np.ones((12, 12), np.uint8)
+        """morphKernel = np.ones((5, 5), np.uint8)
         dilateKernel = np.ones((2, 2), np.uint8)
-        erodeKernel = np.ones((3, 7), np.uint8)
+        erodeKernel = np.ones((3, 5), np.uint8)
 
         img = cv2.dilate(img, dilateKernel, iterations=1)
         img = cv2.erode(img, erodeKernel, iterations=1)
         img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, morphKernel)"""
 
-        for scale in np.linspace(self.MinDimension, self.MaxDimension, self.Number)[::-1]:
-            resized = imutils.resize(img, width=int(img.shape[1] * scale))
+        cv2.imshow("Elaborated frame", img)
+        cv2.waitKey(0)
 
-            cv2.imshow("Resized frame", resized)
-            cv2.waitKey(0)
+        resized = img
+
+        for scale in np.linspace(self.MinDimension, self.MaxDimension, self.Number)[::-1]:
+            try:
+                resized = imutils.resize(img, width=int(img.shape[1] * scale))
+            except:
+                print("Error in resizing")
 
             for template in self.Template:
                 if resized.shape[0] < self.TH or resized.shape[1] < self.TW:

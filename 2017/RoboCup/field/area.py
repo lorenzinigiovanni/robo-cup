@@ -18,6 +18,7 @@ class Area:
         self.Distance = sensors[1]
         self.Gyroscope = sensors[2]
         self.Temperature = sensors[3]
+
         self.Led = actuators[0]
         self.Servo = actuators[1]
 
@@ -68,9 +69,10 @@ class Area:
             n = 3
 
         tempDifference = 0
+        time.sleep(0.1)
         for i in range(3):
-            time.sleep(0.1)
             tempDifference += self.Temperature[n].getDifference()
+            time.sleep(0.1)
         tempDifference /= 3
 
         print("Temperature difference at " + str(n) + " is = " + str(tempDifference))

@@ -11,16 +11,17 @@ class Motor:
         GPIO.setup(a, GPIO.OUT)
         GPIO.setup(b, GPIO.OUT)
         self.pwm = GPIO.PWM(enable, 100)        # TODO: tune the frequency of the pwm signal
+        self.pwm.start(0)
         self.a = a
         self.b = b
 
     def forward(self):
-        self.pwm.start(0)
+        # self.pwm.start(0)
         GPIO.output(self.a, GPIO.HIGH)
         GPIO.output(self.b, GPIO.LOW)
 
     def reverse(self):
-        self.pwm.start(0)
+        # self.pwm.start(0)
         GPIO.output(self.a, GPIO.LOW)
         GPIO.output(self.b, GPIO.HIGH)
 
@@ -33,6 +34,6 @@ class Motor:
         self.pwm.ChangeDutyCycle(speed)
 
     def stop(self):
-        self.pwm.stop()
+        # self.pwm.stop()
         GPIO.output(self.a, GPIO.LOW)
         GPIO.output(self.b, GPIO.LOW)

@@ -36,12 +36,20 @@ class Temperature:
         self.calibrationTemp = self.getObjTemp()
 
     def getAmbTemp(self):
-        data = self.i2c.read_word_data(self.address, self.MLX90614_TA)
+        data = 0
+        try:
+            data = self.i2c.read_word_data(self.address, self.MLX90614_TA)
+        except:
+            print("getAmbTemp error")
         temp = (data * 0.02) - 273.15
         return temp
 
     def getObjTemp(self):
-        data = self.i2c.read_word_data(self.address, self.MLX90614_TOBJ1)
+        data = 0
+        try:
+            data = self.i2c.read_word_data(self.address, self.MLX90614_TOBJ1)
+        except:
+            print("getObjTemp error")
         temp = (data * 0.02) - 273.15
         return temp
 

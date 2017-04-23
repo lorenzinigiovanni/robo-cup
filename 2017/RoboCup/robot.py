@@ -22,6 +22,7 @@ class Robot:
     RobotDimensionX = 160
     RobotDimensionY = 150
     AreaDimension = 300
+    ReturnTime = 420
 
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
@@ -59,6 +60,12 @@ class Robot:
         self._stop()
 
     def start(self):
+        print("Robot ready")
+
+        self.LedYellow.on()
+        time.sleep(1)
+        self.LedYellow.off()
+
         while True:
             if self.Gyroscope.isCalibrated():
                 self.LedYellow.on()
@@ -85,10 +92,10 @@ class Robot:
             if not area.Scanned:
                 area.scan()
                 for i in range(4):
-                    if area.Walls[i]:
+                    if area.Victims[i].Present:  # if area.Walls[i]:
                         self.turn(i)
                         # self._center()
-                        area.findVisualVictim(i)
+                        # area.findVisualVictim(i)
                         area.Victims[i].save()
 
             tmp = self.move(self.Maze.findPath(self.ActualX, self.ActualY, self.ActualZ))
@@ -103,7 +110,7 @@ class Robot:
             else:
                 print("Moved to X = " + str(self.ActualX) + " Y = " + str(self.ActualY) + " Z = " + str(self.ActualZ))
 
-            if self.StartTime - time.time() > 420:
+            if self.StartTime - time.time() > self.ReturnTime:
                 break
 
         print("Searching for a returning home path")
@@ -114,7 +121,8 @@ class Robot:
                 self.move(movement)
         else:
             print("Path not found")
-        self.stop()
+        self._stop()
+        self.cleanUp()
 
     def stop(self):
         self._stop()
@@ -431,7 +439,7 @@ class Robot:
                 self._stop()
                 if control:
                     time.sleep(0.5)
-                    self._turn((requiredHeading + initialHeading - self.Gyroscope.getHeading()), 60, False)
+                    self._turn((requiredHeading + initialHeading - self.Gyroscope.getHeading()), 60, control=False)
                 return 1
 
     def _stop(self):
