@@ -61,10 +61,10 @@ class Maze:
         rampDirection = 0
 
         if z != self.StartZ:
-            for i in range(0, 50):
-                for j in range(0, 50):
+            for i in range(50):
+                for j in range(50):
                     area = self.Areas[i][j][z]
-                    for l in range(0, 4):
+                    for l in range(4):
                         if area.Ramps[l]:
                             targetX = i
                             targetY = j

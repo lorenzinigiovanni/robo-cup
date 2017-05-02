@@ -2,13 +2,15 @@
 Button Class
 """
 
-import RPi.GPIO as GPIO
+import pigpio
 
 
 class Button:
-    def __init__(self, buttonPin):
+    def __init__(self, gpio, buttonPin):
+        self.gpio = gpio
         self.buttonPin = buttonPin
-        GPIO.setup(self.buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        self.gpio.set_mode(buttonPin, pigpio.INPUT)
+        self.gpio.set_pull_up_down(buttonPin, pigpio.PUD_UP)
 
     def pressed(self):
-        return not GPIO.input(self.buttonPin)
+        return not bool(self.gpio.read(self.buttonPin))

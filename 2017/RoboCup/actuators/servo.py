@@ -2,18 +2,20 @@
 Servo Class
 """
 
-import RPi.GPIO as GPIO
+import pigpio
 
 
 class Servo:
-    def __init__(self, servoPin):
-        GPIO.setup(servoPin, GPIO.OUT)
-        self.pwm = GPIO.PWM(servoPin, 50)
-        self.pwm.start(7)
+    def __init__(self, gpio, servoPin):
+        self.gpio = gpio
+        self.servoPin = servoPin
+        self.gpio.set_mode(servoPin, pigpio.OUTPUT)
+        self.gpio.set_servo_pulsewidth(servoPin, 1500)
 
     def angle(self, angle):
-        duty = float(angle) / 18.0 + 2.0
-        self.pwm.ChangeDutyCycle(duty)
+        angle *= 11
+        angle += 500
+        self.gpio.set_servo_pulsewidth(self.servoPin, angle)
 
     def stop(self):
-        self.pwm.stop()
+        self.gpio.set_servo_pulsewidth(self.servoPin, 0)

@@ -10,7 +10,7 @@ from field.victim import Victim
 class Area:
     AreaType = Enum('AreaType', 'Standard CheckPoint NoGo')
 
-    WallDistance = 150          # TODO: tuning the distance to recognise a wall
+    WallDistance = 200          # TODO: tuning the distance to recognise a wall
     TemperatureDifference = 1   # TODO: tuning the difference between victim temperature and ambient temperature
 
     def __init__(self, sensors, actuators, camera, x, y, z):

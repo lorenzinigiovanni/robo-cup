@@ -62,7 +62,11 @@ class Gyroscope:
             return -1
 
     def isCalibrated(self):
-        calibrationStatus = self.sensor.get_calibration_status()
+        calibrationStatus = [0, 0, 0, 0]
+        try:
+            calibrationStatus = self.sensor.get_calibration_status()
+        except BlockingIOError:
+            print("BlockingIOError")
         calibrated = [3, 3, 3, 3]
         if calibrationStatus == calibrated:
             return True

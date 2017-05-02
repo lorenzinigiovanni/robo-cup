@@ -2,16 +2,17 @@
 Led Class
 """
 
-import RPi.GPIO as GPIO
+import pigpio
 
 
 class Led:
-    def __init__(self, ledPin):
+    def __init__(self, gpio, ledPin):
+        self.gpio = gpio
         self.ledPin = ledPin
-        GPIO.setup(self.ledPin, GPIO.OUT)
+        self.gpio.set_mode(ledPin, pigpio.OUTPUT)
 
     def on(self):
-        GPIO.output(self.ledPin, GPIO.HIGH)
+        self.gpio.write(self.ledPin, 1)
 
     def off(self):
-        GPIO.output(self.ledPin, GPIO.LOW)
+        self.gpio.write(self.ledPin, 0)
