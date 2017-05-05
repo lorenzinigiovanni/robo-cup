@@ -11,7 +11,8 @@ import copy
 
 
 class Camera:
-    Margin = 1.3
+    MarginUD = 1.3
+    MarginLR = 1.1
     Threshold = 0.65
     MinDimension = 0.2
     MaxDimension = 1.0
@@ -32,21 +33,25 @@ class Camera:
         self.Camera.brightness = 60
         self.RawCapture = PiRGBArray(self.Camera, size=(640, 480))
 
+        self.Sift = cv2.xfeatures2d.SIFT_create()
+
         tmp1 = cv2.imread("/home/pi/Desktop/RoboCup/camera/H.png")
         tmp1 = cv2.cvtColor(tmp1, cv2.COLOR_BGR2GRAY)
-        tmp1 = cv2.resize(tmp1, (64, 64))
+        #tmp1 = cv2.resize(tmp1, (64, 64))
+        sift1 = self.Sift.detectAndCompute(tmp1, None)
 
         tmp2 = cv2.imread("/home/pi/Desktop/RoboCup/camera/S.png")
         tmp2 = cv2.cvtColor(tmp2, cv2.COLOR_BGR2GRAY)
-        tmp2 = cv2.resize(tmp2, (64, 64))
+        #tmp2 = cv2.resize(tmp2, (64, 64))
+        sift2 = self.Sift.detectAndCompute(tmp2, None)
 
         tmp3 = cv2.imread("/home/pi/Desktop/RoboCup/camera/U.png")
         tmp3 = cv2.cvtColor(tmp3, cv2.COLOR_BGR2GRAY)
-        tmp3 = cv2.resize(tmp3, (64, 64))
+        #tmp3 = cv2.resize(tmp3, (64, 64))
+        sift3 = self.Sift.detectAndCompute(tmp3, None)
 
-        self.Template = [tmp1, tmp2, tmp3]
-
-        self.TH, self.TW = self.Template[0].shape[::-1]
+        self.Template = [sift1, sift2, sift3]
+        self.Pippo = [tmp1, tmp2, tmp3]
 
     def matchTemplate(self):
         print("Camera capture")
@@ -61,11 +66,6 @@ class Camera:
 
         frame = cv2.undistort(frame, self.K, self.D, None, newcameramtx)
 
-        # frame = imutils.resize(frame, height=300)
-
-        """cv2.imshow("Raw frame", frame)
-        cv2.waitKey(0)"""
-
         warped = frame.copy()
 
         print("Elaborating frame")
@@ -78,8 +78,9 @@ class Camera:
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
 
         matches = []
+        warpeds = []
 
-        ok = False
+        # TODO: do an if for contours number
 
         for contour in contours:
             perimeter = cv2.arcLength(contour, True)
@@ -89,49 +90,55 @@ class Camera:
 
             if 25 <= len(approx) <= 110:
                 screenCnt = approx
-                warped = self._fourPointTransform(frame, np.reshape(screenCnt, (len(approx), 2)))
-                ok = True
+                warpeds.append(self._fourPointTransform(frame, np.reshape(screenCnt, (len(approx), 2))))
                 break
-
-        if not ok:
-            print("Non ho trovato un cazzo")
-            return -1
-
-        img = imutils.resize(warped, width=300)
 
         print("Searching for visual victim")
 
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 55, 15)
-        img = cv2.medianBlur(img, 7)
+        for warped in warpeds:
+            """cv2.imshow("Warped", warped)
+            cv2.waitKey(0)"""
 
-        """morphKernel = np.ones((5, 5), np.uint8)
-        dilateKernel = np.ones((2, 2), np.uint8)
-        erodeKernel = np.ones((3, 5), np.uint8)
+            img = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+            img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 55, 15)
+            img = cv2.medianBlur(img, 7)
 
-        img = cv2.dilate(img, dilateKernel, iterations=1)
-        img = cv2.erode(img, erodeKernel, iterations=1)
-        img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, morphKernel)"""
+            """cv2.imshow("Elaborated frame", img)
+            cv2.waitKey(0)"""
 
-        cv2.imshow("Elaborated frame", img)
-        cv2.waitKey(0)
+            x, y = img.shape[::-1]
+            r = x / y
 
-        resized = img
+            print("Ratio = " + str(r))
+            print("Dimension X = " + str(x))
+            print("Dimension Y = " + str(y))
 
-        for scale in np.linspace(self.MinDimension, self.MaxDimension, self.Number)[::-1]:
-            try:
-                resized = imutils.resize(img, width=int(img.shape[1] * scale))
-            except:
-                print("Error in resizing")
+            if r < 0.55 or r > 1.35 or x < 150 or x > 360 or y < 150 or y > 360:
+                print("Non ho trovato un cazzo")
+                return -1
+
+            kp, des = self.Sift.detectAndCompute(img, None)
+
+            # i = 0
 
             for template in self.Template:
-                if resized.shape[0] < self.TH or resized.shape[1] < self.TW:
-                    break
+                bf = cv2.BFMatcher()
+                bfmatches = bf.knnMatch(des, template[1], k=2)
 
-                result = cv2.matchTemplate(resized, template, cv2.TM_CCOEFF_NORMED)
-                min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+                good = []
+                for m, n in bfmatches:
+                    if m.distance < 0.85 * n.distance:
+                        good.append([m])
 
-                matches.append(max_val)
+                """img3 = None
+                img3 = cv2.drawMatchesKnn(img, kp, self.Pippo[i], template[0], good, img3, flags=2)
+    
+                cv2.imshow("test", img3)
+                cv2.waitKey(0)"""
+
+                matches.append(len(good))
+
+                # i += 1
 
         print(matches)
 
@@ -160,17 +167,17 @@ class Camera:
         a = sorted(points, key=lambda point: point[0] + point[1])
         b = sorted(points, key=lambda point: point[0] - point[1])
 
-        a[0][0] /= self.Margin
-        a[0][1] /= self.Margin
+        a[0][0] /= self.MarginLR
+        a[0][1] /= self.MarginUD
 
-        a[-1][0] *= self.Margin
-        a[-1][1] *= self.Margin
+        a[-1][0] *= self.MarginLR
+        a[-1][1] *= self.MarginUD
 
-        b[0][0] /= self.Margin
-        b[0][1] *= self.Margin
+        b[0][0] /= self.MarginLR
+        b[0][1] *= self.MarginUD
 
-        b[-1][0] *= self.Margin
-        b[-1][1] /= self.Margin
+        b[-1][0] *= self.MarginLR
+        b[-1][1] /= self.MarginUD
 
         rect[0] = a[0]
         rect[2] = a[-1]

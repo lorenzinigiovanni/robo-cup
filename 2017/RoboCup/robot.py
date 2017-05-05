@@ -96,10 +96,16 @@ class Robot:
             if not area.Scanned:
                 area.scan()
                 for i in range(4):
-                    if area.Victims[i].Present:  # if area.Walls[i]:
+                    """
+                    if area.Victims[i].Present:
                         self.turn(i)
-                        # self._center()
-                        # area.findVisualVictim(i)
+                        area.Victims[i].save()
+                    """
+                    if area.Walls[i]:
+                        time.sleep(0.25)
+                        self.turn(i)
+                        time.sleep(0.25)
+                        area.findVisualVictim(i)
                         area.Victims[i].save()
 
             if movementCounter > 10:
@@ -219,6 +225,10 @@ class Robot:
                 xy = 1
             self.Maze.Areas[self.ActualX][self.ActualY][self.ActualZ].Ramps[xy] = True
             self.Maze.RampPassages += 1
+            print("Calibrating temperature sensors")
+            for t in self.Temperature:
+                time.sleep(0.1)
+                t.calibrate()
             return 4
         elif tmp == 5:
             self.Maze.Areas[self.ActualX][self.ActualY][self.ActualZ].Ramps[xy] = True
@@ -233,6 +243,10 @@ class Robot:
                 xy = 1
             self.Maze.Areas[self.ActualX][self.ActualY][self.ActualZ].Ramps[xy] = True
             self.Maze.RampPassages += 1
+            print("Calibrating temperature sensors")
+            for t in self.Temperature:
+                time.sleep(0.1)
+                t.calibrate()
             return 5
         elif xy == 0:
             if tmp == 3:
@@ -389,10 +403,10 @@ class Robot:
 
             # TODO: tuning the pitch to recognise a ramp
 
-            if pitch > 15:
+            if pitch > 18:
                 ramp = True
                 tmp = 4 if direction else 5
-            elif pitch < -15:
+            elif pitch < -18:
                 ramp = True
                 tmp = 5 if direction else 4
 
@@ -533,7 +547,7 @@ class Robot:
                 self._stop()
                 if control:
                     time.sleep(0.5)
-                    self._turn((requiredHeading + initialHeading - self.Gyroscope.getHeading()), 50, control=False)
+                    self._turn((requiredHeading + initialHeading - self.Gyroscope.getHeading()) / 2, 40, control=False)
                 self._stop()
                 return 1
 
