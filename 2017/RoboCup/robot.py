@@ -95,18 +95,16 @@ class Robot:
 
             if not area.Scanned:
                 area.scan()
-                for i in range(4):
-                    """
-                    if area.Victims[i].Present:
-                        self.turn(i)
-                        area.Victims[i].save()
-                    """
-                    if area.Walls[i]:
-                        time.sleep(0.25)
-                        self.turn(i)
-                        time.sleep(0.25)
-                        area.findVisualVictim(i)
-                        area.Victims[i].save()
+                if -8 < self.Gyroscope.getPitch() < 8:
+                    for i in range(4):
+                        if area.Walls[i]:
+                            time.sleep(0.25)
+                            self.turn(i)
+                            time.sleep(0.25)
+                            self._center()
+                            time.sleep(0.25)
+                            area.findVisualVictim(i)
+                            area.Victims[i].save()
 
             if movementCounter > 10:
                 orientation = self.Gyroscope.getOrientation()
@@ -118,7 +116,7 @@ class Robot:
                     orientation = 0
                 elif orientation == 3:
                     orientation = 1
-                if area.Walls[orientation]:
+                if area.Walls[orientation] and not area.Victims[orientation].Present:
                     self._reset()
                     self._center(rear=0)
                     movementCounter = 0
@@ -471,7 +469,7 @@ class Robot:
 
         errorDistance /= 4
 
-        self._move(abs(errorDistance), 20, direction, control=False, center=False)
+        self._move(abs(errorDistance), 25, direction, control=False, center=False)
         return 1
 
     def _reset(self):

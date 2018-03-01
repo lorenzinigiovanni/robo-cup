@@ -37,17 +37,14 @@ class Camera:
 
         tmp1 = cv2.imread("/home/pi/Desktop/RoboCup/camera/H.png")
         tmp1 = cv2.cvtColor(tmp1, cv2.COLOR_BGR2GRAY)
-        #tmp1 = cv2.resize(tmp1, (64, 64))
         sift1 = self.Sift.detectAndCompute(tmp1, None)
 
         tmp2 = cv2.imread("/home/pi/Desktop/RoboCup/camera/S.png")
         tmp2 = cv2.cvtColor(tmp2, cv2.COLOR_BGR2GRAY)
-        #tmp2 = cv2.resize(tmp2, (64, 64))
         sift2 = self.Sift.detectAndCompute(tmp2, None)
 
         tmp3 = cv2.imread("/home/pi/Desktop/RoboCup/camera/U.png")
         tmp3 = cv2.cvtColor(tmp3, cv2.COLOR_BGR2GRAY)
-        #tmp3 = cv2.resize(tmp3, (64, 64))
         sift3 = self.Sift.detectAndCompute(tmp3, None)
 
         self.Template = [sift1, sift2, sift3]
@@ -65,8 +62,6 @@ class Camera:
         newcameramtx, roi = cv2.getOptimalNewCameraMatrix(self.K, self.D, (w, h), 1, (w, h))
 
         frame = cv2.undistort(frame, self.K, self.D, None, newcameramtx)
-
-        warped = frame.copy()
 
         print("Elaborating frame")
 
@@ -96,15 +91,9 @@ class Camera:
         print("Searching for visual victim")
 
         for warped in warpeds:
-            """cv2.imshow("Warped", warped)
-            cv2.waitKey(0)"""
-
             img = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
             img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 55, 15)
             img = cv2.medianBlur(img, 7)
-
-            """cv2.imshow("Elaborated frame", img)
-            cv2.waitKey(0)"""
 
             x, y = img.shape[::-1]
             r = x / y
@@ -114,12 +103,10 @@ class Camera:
             print("Dimension Y = " + str(y))
 
             if r < 0.55 or r > 1.35 or x < 150 or x > 360 or y < 150 or y > 360:
-                print("Non ho trovato un cazzo")
+                print("Non ho trovato niente")
                 return -1
 
             kp, des = self.Sift.detectAndCompute(img, None)
-
-            # i = 0
 
             for template in self.Template:
                 bf = cv2.BFMatcher()
@@ -130,15 +117,7 @@ class Camera:
                     if m.distance < 0.85 * n.distance:
                         good.append([m])
 
-                """img3 = None
-                img3 = cv2.drawMatchesKnn(img, kp, self.Pippo[i], template[0], good, img3, flags=2)
-    
-                cv2.imshow("test", img3)
-                cv2.waitKey(0)"""
-
                 matches.append(len(good))
-
-                # i += 1
 
         print(matches)
 

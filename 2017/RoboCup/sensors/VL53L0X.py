@@ -10,7 +10,6 @@ VL53L0X_HIGH_SPEED_MODE = 4         # High Speed mode
 i2c = smbus.SMBus(1)
 
 
-# i2c bus read callback
 def i2c_read(address, reg, data_p, length):
     ret_val = 0
     result = []
@@ -42,21 +41,17 @@ def i2c_write(address, reg, data_p, length):
     return ret_val
 
 
-# Load VL53L0X shared lib 
 tof_lib = CDLL("sensors/vl53l0x_python.so")
 
 
-# Create read function pointer
 READFUNC = CFUNCTYPE(c_int, c_ubyte, c_ubyte, POINTER(c_ubyte), c_ubyte)
 read_func = READFUNC(i2c_read)
 
 
-# Create write function pointer
 WRITEFUNC = CFUNCTYPE(c_int, c_ubyte, c_ubyte, POINTER(c_ubyte), c_ubyte)
 write_func = WRITEFUNC(i2c_write)
 
 
-# pass i2c read and write function pointers to VL53L0X library
 tof_lib.VL53L0X_set_i2c(read_func, write_func)
 
 

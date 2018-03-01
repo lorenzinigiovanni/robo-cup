@@ -114,10 +114,10 @@ class Color:
         return False
 
     def isSilver(self):
-        """self.getColors()
+        self.getColors()
         # TODO: tuning the value for each color to find silver
         if 200 < self.clear_color < 350:
-            return True"""
+            return True
         return False
 
     def isBlack(self):
