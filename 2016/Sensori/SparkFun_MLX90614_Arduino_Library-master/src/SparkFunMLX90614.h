@@ -23,7 +23,7 @@ SparkFun IR Thermometer Evaluation Board - MLX90614
 //////////////////////////////////
 // MLX90614 Default I2C Address //
 //////////////////////////////////
-#define MLX90614_DEFAULT_ADDRESS 0x5A
+#define MLX90614_DEFAULT_ADDRESS 0x55
 
 ///////////////////////////////////////
 // MLX90614 RAM and EEPROM Addresses //
