@@ -240,3 +240,11 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+*.pyc
+*.bak
+*.pyc
+2017/RoboCup/.idea/deployment.xml
+2017/RoboCup/.idea/webServers.xml
+2017/RoboCup/.idea/workspace.xml
+2018/RoboCup/.idea/workspace.xml
